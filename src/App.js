@@ -9,8 +9,6 @@ function App() {
         <div className="stagesContainer">
         <Stage></Stage>
         <Stage></Stage>
-        <Stage></Stage>
-
         </div>
         <div className="mapContainer">
           <Map></Map>
