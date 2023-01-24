@@ -3,9 +3,48 @@
     width: 95%;    
     background-color: white;
     margin: 1rem;
-    maring-left: 1rem;
+    display: flex;
+    flex-direction: column;
+   
+    min-height: 4rem;
     
 }
-.Stage p{
+.Stage .header {
+    display: flex;
+    flex: row;
+    border: 3px solid rgb(0, 215, 18);
+}
+
+.Stage .header div{
     font-size: 1rem;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid greenyellow
+}
+
+.Stage .header .stage-number{
+    width:5%;
+}
+
+.Stage .header .stage-name{
+    font-size:2rem;     
+}
+
+.stage-events{
+    display: flex;
+    flex-direction: column;
+    border: 2px solid red;
+}
+
+.event{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.event div{
+    flex-grow: 1;
+    border: 2px solid blue;
 }
