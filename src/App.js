@@ -1,12 +1,16 @@
 import './App.css';
 
 // Import react functions
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Import app components
-import { Map } from './components/Map/Map'
+import { Title } from './components/Title/Title';
 import { Time } from './components/Time/Time'
 import { Tripmates } from './components/Tripmates/Tripmates';
+import { Map } from './components/Map/Map'
+
+// Import api classes
+import { Plan } from './plan/plan'
 
 // Import MUI components
 import { Input, TextField, Card, Grid, CardContent, Typography } from '@mui/material';
@@ -20,15 +24,29 @@ const planBgImageStyle = {
   backgroundSize: "cover",
 }
 
-function App() {
-  const exampleData = {
-    totalCost: 4000,
-    currency: 'PLN'
-  }
 
-  const [totalCost, setTotalCost] = useState(exampleData.totalCost)
-  const [currency, setCurrency] = useState(exampleData.currency)
-  const [tripmates, setTripmates] = useState(null)
+function App() {
+  const [plan, setPlan] = useState({ properties: {} })
+
+  const [title, setTitle] = useState(plan.properties.title || 'Enter title for your trip')
+  const [cost, setCost] = useState(plan.properties.cost)
+  const [currency, setCurrency] = useState(plan.properties.currency)
+  // const [tripmates, setTripmates] = useState(null)
+
+  useEffect(() => {
+    // fetchPlan()
+  }, []);
+
+  async function fetchPlan() {
+    const plan = new Plan('5234235')
+    await plan.id
+    console.log('plan id in App is ' + plan.id)
+    plan.title = 'Trip to Sweden'
+    plan.cost = 4000
+    plan.currency = 'PLN'
+
+    setPlan(plan)
+  }
 
   return (
     <div className="App">
@@ -48,14 +66,7 @@ function App() {
                     justifyContent: 'center',
                     alignItems: 'center'
                   }}>
-                    <Card>
-                      <CardContent >
-                        <Typography variant="h4">
-                          Trip to Greece
-                        </Typography>
-                        {/* <Input placeholder='Enter title for your trip'></Input> */}
-                      </CardContent>
-                    </Card>
+                    <Title title={title} setTitle={setTitle}></Title>
                   </div>
                 </div>
               </Grid>
@@ -78,7 +89,7 @@ function App() {
                   <CardContent>
                     <Input placeholder='set up a budget for your trip'></Input>
                     <Typography>
-                      Calculated cost of your trip: {totalCost} {currency}
+                      Calculated cost of your trip: {cost} {currency}
                     </Typography>
                   </CardContent>
                 </Card>
