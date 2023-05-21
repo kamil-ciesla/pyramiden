@@ -13,12 +13,3 @@
   padding:1rem;
   align-items: center ;
 }
-
-.plan-card{
-  width:90%;
-
-}
-.plan-card CardContent{
-  display: flex;
-  flex-direction: column;
-}
