@@ -39,12 +39,12 @@ export const PlanTitle = (props) => {
 		<Card>
 			<CardContent>
 				{isEditable ? (
-					// <input ref={inputRef} />
 					<Input
 						value={title}
 						onBlur={handleBlur}
 						onChange={handleOnChange}
-						focused={"true"}
+						onKeyPress={handleUpdate}
+						autoFocus
 					/>
 				) : (
 					<Typography variant="h4" onClick={handleClick}>
