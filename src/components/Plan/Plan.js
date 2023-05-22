@@ -87,8 +87,9 @@ export const Plan = () => {
 									}}
 								>
 									<PlanTitle
+										variant="h4"
 										title={"Enter title for your trip"}
-										onUpdate={updateTitle}
+										onChange={updateTitle}
 									/>
 								</div>
 							</div>

@@ -1,18 +1,7 @@
-import React, { useState, useRef, useEffect } from "react"
+import React, { useState } from "react"
 import { Card, CardContent, Typography, Input } from "@mui/material"
 
 export const PlanTitle = (props) => {
-	// const useFocus = () => {
-	// 	const htmlElRef = useRef(null)
-	// 	const setFocus = () => {
-	// 		setIsEditable(true)
-	// 		htmlElRef.current && htmlElRef.current.focus()
-	// 	}
-
-	// 	return [htmlElRef, setFocus]
-	// }
-	// const [inputRef, setInputFocus] = useFocus()
-
 	const [title, setTitle] = useState(props.title)
 	const [isEditable, setIsEditable] = useState(false)
 
@@ -21,17 +10,17 @@ export const PlanTitle = (props) => {
 	}
 
 	const handleBlur = (event) => {
-		props.onUpdate(event.target.value)
+		props.onChange(event.target.value)
 		setIsEditable(false)
 	}
-	const handleOnChange = (event) => {
+	const onChange = (event) => {
 		setTitle(event.target.value)
 	}
 
-	const handleUpdate = (event) => {
+	const onKeyPress = (event) => {
 		if (event.key === "Enter") {
 			setIsEditable(false)
-			props.onUpdate(event.target.value)
+			props.onChange(event.target.value)
 		}
 	}
 
@@ -42,12 +31,12 @@ export const PlanTitle = (props) => {
 					<Input
 						value={title}
 						onBlur={handleBlur}
-						onChange={handleOnChange}
-						onKeyPress={handleUpdate}
+						onChange={onChange}
+						onKeyPress={onKeyPress}
 						autoFocus
 					/>
 				) : (
-					<Typography variant="h4" onClick={handleClick}>
+					<Typography variant={props.variant} onClick={handleClick}>
 						{title}
 					</Typography>
 				)}
