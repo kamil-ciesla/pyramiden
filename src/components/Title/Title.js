@@ -13,7 +13,7 @@ export const Title = (props) => {
     };
 
     const handleChange = (event) => {
-        props.setTitle(event.target.value);
+        props.onUpdate(event.target.value);
     };
 
     return (
