@@ -1,0 +1,11 @@
+.delete-tripmate-button{
+    visibility: hidden;
+}
+
+/* .delete-tripmate-button:hover{
+    visibility: visible;
+} */
+
+.tripmate-input-container:hover > .delete-tripmate-button {
+    visibility: visible;
+}

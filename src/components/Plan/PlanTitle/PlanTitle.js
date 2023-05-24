@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { Card, CardContent, Typography, Input } from "@mui/material"
 
 export const PlanTitle = (props) => {
-	const [title, setTitle] = useState(props.title)
 	const [isEditable, setIsEditable] = useState(false)
 
 	const handleClick = () => {
@@ -14,7 +13,7 @@ export const PlanTitle = (props) => {
 		setIsEditable(false)
 	}
 	const onChange = (event) => {
-		setTitle(event.target.value)
+		props.onChange(event.target.value)
 	}
 
 	const onKeyPress = (event) => {
@@ -29,7 +28,7 @@ export const PlanTitle = (props) => {
 			<CardContent>
 				{isEditable ? (
 					<Input
-						value={title}
+						value={props.title}
 						onBlur={handleBlur}
 						onChange={onChange}
 						onKeyPress={onKeyPress}
@@ -37,7 +36,7 @@ export const PlanTitle = (props) => {
 					/>
 				) : (
 					<Typography variant={props.variant} onClick={handleClick}>
-						{title}
+						{props.title}
 					</Typography>
 				)}
 			</CardContent>

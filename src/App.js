@@ -1,9 +1,5 @@
 import "./App.css"
 
-// Import react functions
-import { useState, useEffect } from "react"
-
-// Import app components
 import { Plan } from "./components/Plan/Plan"
 import { Map } from "./components/Map/Map"
 

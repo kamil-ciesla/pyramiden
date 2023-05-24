@@ -1,20 +1,21 @@
 // Import react functions
 import { useState, useEffect } from "react"
 
+// Import custom hooks
+import { useInterval } from "../../useInterval"
+
 // Import MUI components
-import {
-	Input,
-	TextField,
-	Card,
-	Grid,
-	CardContent,
-	Typography
-} from "@mui/material"
+import { Card, Grid, CardContent, Typography } from "@mui/material"
 
 // Import app components
-import { PlanTitle } from "../PlanTitle/PlanTitle"
+import { PlanTitle } from "./PlanTitle/PlanTitle"
+import { Note } from "../Note/Note"
 import { Time } from "../Time/Time"
 import { Tripmates } from "../Tripmates/Tripmates"
+import { Budget } from "../Budget/Budget"
+
+// Import css
+import "./Plan.css"
 
 // Import API functions
 import * as firestore from "./firestorePlan"
@@ -22,47 +23,98 @@ import * as firestore from "./firestorePlan"
 // Import images
 import planBgImage from "../../plan-bg.jpg"
 
-const planBgImageStyle = {
-	backgroundImage: `url(${planBgImage})`,
-	backgroundRepeat: "no-repeat",
-	backgroundSize: "cover"
-}
+// Import othe libraries
+import _ from "lodash"
+
+// END of imports
+// --------------
 
 export const Plan = () => {
-	const [id, setId] = useState(null)
-	const [cost, setCost] = useState(0)
+	const [dbPlanData, setDbPlanData] = useState(null)
+	// ---------------
+	// Plan properties
+	const [planId, setPlanId] = useState(null)
+	const [title, setTitle] = useState("Enter title for your trip")
+	const [description, setDescription] = useState("")
+	const [budget, setBudget] = useState(0)
 	const [currency, setCurrency] = useState("USD")
+	const [tripNotes, setTripNotes] = useState("")
 
-	// const [tripmates, setTripmates] = useState(null)
+	// END of plan properties
+	// ----------------------
 
-	// constructor(userId, planId) {
-	//     this.userId = userId
-	//     this.id = planId
-	//     this.properties = {}
-	// }
+	const [cost, setCost] = useState(0)
 
-	// build(userId) {
-	//     const planId = await createPlan()
-	//     return new Plan(userId, planId)
-	// }
+	const DB_UPDATE_INTERVAL = 4000
 
-	// title = 'Trip to Sweden'
-	// cost = 4000
-	// currency = 'PLN'
+	const planBgImageStyle = {
+		backgroundImage: `url(${planBgImage})`,
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "cover"
+	}
+
 	function updateTitle(title) {
-		// firestore.updateTitle(id, title)
-		console.log("[FAKE] updating title in DB with value: " + title)
+		setTitle(title)
+	}
+
+	function updateDescription(description) {
+		setDescription(description)
+	}
+
+	function updateBudget(budget) {
+		setBudget(budget)
+	}
+
+	function updateTripNotes(value) {
+		setTripNotes(value)
 	}
 
 	useEffect(() => {
-		// fetchPlan()
+		fetchPlan()
 	}, [])
 
 	async function fetchPlan() {
-		const fakeUserId = "5234235"
-		const plan = await firestore.createPlan(fakeUserId)
-		setId(plan.id)
+		const testPlanId = "02INHxSf6L7auxCyVShB"
+		const plan = await firestore.getPlan(testPlanId)
+		updateLocalPlan(plan)
 	}
+	function updateLocalPlan(plan) {
+		setPlanId(plan.id)
+		const planData = plan.data()
+		setDbPlanData(planData)
+
+		setTitle(planData.title)
+		setDescription(planData.description)
+		setBudget(planData.budget)
+		setCurrency(planData.currency)
+
+		console.log(plan.data())
+	}
+
+	async function updateDbPlan() {
+		const planData = {
+			title: title,
+			description: description,
+			budget: budget,
+			currency: currency
+		}
+
+		if (planId) {
+			if (_.isEqual(planData, dbPlanData)) {
+				console.log("There were no changes to plan, updating stoppped")
+			} else {
+				console.log("Detected changes: updating plan in database...")
+				const updatedSucceeded = firestore.updatePlan(planId, planData)
+				if (updatedSucceeded) {
+					setDbPlanData(planData)
+				}
+			}
+		} else {
+			console.log("Plan Id is null, cannot update the plan!")
+		}
+	}
+
+	useInterval(updateDbPlan, DB_UPDATE_INTERVAL)
 
 	return (
 		<div className="Plan">
@@ -73,7 +125,7 @@ export const Plan = () => {
 				}}
 			>
 				<CardContent>
-					<Grid container spacing={2}>
+					<Grid className="plan-grid" container spacing={2}>
 						<Grid item lg={12}>
 							<div style={planBgImageStyle}>
 								<div
@@ -88,18 +140,18 @@ export const Plan = () => {
 								>
 									<PlanTitle
 										variant="h4"
-										title={"Enter title for your trip"}
+										title={title}
 										onChange={updateTitle}
 									/>
 								</div>
 							</div>
 						</Grid>
 						<Grid item lg={12}>
-							<TextField
-								id="standard-multiline-flexible"
-								label="Trip description"
-								multiline
-								rows={4}
+							<Note
+								label={"Trip description"}
+								value={description}
+								placeholder={"Briefly explain the goal of your trip"}
+								onChange={updateDescription}
 							/>
 						</Grid>
 						<Grid item lg={12}>
@@ -109,21 +161,22 @@ export const Plan = () => {
 							<Tripmates></Tripmates>
 						</Grid>
 						<Grid item lg={12}>
-							<Card className="plan-cost">
-								<CardContent>
-									<Input placeholder="set up a budget for your trip"></Input>
-									<Typography>
-										Calculated cost of your trip: {cost} {currency}
-									</Typography>
-								</CardContent>
-							</Card>
+							<Budget
+								placeholder={"set up a budget for your trip"}
+								budget={budget}
+								cost={cost}
+								currency={currency}
+								onChange={updateBudget}
+							/>
 						</Grid>
 						<Grid item lg={12}>
-							<TextField
-								id="standard-multiline-flexible"
-								label="Trip notes"
-								multiline
-								rows={4}
+							<Note
+								label={"Trip notes"}
+								value={tripNotes}
+								onChange={updateTripNotes}
+								placeholder={
+									"Put here some useful notes e.g. what to take for the trip"
+								}
 							/>
 						</Grid>
 						<Grid item lg={12}>
