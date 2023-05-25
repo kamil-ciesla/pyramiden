@@ -1,41 +1,29 @@
 import { LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-// import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
-
-// export const Time = () => {
-//     return (
-//         <LocalizationProvider dateAdapter={AdapterDayjs}>
-//             <DateRangePicker localeText={{ start: 'Start', end: 'End' }} />
-//         </LocalizationProvider>
-//     );
-// }
-
 import { TextField } from "@mui/material"
-
-import React, { useState } from "react"
 import { DesktopDatePicker } from "@mui/x-date-pickers"
 
-export function Time() {
-	const [startDate, setStartDate] = useState(null)
-	const [endDate, setEndDate] = useState(null)
+import { useState } from "react"
+import dayjs from "dayjs"
 
+export function Time(props) {
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
 			<DesktopDatePicker
 				label="Start Date"
-				inputFormat="MM/dd/yyyy"
-				value={startDate}
+				format="DD-MM-YYYY"
+				value={dayjs(props.startDate)}
 				onChange={(newValue) => {
-					setStartDate(newValue)
+					props.updateStartDate(newValue.toDate())
 				}}
 				renderInput={(params) => <TextField {...params} />}
 			/>
 			<DesktopDatePicker
 				label="End Date"
-				inputFormat="MM/dd/yyyy"
-				value={endDate}
+				format="DD-MM-YYYY"
+				value={dayjs(props.endDate)}
 				onChange={(newValue) => {
-					setEndDate(newValue)
+					props.updateEndDate(newValue.toDate())
 				}}
 				renderInput={(params) => <TextField {...params} />}
 			/>

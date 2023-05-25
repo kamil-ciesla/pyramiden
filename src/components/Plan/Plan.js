@@ -19,7 +19,7 @@ import "./Plan.css"
 
 // Import API functions
 import * as firestore from "./firestorePlan"
-
+import { db } from "../../db/db"
 // Import images
 import planBgImage from "../../plan-bg.jpg"
 
@@ -28,6 +28,12 @@ import _ from "lodash"
 
 // END of imports
 // --------------
+
+const planBgImageStyle = {
+	backgroundImage: `url(${planBgImage})`,
+	backgroundRepeat: "no-repeat",
+	backgroundSize: "cover"
+}
 
 export const Plan = () => {
 	const [dbPlanData, setDbPlanData] = useState(null)
@@ -39,6 +45,8 @@ export const Plan = () => {
 	const [budget, setBudget] = useState(0)
 	const [currency, setCurrency] = useState("USD")
 	const [tripNotes, setTripNotes] = useState("")
+	const [startDate, setStartDate] = useState(new Date())
+	const [endDate, setEndDate] = useState(new Date())
 
 	// END of plan properties
 	// ----------------------
@@ -46,28 +54,6 @@ export const Plan = () => {
 	const [cost, setCost] = useState(0)
 
 	const DB_UPDATE_INTERVAL = 4000
-
-	const planBgImageStyle = {
-		backgroundImage: `url(${planBgImage})`,
-		backgroundRepeat: "no-repeat",
-		backgroundSize: "cover"
-	}
-
-	function updateTitle(title) {
-		setTitle(title)
-	}
-
-	function updateDescription(description) {
-		setDescription(description)
-	}
-
-	function updateBudget(budget) {
-		setBudget(budget)
-	}
-
-	function updateTripNotes(value) {
-		setTripNotes(value)
-	}
 
 	useEffect(() => {
 		fetchPlan()
@@ -87,8 +73,12 @@ export const Plan = () => {
 		setDescription(planData.description)
 		setBudget(planData.budget)
 		setCurrency(planData.currency)
-
-		console.log(plan.data())
+		if (planData.startDate) {
+			setStartDate(planData.startDate.toDate())
+		}
+		if (planData.endDate) {
+			setEndDate(planData.endDate.toDate())
+		}
 	}
 
 	async function updateDbPlan() {
@@ -96,7 +86,9 @@ export const Plan = () => {
 			title: title,
 			description: description,
 			budget: budget,
-			currency: currency
+			currency: currency,
+			startDate: startDate,
+			endDate: endDate
 		}
 
 		if (planId) {
@@ -121,7 +113,7 @@ export const Plan = () => {
 			<Card
 				className="plan-card"
 				sx={{
-					height: "95vh"
+					minHeight: "95vh"
 				}}
 			>
 				<CardContent>
@@ -141,7 +133,7 @@ export const Plan = () => {
 									<PlanTitle
 										variant="h4"
 										title={title}
-										onChange={updateTitle}
+										onChange={(value) => setTitle(value)}
 									/>
 								</div>
 							</div>
@@ -151,14 +143,19 @@ export const Plan = () => {
 								label={"Trip description"}
 								value={description}
 								placeholder={"Briefly explain the goal of your trip"}
-								onChange={updateDescription}
+								onChange={(value) => setDescription(value)}
 							/>
 						</Grid>
 						<Grid item lg={12}>
-							<Time></Time>
+							<Time
+								startDate={startDate}
+								endDate={endDate}
+								updateStartDate={(value) => setStartDate(value)}
+								updateEndDate={(value) => setEndDate(value)}
+							/>
 						</Grid>
 						<Grid item lg={12}>
-							<Tripmates></Tripmates>
+							<Tripmates />
 						</Grid>
 						<Grid item lg={12}>
 							<Budget
@@ -166,14 +163,14 @@ export const Plan = () => {
 								budget={budget}
 								cost={cost}
 								currency={currency}
-								onChange={updateBudget}
+								onChange={(value) => setBudget(value)}
 							/>
 						</Grid>
 						<Grid item lg={12}>
 							<Note
 								label={"Trip notes"}
 								value={tripNotes}
-								onChange={updateTripNotes}
+								onChange={(value) => setTripNotes(value)}
 								placeholder={
 									"Put here some useful notes e.g. what to take for the trip"
 								}

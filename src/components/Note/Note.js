@@ -1,10 +1,6 @@
 import { Card, CardContent, TextField } from "@mui/material"
 
 export const Note = (props) => {
-	const onChange = (event) => {
-		props.onChange(event.target.value)
-	}
-
 	return (
 		<Card>
 			<CardContent>
@@ -16,7 +12,9 @@ export const Note = (props) => {
 					label={props.label}
 					multiline
 					rows={4}
-					onChange={onChange}
+					onChange={(event) => {
+						props.onChange(event.target.value)
+					}}
 					placeholder={props.placeholder}
 					value={props.value}
 				/>
