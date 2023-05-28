@@ -17,7 +17,17 @@ function successLog(message) {
 }
 
 export async function createPlan() {
-	const planReference = await addDoc(collection(db, "plans"), {})
+	const emptyPlan = {
+		title: "",
+		description: "",
+		budget: 0,
+		currency: "EUR",
+		startDate: null,
+		endDate: null,
+		tripmates: [],
+		tripNotes: "tripNotes"
+	}
+	const planReference = await addDoc(collection(db, "plans"), emptyPlan)
 	successLog("Plan has been created succesfully with id: " + planReference.id)
 	return planReference
 }

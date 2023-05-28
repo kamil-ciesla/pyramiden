@@ -3,7 +3,7 @@ import { Currency } from "../Currency/Currency"
 
 export const Budget = (props) => {
 	function onChange(event) {
-		props.onChange(event.target.value)
+		props.onBudgetChange(event.target.value)
 	}
 	return (
 		<Card className="Budget">
@@ -26,7 +26,12 @@ export const Budget = (props) => {
 						value={props.budget}
 						onChange={onChange}
 					/>
-					<Currency />
+					<Currency
+						currency={props.currency}
+						onChange={(value) => {
+							props.onCurrencyChange(value)
+						}}
+					/>
 				</Box>
 				<Typography>
 					Calculated cost of your trip: {props.cost} {props.currency}

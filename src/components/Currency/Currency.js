@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box"
 import TextField from "@mui/material/TextField"
 
-const currencies = [
+const CURRENCIES = [
 	{
 		value: "EUR",
 		label: "€"
@@ -56,7 +56,7 @@ const currencies = [
 	}
 ]
 
-export function Currency() {
+export function Currency(props) {
 	return (
 		<Box
 			component="form"
@@ -73,17 +73,24 @@ export function Currency() {
 					id="standard-select-currency-native"
 					select
 					// label="Native select"
-					defaultValue={currencies[0].value}
+					defaultValue={props.currency}
 					SelectProps={{
 						native: true
 					}}
+					onChange={(event) => props.onChange(event.target.value)}
 					// helperText="Please select your currency"
 				>
-					{currencies.map((option) => (
-						<option key={option.value} value={option.value}>
+					{/* <select defaultValue={props.currency}> */}
+					{CURRENCIES.map((option) => (
+						<option
+							key={option.value}
+							value={option.value}
+							selected={option.value == props.currency ? true : false}
+						>
 							{option.label}
 						</option>
 					))}
+					{/* </select> */}
 				</TextField>
 			</div>
 		</Box>

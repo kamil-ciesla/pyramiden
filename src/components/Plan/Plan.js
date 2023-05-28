@@ -43,7 +43,7 @@ export const Plan = () => {
 	const [title, setTitle] = useState("Enter title for your trip")
 	const [description, setDescription] = useState("")
 	const [budget, setBudget] = useState(0)
-	const [currency, setCurrency] = useState("USD")
+	const [currency, setCurrency] = useState(null)
 	const [tripNotes, setTripNotes] = useState("")
 	const [startDate, setStartDate] = useState(new Date())
 	const [endDate, setEndDate] = useState(new Date())
@@ -93,7 +93,8 @@ export const Plan = () => {
 			currency: currency,
 			startDate: startDate,
 			endDate: endDate,
-			tripmates: tripmates
+			tripmates: tripmates,
+			tripNotes: tripNotes
 		}
 
 		if (planId) {
@@ -173,7 +174,8 @@ export const Plan = () => {
 								budget={budget}
 								cost={cost}
 								currency={currency}
-								onChange={(value) => setBudget(value)}
+								onBudgetChange={(value) => setBudget(value)}
+								onCurrencyChange={(value) => setCurrency(value)}
 							/>
 						</Grid>
 						<Grid item lg={12}>
