@@ -5,32 +5,29 @@ import ClearIcon from "@mui/icons-material/Clear"
 
 import "./tripmates.css"
 
-export const Tripmates = () => {
-	const [inputs, setInputs] = useState(["Name Surname"])
-
-	const handleAddInput = () => {
-		const newInput = ""
-		setInputs([...inputs, newInput])
+export const Tripmates = (props) => {
+	const handleAddTripmate = () => {
+		const newTripmate = ""
+		props.onChange([...props.tripmates, newTripmate])
 	}
 
-	const handleDeleteInput = (index) => {
-		const newInputs = [...inputs]
-		newInputs.splice(index, 1)
-		setInputs(newInputs)
+	const handleDeleteTripmate = (index) => {
+		const newTripmates = [...props.tripmates]
+		newTripmates.splice(index, 1)
+		props.onChange(newTripmates)
 	}
 
 	const handleChange = (event, index) => {
-		const newInputs = [...inputs]
-		newInputs[index] = event.target.value
-		console.log(newInputs)
-		setInputs(newInputs)
+		const newTripmates = [...props.tripmates]
+		newTripmates[index] = event.target.value
+		props.onChange(newTripmates)
 	}
 
 	return (
 		<Card className="Tripmates">
 			<CardContent sx={{ display: "flex", flexDirection: "column" }}>
 				<Typography>Tripmates</Typography>
-				{inputs.map((input, index) => (
+				{props.tripmates.map((input, index) => (
 					<div className="tripmate-input-container">
 						<Input
 							key={index}
@@ -42,14 +39,18 @@ export const Tripmates = () => {
 							aria-label="delete"
 							size="large"
 							onClick={() => {
-								handleDeleteInput(index)
+								handleDeleteTripmate(index)
 							}}
 						>
 							<ClearIcon />
 						</IconButton>
 					</div>
 				))}
-				<IconButton aria-label="delete" size="large" onClick={handleAddInput}>
+				<IconButton
+					aria-label="delete"
+					size="large"
+					onClick={handleAddTripmate}
+				>
 					<AddBoxIcon color="primary" />
 				</IconButton>
 			</CardContent>

@@ -47,6 +47,7 @@ export const Plan = () => {
 	const [tripNotes, setTripNotes] = useState("")
 	const [startDate, setStartDate] = useState(new Date())
 	const [endDate, setEndDate] = useState(new Date())
+	const [tripmates, setTripmates] = useState([""])
 
 	// END of plan properties
 	// ----------------------
@@ -79,6 +80,9 @@ export const Plan = () => {
 		if (planData.endDate) {
 			setEndDate(planData.endDate.toDate())
 		}
+		if (planData.tripmates) {
+			setTripmates(planData.tripmates)
+		}
 	}
 
 	async function updateDbPlan() {
@@ -88,12 +92,15 @@ export const Plan = () => {
 			budget: budget,
 			currency: currency,
 			startDate: startDate,
-			endDate: endDate
+			endDate: endDate,
+			tripmates: tripmates
 		}
 
 		if (planId) {
 			if (_.isEqual(planData, dbPlanData)) {
-				console.log("There were no changes to plan, updating stoppped")
+				console.log(
+					"There were no changes to plan, No updates send to database"
+				)
 			} else {
 				console.log("Detected changes: updating plan in database...")
 				const updatedSucceeded = firestore.updatePlan(planId, planData)
@@ -155,7 +162,10 @@ export const Plan = () => {
 							/>
 						</Grid>
 						<Grid item lg={12}>
-							<Tripmates />
+							<Tripmates
+								tripmates={tripmates}
+								onChange={(value) => setTripmates(value)}
+							/>
 						</Grid>
 						<Grid item lg={12}>
 							<Budget
