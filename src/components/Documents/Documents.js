@@ -1,30 +1,68 @@
 import { useState } from "react"
 import { Fab } from "@mui/material"
-import { Input, Card, CardContent, Typography, IconButton } from "@mui/material"
+import {
+	Tooltip,
+	Avatar,
+	Card,
+	CardContent,
+	Typography,
+	Box
+} from "@mui/material"
 import DescriptionIcon from "@mui/icons-material/Description"
 import AddIcon from "@mui/icons-material/Add"
+
+import { uploadFile } from "../Plan/firestorePlan"
 
 export function Documents() {
 	const [files, setFiles] = useState([])
 
-	const handleFileUpload = (event) => {
+	const handleFileUpload = async (event) => {
 		const file = event.target.files[0]
 		setFiles([...files, file])
+		await uploadFile(file, file.name)
+	}
+
+	const handleFileDownload = (file) => {
+		const url = URL.createObjectURL(file)
+		const link = document.createElement("a")
+		link.href = url
+		link.download = file.name
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
 	}
 
 	return (
 		<>
 			<Typography variant="h5">Documents</Typography>
-			<div className="files">
+			<Box
+				className="files"
+				sx={{
+					display: "flex"
+				}}
+			>
 				{files.map((file) => (
-					<DescriptionIcon
-						key={file.name}
-						alt={file.name}
-						src={URL.createObjectURL(file)}
-						fontSize="large"
-					/>
+					<Box
+						className="file"
+						sx={{
+							width: "10rem"
+						}}
+					>
+						<Tooltip key={file.name} title={file.name}>
+							<Box className="file-container" style={{ cursor: "pointer" }}>
+								<DescriptionIcon
+									key={file.name}
+									alt={file.name}
+									src={URL.createObjectURL(file)}
+									fontSize="large"
+									onClick={() => handleFileDownload(file)}
+								/>
+								<Typography noWrap="false">{file.name}</Typography>
+							</Box>
+						</Tooltip>
+					</Box>
 				))}
-			</div>
+			</Box>
 			<label htmlFor="upload-photo">
 				<input
 					style={{ display: "none" }}

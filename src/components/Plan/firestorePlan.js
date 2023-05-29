@@ -1,4 +1,5 @@
 import { db } from "../../db/db"
+import { app } from "../../db/db"
 
 import {
 	collection,
@@ -11,6 +12,10 @@ import {
 	getDocs,
 	updateDoc
 } from "firebase/firestore"
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
+
+const storage = getStorage(app)
 
 function successLog(message) {
 	console.log(`%c${message}`, "color: green;")
@@ -42,9 +47,18 @@ export async function getPlan(planId) {
 export async function updatePlan(planId, newPlanData) {
 	console.log("given planId is " + planId)
 	const planRef = doc(db, "plans", planId)
-	const planDoc = await getDoc(planRef)
+	// const planDoc = await getDoc(planRef)
 	// const planDocData = planDoc.data()
 	await updateDoc(planRef, newPlanData)
 	successLog("Plan has been updated succesfully")
 	return true
+}
+
+// 'file' comes from the Blob or File API
+export async function uploadFile(file, fileName, planId) {
+	const filePath = planId + "/" + fileName
+	const fileRef = ref(storage, filePath)
+	await uploadBytes(fileRef, file).then((snapshot) => {
+		successLog("Uploaded file: " + fileName)
+	})
 }
