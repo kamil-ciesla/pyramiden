@@ -13,7 +13,7 @@ import { Note } from "../Note/Note"
 import { Time } from "../Time/Time"
 import { Tripmates } from "../Tripmates/Tripmates"
 import { Budget } from "../Budget/Budget"
-
+import { Documents } from "../Documents/Documents"
 // Import css
 import "./Plan.css"
 
@@ -83,6 +83,7 @@ export const Plan = () => {
 		if (planData.tripmates) {
 			setTripmates(planData.tripmates)
 		}
+		setTripNotes(planData.tripNotes)
 	}
 
 	async function updateDbPlan() {
@@ -182,7 +183,10 @@ export const Plan = () => {
 							<Note
 								label={"Trip notes"}
 								value={tripNotes}
-								onChange={(value) => setTripNotes(value)}
+								onChange={(value) => {
+									console.log(value)
+									setTripNotes(value)
+								}}
 								placeholder={
 									"Put here some useful notes e.g. what to take for the trip"
 								}
@@ -198,7 +202,9 @@ export const Plan = () => {
 						<Grid item lg={12}>
 							<Card className="documents">
 								<CardContent>
-									<Typography variant="h5">Documents</Typography>
+									<Typography variant="h5">
+										<Documents />
+									</Typography>
 								</CardContent>
 							</Card>
 						</Grid>

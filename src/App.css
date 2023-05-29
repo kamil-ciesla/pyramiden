@@ -5,11 +5,28 @@
   flex-direction: row;
 }
 
-.plan-container{
-  width:70vw;
+.left-container{
+  width:50vw;
   height: 100vh;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.plan-container{
   display: flex;
   flex-direction: column;
   padding:1rem;
   align-items: center ;
+}
+
+.right-container{
+  width:50vw;
+  height:100vh;
+}
+
+.map-container{
+  width:50vw;
+  height: 100vh;
+  background-color: green;
 }
