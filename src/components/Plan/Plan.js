@@ -36,10 +36,12 @@ const planBgImageStyle = {
 }
 
 export const Plan = () => {
+
 	const [dbPlanData, setDbPlanData] = useState(null)
 	// ---------------
 	// Plan properties
-	const [planId, setPlanId] = useState(null)
+	const TEST_PLAN_ID = "02INHxSf6L7auxCyVShB"
+	const [planId, setPlanId] = useState(TEST_PLAN_ID)
 	const [title, setTitle] = useState("Enter title for your trip")
 	const [description, setDescription] = useState("")
 	const [budget, setBudget] = useState(0)
@@ -61,13 +63,10 @@ export const Plan = () => {
 	}, [])
 
 	async function fetchPlan() {
-		const testPlanId = "02INHxSf6L7auxCyVShB"
-		const plan = await firestore.getPlan(testPlanId)
-		updateLocalPlan(plan)
+		const planData = await firestore.getPlan(planId)
+		updateLocalPlan(planData)
 	}
-	function updateLocalPlan(plan) {
-		setPlanId(plan.id)
-		const planData = plan.data()
+	function updateLocalPlan(planData) {
 		setDbPlanData(planData)
 
 		setTitle(planData.title)
@@ -203,7 +202,8 @@ export const Plan = () => {
 							<Card className="documents">
 								<CardContent>
 									<Typography variant="h5">
-										<Documents />
+										<Documents
+										planId={planId}/>
 									</Typography>
 								</CardContent>
 							</Card>

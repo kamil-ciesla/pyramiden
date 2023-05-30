@@ -13,13 +13,13 @@ import AddIcon from "@mui/icons-material/Add"
 
 import { uploadFile } from "../Plan/firestorePlan"
 
-export function Documents() {
+export function Documents(props) {
 	const [files, setFiles] = useState([])
 
 	const handleFileUpload = async (event) => {
 		const file = event.target.files[0]
 		setFiles([...files, file])
-		await uploadFile(file, file.name)
+		await uploadFile(props.planId, file)
 	}
 
 	const handleFileDownload = (file) => {
