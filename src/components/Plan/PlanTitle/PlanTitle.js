@@ -1,45 +1,56 @@
-import React, { useState } from "react"
-import { Card, CardContent, Typography, Input } from "@mui/material"
+import React, {useState, useEffect} from "react"
+import {Card, CardContent, Typography, Input} from "@mui/material"
 
 export const PlanTitle = (props) => {
-	const [isEditable, setIsEditable] = useState(false)
+    const [localTitle, setLocalTitle] = useState(props.title)
 
-	const handleClick = () => {
-		setIsEditable(true)
-	}
+    useEffect(() => {
+        setLocalTitle(props.title)
+    }, [props.title])
 
-	const handleBlur = (event) => {
-		props.onChange(event.target.value)
-		setIsEditable(false)
-	}
-	const onChange = (event) => {
-		props.onChange(event.target.value)
-	}
+    const [isEditable, setIsEditable] = useState(false)
 
-	const onKeyPress = (event) => {
-		if (event.key === "Enter") {
-			setIsEditable(false)
-			props.onChange(event.target.value)
-		}
-	}
+    const handleClick = () => {
+        setIsEditable(true)
+    }
 
-	return (
-		<Card>
-			<CardContent>
-				{isEditable ? (
-					<Input
-						value={props.title}
-						onBlur={handleBlur}
-						onChange={onChange}
-						onKeyPress={onKeyPress}
-						autoFocus
-					/>
-				) : (
-					<Typography variant={props.variant} onClick={handleClick}>
-						{props.title}
-					</Typography>
-				)}
-			</CardContent>
-		</Card>
-	)
+    const onChange = (title) => {
+        setLocalTitle(title)
+    }
+
+    function handleTitleChange() {
+        if (isTitleNotBlank(localTitle)) {
+            setIsEditable(false)
+            props.onChange(localTitle)
+        } else {
+            alert('Title cannot be blank');
+        }
+    }
+
+    function isTitleNotBlank(title) {
+        return !!title || !(title.trim() === "")
+    }
+
+    return (
+        <Card>
+            <CardContent>
+                {isEditable ? (
+                    <Input
+                        required
+                        value={localTitle}
+                        onBlur={handleTitleChange}
+                        onChange={event => onChange(event.target.value)}
+                        onKeyPress={event => {
+                            if (event.key === "Enter") handleTitleChange()
+                        }}
+                        autoFocus
+                    />
+                ) : (
+                    <Typography variant={props.variant} onClick={handleClick}>
+                        {localTitle}
+                    </Typography>
+                )}
+            </CardContent>
+        </Card>
+    )
 }

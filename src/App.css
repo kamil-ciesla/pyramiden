@@ -1,32 +1,32 @@
 
 .App {
-  text-align: center;
-  display: flex;
-  flex-direction: row;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
 }
 
-.left-container{
-  width:50vw;
-  height: 100vh;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
+.left-container {
+    width: 50vw;
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
 }
 
-.plan-container{
-  display: flex;
-  flex-direction: column;
-  padding:1rem;
-  align-items: center ;
+.plan-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    align-items: center;
 }
 
-.right-container{
-  width:50vw;
-  height:100vh;
+.right-container {
+    width: 50vw;
+    height: 100vh;
 }
 
-.map-container{
-  width:50vw;
-  height: 100vh;
-  background-color: green;
+.map-container {
+    width: 50vw;
+    height: 100vh;
+    background-color: green;
 }
