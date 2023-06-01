@@ -34,7 +34,7 @@ const planBgImageStyle = {
     backgroundSize: "cover"
 }
 
-export const Plan = () => {
+export const Plan = (props) => {
     const emptyPlanData = {
         title: "Enter title for your trip",
         description: " ",
@@ -155,7 +155,7 @@ export const Plan = () => {
                         />
                     </Grid>
                     <Grid item sm={12}>
-                        <Schedule/>
+                        <Schedule markers={props.markers}/>
                     </Grid>
                     <Grid item sm={12}>
                         <Timeframe

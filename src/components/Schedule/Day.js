@@ -2,6 +2,7 @@ import {DateTitle} from "../Time/Time";
 import {Card, CardContent} from "@mui/material";
 import {Name} from "../Name/Name"
 import {Cost} from "../Cost/Cost"
+import {Place} from "../Place/Place";
 export const Day = (props) => {
 
     return (
@@ -13,7 +14,7 @@ export const Day = (props) => {
                 <div className="cost">Cost</div>
                 <div className="cost">Note</div>
                 <div className="cost">Events</div>
-                <div className="cost">Places</div>
+                <Place markers={props.markers}/>
                 <div className="cost">Reservations</div>
             </CardContent>
         </Card>
