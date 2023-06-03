@@ -11,8 +11,9 @@ export const Map = (props) => {
 
     const handleMapClick = (event) => {
         const { latLng } = event;
-        setMarkers([...markers, { lat: latLng.lat(), lng: latLng.lng() }]);
-        props.onMapClick(event)
+        const newMarkers = [...markers, { lat: latLng.lat(), lng: latLng.lng() }]
+        setMarkers(newMarkers)
+        props.onMapClick(newMarkers)
     };
 
     return (

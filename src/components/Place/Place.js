@@ -1,12 +1,12 @@
 import {useEffect, useState} from "react";
 
 import React from 'react';
-import {Autocomplete, TextField, Typography} from "@mui/material";
+import {Autocomplete, ListItem, TextField, Typography, Button} from "@mui/material";
 
 export const Place = (props) => {
     const [location, setLocation] = useState(null)
     const [places, setPlaces] = React.useState([]);
-
+    const [isListeningForMarker, setIsListeningForMarker] = useState(false)
     const handleAddPlace = (place) => {
         setPlaces([...places, place]);
     };
@@ -16,25 +16,48 @@ export const Place = (props) => {
     };
 
     useEffect(()=>{
-        // setLocation(props.markers[0])
-        console.log('MARKERS in PLACE')
-        console.log(props.markers)
-        if(props.markers){
-            setLocation(props.markers[0])
+        if(props.markers && isListeningForMarker) {
+            console.log('DETECTED new LOCATION')
+            setLocation(props.markers.at(-1))
+            setIsListeningForMarker(false)
         }
 
     },[props.markers])
 
+    function locationString(location) {
+        if (location) {
+            location = formatLatLng(location)
+            return `lat: ${location.lat}, lng: ${location.lng}`
+        } else {
+            return 'Not defined'
+        }
+    }
+
+    function formatLatLng(location) {
+        const lat = location.lat.toFixed(2);
+        const lng = location.lng.toFixed(2);
+        return {lat, lng};
+    }
+
+    function listenForMarker() {
+        console.log('started listening')
+        setLocation(null)
+        setIsListeningForMarker(true)
+
+    }
+
     return (
-        <>
-            <Typography variant={"h5"}>Location:</Typography>
-            {location ? (
-                <Typography>
-                    {/*lat: {props.location.lat}, lng: {props.location.lng}*/}
-                    lat: {location.lat}, lng: {location.lng}
-                </Typography>
-            ) : null}
-        </>
+        <ListItem>
+            <TextField label="Place name"
+            />
+            <TextField label="Place name"
+                       value={locationString(location)}
+                       disabled
+            />
+            {/*<Typography>*/}
+            {/*</Typography>*/}
+            <Button onClick={listenForMarker}>Choose place</Button>
+        </ListItem>
         // <Autocomplete
         //     multiple
         //     id="tags-outlined"

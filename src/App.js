@@ -8,12 +8,9 @@ import {useState} from "react";
 function App() {
     const [markers, setMarkers] = useState([]);
 
-    const handleMapClick = (event) => {
-        const { latLng } = event;
-        setMarkers([...markers, { lat: latLng.lat(), lng: latLng.lng() }]);
-        console.log('MARKERS IN APP')
-        console.log(markers)
-    };
+    const handleMapClick = (markers) => {
+        setMarkers(markers)
+    }
 
     return (
         <div className="App">
