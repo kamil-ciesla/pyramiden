@@ -16,9 +16,7 @@ function App() {
         <div className="App">
             <div className="left-container">
                 <AppMenu/>
-                <div className="plan-container">
-                    <Plan markers={markers}/>
-                </div>
+                <Plan markers={markers}/>
             </div>
             <div className="right-container">
                 <div className="map-container">

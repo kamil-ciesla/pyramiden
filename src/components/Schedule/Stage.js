@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 
 import React from 'react';
-import {Autocomplete, ListItem, TextField, Typography, Button} from "@mui/material";
+import {Card, CardContent, TextField, Button} from "@mui/material";
 import {Note} from "../Note/Note";
-import {Cost} from "../Cost/Cost";
+import {Name} from "../Name/Name";
 
 export const Stage = (props) => {
     const [location, setLocation] = useState(null)
@@ -48,37 +48,22 @@ export const Stage = (props) => {
     }
 
     return (
-        <>
-            <TextField label="Place name"/>
-            <TextField label="Coordinates"
-                       value={locationString(location)}
-                       disabled
-            />
-            <Note label="Note"/>
-            <Button onClick={listenForMarker}>Choose place</Button>
-        </>
+            <Card sx={{width:"100%"}}>
+                <CardContent>
+                    <Button variant="contained" color="primary">
+                        <Name name={props.number}/>
+                    </Button>
+                    <Note label="Note"/>
 
-        // <Autocomplete
-        //     multiple
-        //     id="tags-outlined"
-        //     options={['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix']}
-        //     getOptionLabel={(option) => option}
-        //     filterSelectedOptions
-        //     renderInput={(params) => (
-        //         <TextField
-        //             {...params}
-        //             variant="outlined"
-        //             label="Places"
-        //             placeholder="Add a place"
-        //         />
-        //     )}
-        //     onChange={(event, value) => {
-        //         if (value.length > places.length) {
-        //             handleAddPlace(value[value.length - 1]);
-        //         } else {
-        //             handleRemovePlace(places.find((p) => !value.includes(p)));
-        //         }
-        //     }}
-        // />
+                    <TextField label="Place name"/>
+                    <TextField label="Coordinates"
+                               value={locationString(location)}
+                               disabled
+                    />
+                    <Button onClick={listenForMarker}>Choose place</Button>
+                </CardContent>
+            </Card>
+
+
     );
 }

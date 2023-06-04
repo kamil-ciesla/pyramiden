@@ -33,7 +33,7 @@ export function Timeframe(props) {
 
 export function Date(props) {
     const formattedDate = format(props.date, "EEEE, MMMM do");
-
+    console.log(props.date)
     return (
         <Typography variant={props.variant}>
             {formattedDate}

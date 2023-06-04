@@ -2,8 +2,6 @@ import {Card, CardContent, TextField} from "@mui/material"
 
 export const Note = (props) => {
     return (
-        <Card>
-            <CardContent>
                 <TextField
                     sx={{
                         width: "100%",
@@ -20,7 +18,5 @@ export const Note = (props) => {
                     value={props.value}
 
                 />
-            </CardContent>
-        </Card>
     )
 }

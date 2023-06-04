@@ -5,7 +5,7 @@ import {useState, useEffect} from "react"
 import {useInterval} from "../../useInterval"
 
 // Import MUI components
-import {Card, Grid, CardContent, Typography} from "@mui/material"
+import {Card, Grid, Box, CardContent, Typography} from "@mui/material"
 
 // Import app components
 import {PlanTitle} from "./PlanTitle/PlanTitle"
@@ -106,14 +106,10 @@ export const Plan = (props) => {
     useInterval(updateDbPlan, DB_UPDATE_INTERVAL)
 
     return (
-        <Card
-            className="plan-card"
-            sx={{
-                width: "100%",
-                minHeight: "95vh"
-            }}
-        >
-            <CardContent>
+        <Box sx={{
+            width: "100%",
+            minHeight: "95vh"
+        }}>
                 <Grid className="plan-grid" container spacing={2}>
                     <Grid item sm={12}>
                         <div style={planBgImageStyle}>
@@ -145,7 +141,7 @@ export const Plan = (props) => {
                     </Grid>
 
                     <Grid item sm={12}>
-                        <Schedule markers={props.markers}/>
+                        <Schedule markers={props.markers} timeframe={{startDate: startDate, endDate: endDate}}/>
                     </Grid>
                     <Grid item sm={6}>
                         <Tripmates
@@ -196,15 +192,6 @@ export const Plan = (props) => {
                         </Card>
                     </Grid>
                 </Grid>
-            </CardContent>
-        </Card>
+        </Box>
     )
-}
-
-function addDay(){
-
-}
-
-function addDayStage(){
-
 }

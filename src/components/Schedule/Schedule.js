@@ -1,15 +1,24 @@
-import {useState} from "react";
-import {Card, CardContent, Typography, List, ListItem, Box, Button} from "@mui/material";
+import {useEffect, useState} from "react";
+import {Card, CardContent, Typography, Stack, Item, Box} from "@mui/material";
 
 import {Day} from './Day'
-import {Stage} from "./Stage";
 
 export const Schedule = (props) => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
+    const [days, setDays] = useState([])
 
-    const [days, setDays] = useState([{name: 'Day one', date: today}, {name: 'Day two', date: tomorrow}])
+    function parseTimeframeToDays(timeframe) {
+        const days = [];
+        for (let date = new Date(timeframe.startDate); date <= timeframe.endDate; date.setDate(date.getDate() + 1)) {
+            days.push({
+                name: `Day ${parseInt(days.length)+1}`, date: new Date(date)
+            });
+        }
+        return days;
+    }
+
+    useEffect(() => {
+        setDays(parseTimeframeToDays(props.timeframe))
+    }, [props.timeframe])
 
     return (<Card>
         <CardContent>
@@ -17,14 +26,15 @@ export const Schedule = (props) => {
                 Trip schedule
             </Typography>
             <Box>
-                <List>
-                    {days.map((day, index) => (<ListItem key={index}>
+                <Stack>
+                    {days.map((day, index) => (
                         <Day
                             markers={props.markers}
-                            date={day.date} name={day.name}
+                            date={day.date}
+                            name={day.name}
                         />
-                    </ListItem>))}
-                </List>
+                    ))}
+                </Stack>
             </Box>
 
         </CardContent>
