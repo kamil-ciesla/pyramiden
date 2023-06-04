@@ -11,7 +11,20 @@ function errorLog(message) {
     console.log(`%c [ERROR] ${message}`, "color: red;")
 }
 
-export async function createPlan(emptyPlanData) {
+const emptyPlanData = {
+    coverPhotoPath: "",
+    title: "Enter title for your trip",
+    description: " ",
+    tripNotes: " ",
+    budget: 0,
+    currency: "EUR",
+    startDate: null,
+    endDate: null,
+    tripmates: [],
+    filePaths: [],
+}
+
+export async function createPlan() {
     await addDoc(collection(db, "plans"), emptyPlanData)
 }
 
@@ -59,3 +72,4 @@ async function addFileName(planId, fileName) {
 // async function removeFilePath(){
 
 // }
+

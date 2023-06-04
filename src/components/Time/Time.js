@@ -31,11 +31,11 @@ export function Timeframe(props) {
     )
 }
 
-export function DateTitle(props) {
+export function Date(props) {
     const formattedDate = format(props.date, "EEEE, MMMM do");
 
     return (
-        <Typography>
+        <Typography variant={props.variant}>
             {formattedDate}
         </Typography>
     )

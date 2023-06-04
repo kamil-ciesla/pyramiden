@@ -11,7 +11,7 @@ export const Note = (props) => {
                     }}
                     id="standard-multiline-flexible"
                     label={props.label}
-                    multiline
+                    multiline={props.multiline}
                     rows={4}
                     onChange={(event) => {
                         props.onChange(event.target.value)

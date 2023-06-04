@@ -1,29 +1,37 @@
-import {DateTitle} from "../Time/Time";
-import {Card, CardContent} from "@mui/material";
+import {Card, CardContent, List, ListItem, Box, Button} from "@mui/material";
+import {Date} from "../Time/Time";
 import {Name} from "../Name/Name"
-import {Cost} from "../Cost/Cost"
-import {Place} from "../Place/Place";
-
-import { List} from '@mui/material';
+import {Stage} from "./Stage";
+import {useState} from "react";
 
 export const Day = (props) => {
+    const [stages, setStages] = useState([])
 
+    function addStage(){
+        const stage = {
+            name:'stage',
+            note: ' ',
+            location: {lat:0,lng:0},
+            time: 'fake_timestamp',
+
+        }
+        setStages([...stages, stage]);
+    }
     return (
         <Card>
             <CardContent>
-                <DateTitle date={props.date}/>
-                <Name name={props.name}/>
-                <Cost/>
-                <div className="cost">Cost</div>
-                <div className="cost">Note</div>
-                <div className="cost">Events</div>
-
-                <List>
-                    <Place markers={props.markers}/>
-                    <Place markers={props.markers}/>
-                </List>
-
-                <div className="cost">Reservations</div>
+                <Date date={props.date} variant="h6"/>
+                <Name name={props.name} variant={"subtitle2"}/>
+                <Box>
+                    <List>
+                        {stages.map((stage, index) => (
+                            <ListItem key={index}>
+                                <Stage name={stage.name} markers={props.markers}/>
+                            </ListItem>
+                        ))}
+                    </List>
+                    <Button onClick={addStage}>Add stage</Button>
+                </Box>
             </CardContent>
         </Card>
 

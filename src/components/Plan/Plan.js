@@ -35,18 +35,6 @@ const planBgImageStyle = {
 }
 
 export const Plan = (props) => {
-    const emptyPlanData = {
-        title: "Enter title for your trip",
-        description: " ",
-        budget: 0,
-        currency: "EUR",
-        startDate: null,
-        endDate: null,
-        tripmates: [],
-        tripNotes: " ",
-        filePaths: []
-    }
-
     const [dbPlanData, setDbPlanData] = useState(null)
     // ---------------
     // Plan properties
@@ -61,6 +49,7 @@ export const Plan = (props) => {
     const [endDate, setEndDate] = useState(new Date())
     const [tripmates, setTripmates] = useState([""])
     const [files, setFiles] = useState([])
+    const [days, setDays] = useState([])
     // END of plan properties
     // ----------------------
 
@@ -147,23 +136,16 @@ export const Plan = (props) => {
                         </div>
                     </Grid>
                     <Grid item sm={12}>
-                        <Note
-                            label={"Trip description"}
-                            value={description}
-                            placeholder={"Briefly explain the goal of your trip"}
-                            onChange={(value) => setDescription(value)}
-                        />
-                    </Grid>
-                    <Grid item sm={12}>
-                        <Schedule markers={props.markers}/>
-                    </Grid>
-                    <Grid item sm={12}>
                         <Timeframe
                             startDate={startDate}
                             endDate={endDate}
                             updateStartDate={(value) => setStartDate(value)}
                             updateEndDate={(value) => setEndDate(value)}
                         />
+                    </Grid>
+
+                    <Grid item sm={12}>
+                        <Schedule markers={props.markers}/>
                     </Grid>
                     <Grid item sm={6}>
                         <Tripmates
@@ -186,6 +168,7 @@ export const Plan = (props) => {
                             label={"Trip notes"}
                             value={tripNotes}
                             onChange={(value) => setTripNotes(value)}
+                            multiline={true}
                             placeholder={
                                 "Put here some useful notes e.g. what to take for the trip"
                             }
@@ -193,13 +176,13 @@ export const Plan = (props) => {
                         />
                     </Grid>
 
-                    <Grid item sm={12}>
-                        <Card className="reservations">
-                            <CardContent>
-                                <Typography variant="h5">Reservations</Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                    {/*<Grid item sm={12}>*/}
+                    {/*    <Card className="reservations">*/}
+                    {/*        <CardContent>*/}
+                    {/*            <Typography variant="h5">Reservations</Typography>*/}
+                    {/*        </CardContent>*/}
+                    {/*    </Card>*/}
+                    {/*</Grid>*/}
                     <Grid item sm={12}>
                         <Card className="documents">
                             <CardContent>
@@ -212,9 +195,16 @@ export const Plan = (props) => {
                             </CardContent>
                         </Card>
                     </Grid>
-
                 </Grid>
             </CardContent>
         </Card>
     )
+}
+
+function addDay(){
+
+}
+
+function addDayStage(){
+
 }
