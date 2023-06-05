@@ -1,9 +1,8 @@
 import {useEffect, useState} from "react";
 
 import React from 'react';
-import {Card, CardContent, TextField, Button} from "@mui/material";
-import {Note} from "../Note/Note";
-import {Name} from "../Name/Name";
+import {InputAdornment, TextField} from "@mui/material";
+import RoomIcon from '@mui/icons-material/Room';
 
 export const Stage = (props) => {
     const [location, setLocation] = useState(null)
@@ -31,7 +30,7 @@ export const Stage = (props) => {
             location = formatLatLng(location)
             return `lat: ${location.lat}, lng: ${location.lng}`
         } else {
-            return 'Not defined'
+            return null
         }
     }
 
@@ -48,22 +47,32 @@ export const Stage = (props) => {
     }
 
     return (
-            <Card sx={{width:"100%"}}>
-                <CardContent>
-                    <Button variant="contained" color="primary">
-                        <Name name={props.number}/>
-                    </Button>
-                    <Note label="Note"/>
+        <>
+            {/*<Button variant="contained" color="primary">*/}
+            {/*    <Name name={props.number}/>*/}
+            {/*</Button>*/}
+            <TextField
+                sx={{
+                    width: "100%",
+                    // minHeight: props?.textMinHeight
+                }}
+                fullWidth
 
-                    <TextField label="Place name"/>
-                    <TextField label="Coordinates"
-                               value={locationString(location)}
-                               disabled
-                    />
-                    <Button onClick={listenForMarker}>Choose place</Button>
-                </CardContent>
-            </Card>
-
-
+                placeholder={'Add a place'}
+                value={locationString(location)}
+                onClick={listenForMarker}
+                InputProps={{
+                    startAdornment: (
+                        <InputAdornment position="start">
+                            <RoomIcon/>
+                        </InputAdornment>
+                    ),
+                }}
+                // onChange={(event) => {
+                //     props.onChange(event.target.value)
+                // }}
+                // value={props.value}
+            />
+        </>
     );
 }

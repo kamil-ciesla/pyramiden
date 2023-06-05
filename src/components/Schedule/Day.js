@@ -1,11 +1,15 @@
-import {Card, CardContent, List, ListItem, Box, Button} from "@mui/material";
-import {Date} from "../Time/Time";
-import {Name} from "../Name/Name"
+import {Card, CardContent, List, ListItem, Box, Button, CardHeader, Input, TextField, Divider} from "@mui/material";
 import {Stage} from "./Stage";
 import {useState} from "react";
+import {format} from "date-fns";
 
 export const Day = (props) => {
-    const [stages, setStages] = useState([])
+    const [stages, setStages] = useState([
+        {
+            name: 'stage', note: ' ', location: {lat: 0, lng: 0}, time: 'fake_timestamp',
+        }
+    ])
+    const formattedDate = format(props.date, "EEEE, MMMM do")
 
     function addStage() {
         const stage = {
@@ -14,16 +18,33 @@ export const Day = (props) => {
         setStages([...stages, stage]);
     }
 
-    return (
-        <Card sx={{width: "100%"}}>
+    return (<Card sx={{width: "100%"}}>
+            <CardHeader
+                title={formattedDate}
+                titleTypographyProps={{
+                    align: 'left',
+                }}
+                subheader={<Input
+                    defaultValue={props.name}
+                    inputProps={{'aria-label': 'description'}}
+                    size="small"
+
+                />}
+                subheaderTypographyProps={{
+                    align: 'left', padding: '0', margin: '0'
+                }}
+            />
             <CardContent>
-                <Date date={props.date} variant="h6"/>
-                <Name name={props.name} variant={"subtitle2"}/>
                 <Box>
                     <List>
-                        {stages.map((stage, index) => (<ListItem key={index}>
-                            <Stage number={index} name={stage.name} markers={props.markers}/>
-                        </ListItem>))}
+                        {stages.map((stage, index) => (
+                            <>
+                                <ListItem key={index}>
+                                    <Stage number={index} name={stage.name} markers={props.markers}/>
+                                </ListItem>
+                                <Divider light/>
+                            </>
+                        ))}
                     </List>
                     <Button onClick={addStage}>Add stage</Button>
                 </Box>

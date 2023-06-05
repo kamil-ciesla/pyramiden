@@ -104,8 +104,8 @@ export const Plan = (props) => {
     return (
         <Box sx={{
             width: "100%",
-            minHeight: "95vh"
-        }}>
+            minHeight: "95vh",
+            }}>
             <Grid className="plan-grid" container spacing={2}>
                 <Grid item sm={12}>
                     <div
@@ -120,7 +120,6 @@ export const Plan = (props) => {
                     >
                         <Card sx={{
                             width:"50%",
-
                         }}>
                             <CardContent>
                                 <Grid container>
@@ -143,7 +142,18 @@ export const Plan = (props) => {
                         </Card>
                     </div>
                 </Grid>
-
+                <Grid item sm={12}>
+                    <Note
+                        label={"Trip notes"}
+                        value={tripNotes}
+                        onChange={(value) => setTripNotes(value)}
+                        multiline={true}
+                        placeholder={
+                            "Put here some useful notes e.g. what to take for the trip"
+                        }
+                        textMinHeight={'30vh'}
+                    />
+                </Grid>
                 <Grid item sm={12}>
                     <Schedule markers={props.markers} timeframe={{startDate: startDate, endDate: endDate}}/>
                 </Grid>
@@ -161,18 +171,6 @@ export const Plan = (props) => {
                         currency={currency}
                         onBudgetChange={(value) => setBudget(value)}
                         onCurrencyChange={(value) => setCurrency(value)}
-                    />
-                </Grid>
-                <Grid item sm={12}>
-                    <Note
-                        label={"Trip notes"}
-                        value={tripNotes}
-                        onChange={(value) => setTripNotes(value)}
-                        multiline={true}
-                        placeholder={
-                            "Put here some useful notes e.g. what to take for the trip"
-                        }
-                        textMinHeight={'30vh'}
                     />
                 </Grid>
 

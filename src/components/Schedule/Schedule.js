@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Card, CardContent, Typography, Stack, Item, Box} from "@mui/material";
+import {Card, CardContent, Typography, Stack, Box, CardHeader} from "@mui/material";
 
 import {Day} from './Day'
 
@@ -29,19 +29,27 @@ export const Schedule = (props) => {
         setDays(parseTimeframeToDays(props.timeframe))
     }, [props.timeframe])
 
-    return (<Card>
+    return (<Card
+    sx={{
+        border: "2px solid red"
+    }}
+    >
         <CardContent>
-            <Typography variant={'h5'}>
-                Trip schedule
-            </Typography>
+            <CardHeader
+            title={"Trip schedule"}
+            titleTypographyProps={{
+                align:'left',
+                variant:'h4'
+            }}
+            />
             <Box>
-                <Stack>
+                <Stack spacing={2}>
                     {days.map((day, index) => (
-                        <Day
-                            markers={props.markers}
-                            date={day.date}
-                            name={day.name}
-                        />
+                            <Day
+                                markers={props.markers}
+                                date={day.date}
+                                name={day.name}
+                            />
                     ))}
                 </Stack>
             </Box>
