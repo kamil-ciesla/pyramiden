@@ -5,15 +5,24 @@ import {Day} from './Day'
 
 export const Schedule = (props) => {
     const [days, setDays] = useState([])
-
     function parseTimeframeToDays(timeframe) {
         const days = [];
-        for (let date = new Date(timeframe.startDate); date <= timeframe.endDate; date.setDate(date.getDate() + 1)) {
+        let date = new Date(timeframe.startDate)
+
+        for(let i=0;i<=getNumberOfDays(timeframe);i++){
             days.push({
                 name: `Day ${parseInt(days.length)+1}`, date: new Date(date)
             });
+            date.setDate(date.getDate() + 1)
         }
         return days;
+    }
+
+    function getNumberOfDays(timeframe) {
+        const oneDay = 1000 * 60 * 60 * 24;
+        const diffInTime = timeframe.endDate.getTime() - timeframe.startDate.getTime();
+        const diffInDays = Math.round(diffInTime / oneDay);
+        return diffInDays;
     }
 
     useEffect(() => {

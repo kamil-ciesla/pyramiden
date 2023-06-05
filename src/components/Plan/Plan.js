@@ -5,10 +5,10 @@ import {useState, useEffect} from "react"
 import {useInterval} from "../../useInterval"
 
 // Import MUI components
-import {Card, Grid, Box, CardContent, Typography} from "@mui/material"
+import {Card, Grid, Box, CardContent, Typography, CardMedia} from "@mui/material"
 
 // Import app components
-import {PlanTitle} from "./PlanTitle/PlanTitle"
+import {PlanTitle} from "../PlanTitle/PlanTitle"
 import {Note} from "../Note/Note"
 import {Timeframe} from "../Time/Time"
 import {Tripmates} from "../Tripmates/Tripmates"
@@ -27,12 +27,6 @@ import {Schedule} from "../Schedule/Schedule";
 
 // END of imports
 // --------------
-
-const planBgImageStyle = {
-    backgroundImage: `url(${planBgImage})`,
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "cover"
-}
 
 export const Plan = (props) => {
     const [dbPlanData, setDbPlanData] = useState(null)
@@ -92,9 +86,11 @@ export const Plan = (props) => {
         setCurrency(planData.currency)
         if (planData.startDate) {
             setStartDate(planData.startDate.toDate())
+            console.log('setting START date')
         }
         if (planData.endDate) {
             setEndDate(planData.endDate.toDate())
+            console.log('setting END date')
         }
         if (planData.tripmates) {
             setTripmates(planData.tripmates)
@@ -110,88 +106,96 @@ export const Plan = (props) => {
             width: "100%",
             minHeight: "95vh"
         }}>
-                <Grid className="plan-grid" container spacing={2}>
-                    <Grid item sm={12}>
-                        <div style={planBgImageStyle}>
-                            <div
-                                className="plan-title-container"
-                                style={{
-                                    height: "10rem",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}
-                            >
-                                <PlanTitle
-                                    variant="h4"
-                                    title={title}
-                                    onChange={(value) => setTitle(value)}
-                                />
-                            </div>
-                        </div>
-                    </Grid>
-                    <Grid item sm={12}>
-                        <Timeframe
-                            startDate={startDate}
-                            endDate={endDate}
-                            updateStartDate={(value) => setStartDate(value)}
-                            updateEndDate={(value) => setEndDate(value)}
-                        />
-                    </Grid>
+            <Grid className="plan-grid" container spacing={2}>
+                <Grid item sm={12}>
+                    <div
+                        style={{
+                            backgroundImage: `url(${planBgImage})`,
+                            backgroundSize: "cover",
+                            display:"flex",
+                            justifyContent:"center",
+                            alignItems:"center",
+                            padding:"2rem"
+                        }}
+                    >
+                        <Card sx={{
+                            width:"50%",
 
-                    <Grid item sm={12}>
-                        <Schedule markers={props.markers} timeframe={{startDate: startDate, endDate: endDate}}/>
-                    </Grid>
-                    <Grid item sm={6}>
-                        <Tripmates
-                            tripmates={tripmates}
-                            onChange={(value) => setTripmates(value)}
-                        />
-                    </Grid>
-                    <Grid item sm={6}>
-                        <Budget
-                            placeholder={"set up a budget for your trip"}
-                            budget={budget}
-                            cost={cost}
-                            currency={currency}
-                            onBudgetChange={(value) => setBudget(value)}
-                            onCurrencyChange={(value) => setCurrency(value)}
-                        />
-                    </Grid>
-                    <Grid item sm={12}>
-                        <Note
-                            label={"Trip notes"}
-                            value={tripNotes}
-                            onChange={(value) => setTripNotes(value)}
-                            multiline={true}
-                            placeholder={
-                                "Put here some useful notes e.g. what to take for the trip"
-                            }
-                            textMinHeight={'30vh'}
-                        />
-                    </Grid>
-
-                    {/*<Grid item sm={12}>*/}
-                    {/*    <Card className="reservations">*/}
-                    {/*        <CardContent>*/}
-                    {/*            <Typography variant="h5">Reservations</Typography>*/}
-                    {/*        </CardContent>*/}
-                    {/*    </Card>*/}
-                    {/*</Grid>*/}
-                    <Grid item sm={12}>
-                        <Card className="documents">
+                        }}>
                             <CardContent>
-                                <Typography variant="h5">
-                                    <Documents
-                                        planId={planId}
-                                        files={files}
-                                    />
-                                </Typography>
+                                <Grid container>
+                                    <Grid item sm={12}>
+                                        <PlanTitle
+                                            variant="h4"
+                                            title={title}
+                                            onChange={(value) => setTitle(value)}
+                                        />
+                                    </Grid>
+                                    <Grid item sm={12}>
+                                        <Timeframe
+                                            timeframe={{startDate: startDate, endDate: endDate}}
+                                            updateStartDate={(value) => setStartDate(value)}
+                                            updateEndDate={(value) => setEndDate(value)}
+                                        />
+                                    </Grid>
+                                </Grid>
                             </CardContent>
                         </Card>
-                    </Grid>
+                    </div>
                 </Grid>
+
+                <Grid item sm={12}>
+                    <Schedule markers={props.markers} timeframe={{startDate: startDate, endDate: endDate}}/>
+                </Grid>
+                <Grid item sm={6}>
+                    <Tripmates
+                        tripmates={tripmates}
+                        onChange={(value) => setTripmates(value)}
+                    />
+                </Grid>
+                <Grid item sm={6}>
+                    <Budget
+                        placeholder={"set up a budget for your trip"}
+                        budget={budget}
+                        cost={cost}
+                        currency={currency}
+                        onBudgetChange={(value) => setBudget(value)}
+                        onCurrencyChange={(value) => setCurrency(value)}
+                    />
+                </Grid>
+                <Grid item sm={12}>
+                    <Note
+                        label={"Trip notes"}
+                        value={tripNotes}
+                        onChange={(value) => setTripNotes(value)}
+                        multiline={true}
+                        placeholder={
+                            "Put here some useful notes e.g. what to take for the trip"
+                        }
+                        textMinHeight={'30vh'}
+                    />
+                </Grid>
+
+                {/*<Grid item sm={12}>*/}
+                {/*    <Card className="reservations">*/}
+                {/*        <CardContent>*/}
+                {/*            <Typography variant="h5">Reservations</Typography>*/}
+                {/*        </CardContent>*/}
+                {/*    </Card>*/}
+                {/*</Grid>*/}
+                <Grid item sm={12}>
+                    <Card className="documents">
+                        <CardContent>
+                            <Typography variant="h5">
+                                <Documents
+                                    planId={planId}
+                                    files={files}
+                                />
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+            </Grid>
         </Box>
     )
 }

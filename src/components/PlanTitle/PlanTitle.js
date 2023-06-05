@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react"
-import {Card, CardContent, Typography, Input} from "@mui/material"
+import {Card, CardContent, Typography, Input, Button} from "@mui/material"
 
 export const PlanTitle = (props) => {
     const [localTitle, setLocalTitle] = useState(props.title)
@@ -32,9 +32,9 @@ export const PlanTitle = (props) => {
     }
 
     return (
-        <Card>
-            <CardContent>
-                {isEditable ? (
+        <>
+            {isEditable ? (
+                <>
                     <Input
                         required
                         value={localTitle}
@@ -45,12 +45,13 @@ export const PlanTitle = (props) => {
                         }}
                         autoFocus
                     />
-                ) : (
-                    <Typography variant={props.variant} onClick={handleClick}>
-                        {localTitle}
-                    </Typography>
-                )}
-            </CardContent>
-        </Card>
+                   
+                </>
+            ) : (
+                <Typography variant={props.variant} onClick={handleClick}>
+                    {localTitle}
+                </Typography>
+            )}
+        </>
     )
 }
