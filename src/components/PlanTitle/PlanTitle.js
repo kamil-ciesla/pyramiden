@@ -2,10 +2,10 @@ import React, {useState, useEffect} from "react"
 import {Card, CardContent, Typography, Input, Button} from "@mui/material"
 
 export const PlanTitle = (props) => {
-    const [localTitle, setLocalTitle] = useState(props.title)
+    const [title, setTitle] = useState(props.title)
 
     useEffect(() => {
-        setLocalTitle(props.title)
+        setTitle(props.title)
     }, [props.title])
 
     const [isEditable, setIsEditable] = useState(false)
@@ -15,13 +15,18 @@ export const PlanTitle = (props) => {
     }
 
     const onChange = (title) => {
-        setLocalTitle(title)
+        setTitle(title)
     }
 
     function handleTitleChange() {
-        if (isTitleNotBlank(localTitle)) {
+        if (isTitleNotBlank(title)) {
             setIsEditable(false)
-            props.onChange(localTitle)
+            props.onChange({
+                target:{
+                    name:'title',
+                    value:title
+                }
+            })
         } else {
             alert('Title cannot be blank');
         }
@@ -37,7 +42,7 @@ export const PlanTitle = (props) => {
                 <>
                     <Input
                         required
-                        value={localTitle}
+                        value={title}
                         onBlur={handleTitleChange}
                         onChange={event => onChange(event.target.value)}
                         onKeyPress={event => {
@@ -49,7 +54,7 @@ export const PlanTitle = (props) => {
                 </>
             ) : (
                 <Typography variant={props.variant} onClick={handleClick}>
-                    {localTitle}
+                    {title}
                 </Typography>
             )}
         </>

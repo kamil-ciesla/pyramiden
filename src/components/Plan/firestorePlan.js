@@ -18,8 +18,11 @@ const emptyPlanData = {
     tripNotes: " ",
     budget: 0,
     currency: "EUR",
-    startDate: null,
-    endDate: null,
+    timeframe:{
+        startDate: new Date(),
+        endDate: new Date()
+    },
+    days:[],
     tripmates: [],
     filePaths: [],
 }
@@ -47,6 +50,7 @@ export async function uploadFile(planId, file) {
     const isFilePathAdded = await addFileName(planId, file.name)
     if (isFilePathAdded) {
         await uploadBytes(fileRef, file)
+        console.log('FILE UPLOADED')
         return true
     } else return false
 }
@@ -55,13 +59,13 @@ async function addFileName(planId, fileName) {
     const planData = await getPlan(planId)
     const filePaths = planData.filePaths
     try {
-        if (!planData.filePaths.includes(fileName)) {
+        if (planData.filePaths.includes(fileName)) {
+            throw new Error('File with this name has been already uploaded')
+        } else {
             filePaths.push(fileName)
             planData.filePaths = filePaths
             await updatePlan(planId, planData)
             return true
-        } else {
-            throw new Error('File with this name has been already uploaded')
         }
     } catch (error) {
         errorLog(error.message)

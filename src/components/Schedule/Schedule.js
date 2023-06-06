@@ -5,15 +5,41 @@ import {Day} from './Day'
 
 export const Schedule = (props) => {
     const [days, setDays] = useState([])
+
+    function handleDayChange(day, index){
+        const newDays = [...days]
+        newDays[index] = day
+        setDays(newDays)
+    }
+    useEffect(() => {
+        const days = parseTimeframeToDays(props.timeframe)
+        setDays(days)
+        props.onChange({
+                target:{
+                    name: 'days',
+                    value: days
+                }
+            })
+    }, [props.timeframe])
+
+    useEffect(()=>{
+        props.onChange({
+            target:{
+                name: 'days',
+                value: days
+            }
+        })
+    },[days])
     function parseTimeframeToDays(timeframe) {
         const days = [];
-        let date = new Date(timeframe.startDate)
+        let dayDate = new Date(timeframe.startDate)
 
-        for(let i=0;i<=getNumberOfDays(timeframe);i++){
+        for (let i = 0; i <= getNumberOfDays(timeframe); i++) {
             days.push({
-                name: `Day ${parseInt(days.length)+1}`, date: new Date(date)
+                name: `Day ${parseInt(days.length) + 1}`,
+                date: new Date(dayDate)
             });
-            date.setDate(date.getDate() + 1)
+            dayDate.setDate(dayDate.getDate() + 1)
         }
         return days;
     }
@@ -25,31 +51,23 @@ export const Schedule = (props) => {
         return diffInDays;
     }
 
-    useEffect(() => {
-        setDays(parseTimeframeToDays(props.timeframe))
-    }, [props.timeframe])
-
-    return (<Card
-    sx={{
-        border: "2px solid red"
-    }}
-    >
+    return (<Card>
         <CardContent>
             <CardHeader
-            title={"Trip schedule"}
-            titleTypographyProps={{
-                align:'left',
-                variant:'h4'
-            }}
+                title={"Trip schedule"}
+                titleTypographyProps={{
+                    align: 'left',
+                    variant: 'h4'
+                }}
             />
             <Box>
                 <Stack spacing={2}>
                     {days.map((day, index) => (
-                            <Day
-                                markers={props.markers}
-                                date={day.date}
-                                name={day.name}
-                            />
+                        <Day
+                            markers={props.markers}
+                            day={day}
+                            onChange={(day)=>handleDayChange(day, index)}
+                        />
                     ))}
                 </Stack>
             </Box>

@@ -17,8 +17,10 @@ export function Documents(props) {
 
     const handleFileUpload = async (event) => {
         const file = event.target.files[0]
-        const isFileUploaded = await uploadFile(props.planId, file)
-        if (isFileUploaded) setFiles([...files, file])
+        const isFileUploaded =  await uploadFile(props.planId, file)
+        if(isFileUploaded){
+            setFiles([...files, file])
+        }
     }
 
     const handleFileDownload = (file) => {
@@ -36,6 +38,7 @@ export function Documents(props) {
             const storage = getStorage();
             const storageRef = ref(storage, props.planId);
             const res = await listAll(storageRef);
+
             const files = [];
             for (const itemRef of res.items) {
                 const url = await getDownloadURL(itemRef);

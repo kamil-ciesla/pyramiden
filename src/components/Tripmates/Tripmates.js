@@ -1,4 +1,4 @@
-import React, {useState} from "react"
+import React, {useEffect, useState} from "react"
 import {Input, Card, CardContent, Typography, IconButton} from "@mui/material"
 import AddBoxIcon from "@mui/icons-material/AddBox"
 import ClearIcon from "@mui/icons-material/Clear"
@@ -6,22 +6,33 @@ import ClearIcon from "@mui/icons-material/Clear"
 import "./tripmates.css"
 
 export const Tripmates = (props) => {
+    const [tripmates, setTripmates] = useState(props.tripmates)
     const handleAddTripmate = () => {
         const newTripmate = ""
-        props.onChange([...props.tripmates, newTripmate])
+        setTripmates([...tripmates, newTripmate])
     }
 
     const handleDeleteTripmate = (index) => {
         const newTripmates = [...props.tripmates]
         newTripmates.splice(index, 1)
-        props.onChange(newTripmates)
+        setTripmates(newTripmates)
     }
 
     const handleChange = (event, index) => {
         const newTripmates = [...props.tripmates]
         newTripmates[index] = event.target.value
-        props.onChange(newTripmates)
+        setTripmates(newTripmates)
     }
+
+    useEffect(()=>{
+        props.onChange(
+            {target:{
+                    name:'tripmates',
+                    value: tripmates
+                }
+            }
+        )
+    },[tripmates])
 
     return (
         <Card className="Tripmates">

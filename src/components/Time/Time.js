@@ -3,14 +3,16 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs"
 import {Button, Grid, TextField, Typography} from "@mui/material"
 import dayjs from "dayjs"
 import {format} from 'date-fns';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
+import { Timestamp } from 'firebase/firestore';
 
 export function Timeframe(props) {
-    const [localStartDate, setLocalStartDate] = useState(props.timeframe.startDate)
-    const [localEndDate, setLocalEndDate] = useState(props.timeframe.endDate)
+    const [timeframe, setTimeframe] = useState(props.timeframe)
 
     const [isEditable, setIsEditable] = useState(false)
-    function stringifyTimeframe(timeframe){
+
+    function stringifyTimeframe(timeframe) {
+
         const startDay = timeframe.startDate.getDate();
         const startMonth = timeframe.startDate.getMonth() + 1;
         const endDay = timeframe.endDate.getDate();
@@ -21,63 +23,63 @@ export function Timeframe(props) {
 
     return (
         <>
-        {isEditable ? (
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <Grid container spacing={4}>
-                        <Grid item sm={6}>
-                            <DesktopDatePicker
-                                label="Start Date"
-                                format="DD-MM-YYYY"
-                                value={dayjs(props.timeframe.startDate)}
-                                onChange={(newStartDate) => {
-                                    setLocalStartDate(newStartDate.toDate())
-                                }}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </Grid>
-                        <Grid item sm={6}>
-                            <DesktopDatePicker
-                                label="End Date"
-                                format="DD-MM-YYYY"
-                                value={dayjs(props.timeframe.endDate)}
-                                onChange={(newEndDate) => {
-                                    setLocalEndDate(newEndDate.toDate())
-                                }}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </Grid>
-                        <Grid item sm={12}>
-                            <Button variant="contained"
-                                    onClick={()=>{
-                                        props.updateStartDate(localStartDate)
-                                        props.updateEndDate(localEndDate)
-                                        setIsEditable(false)
+            {isEditable ? (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <Grid container spacing={4}>
+                            <Grid item sm={6}>
+                                <DesktopDatePicker
+                                    name='startDate'
+                                    label="Start Date"
+                                    format="DD-MM-YYYY"
+                                    value={dayjs(timeframe.startDate)}
+                                    onChange={(newStartDate) => {
+                                        setTimeframe({...timeframe, startDate: newStartDate.toDate()})
                                     }}
-                            >
-                                Confirm dates
-                            </Button>
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Grid>
+                            <Grid item sm={6}>
+                                <DesktopDatePicker
+                                    name='endDate'
+                                    label="End Date"
+                                    format="DD-MM-YYYY"
+                                    value={dayjs(timeframe.endDate)}
+                                    onChange={(newEndDate) => {
+                                        setTimeframe({...timeframe, endDate: newEndDate.toDate()})
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Grid>
+                            <Grid item sm={12}>
+                                <Button variant="contained"
+                                        onClick={() => {
+                                            props.onChange(
+                                                {
+                                                    target: {
+                                                        name: 'timeframe',
+                                                        value: timeframe
+                                                    }
+                                                }
+                                            )
+                                            setIsEditable(false)
+                                        }}
+                                >
+                                    Confirm dates
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </LocalizationProvider>
+                    </LocalizationProvider>
 
-            )
-            :
-            (
-                <Button>
-                    <Typography variant={props.variant}
-                                onClick={()=>setIsEditable(true)}
-                    >
-                        {stringifyTimeframe(props.timeframe)}
-                    </Typography>
-                </Button>
-            )}
-    </>)
-}
-
-export function Date(props) {
-    const formattedDate = format(props.date, "EEEE, MMMM do");
-
-    return (<Typography variant={props.variant}>
-        {formattedDate}
-    </Typography>)
+                )
+                :
+                (
+                    <Button>
+                        <Typography variant={props.variant}
+                                    onClick={() => setIsEditable(true)}
+                        >
+                            {stringifyTimeframe(timeframe)}
+                        </Typography>
+                    </Button>
+                )}
+        </>)
 }

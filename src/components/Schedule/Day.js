@@ -2,20 +2,28 @@ import {Card, CardContent, List, ListItem, Box, Button, CardHeader, Input, TextF
 import {Stage} from "./Stage";
 import {useState} from "react";
 import {format} from "date-fns";
+import {Place} from "../Place/Place";
 
 export const Day = (props) => {
+    const [day, setDay] = useState(props.day)
     const [stages, setStages] = useState([
         {
             name: 'stage', note: ' ', location: {lat: 0, lng: 0}, time: 'fake_timestamp',
         }
     ])
-    const formattedDate = format(props.date, "EEEE, MMMM do")
+
+    const formattedDate = format(day.date, "EEEE, MMMM do")
 
     function addStage() {
         const stage = {
             name: 'stage', note: ' ', location: {lat: 0, lng: 0}, time: 'fake_timestamp',
         }
         setStages([...stages, stage]);
+    }
+
+    const handleChange = (e) => {
+        setPlan({...plan, [e.target.name]: e.target.value})
+        props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
     }
 
     return (<Card sx={{width: "100%"}}>
@@ -25,7 +33,7 @@ export const Day = (props) => {
                     align: 'left',
                 }}
                 subheader={<Input
-                    defaultValue={props.name}
+                    defaultValue={day.name}
                     inputProps={{'aria-label': 'description'}}
                     size="small"
 
@@ -40,7 +48,11 @@ export const Day = (props) => {
                         {stages.map((stage, index) => (
                             <>
                                 <ListItem key={index}>
-                                    <Stage number={index} name={stage.name} markers={props.markers}/>
+                                    <Place
+                                        // number={index}
+                                        // name={stage.name}
+                                        markers={props.markers}
+                                    />
                                 </ListItem>
                                 <Divider light/>
                             </>

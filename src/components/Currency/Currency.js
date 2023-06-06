@@ -71,13 +71,14 @@ export function Currency(props) {
             <div>
                 <TextField
                     id="standard-select-currency-native"
+                    name='currency'
                     select
                     // label="Native select"
                     defaultValue={props.currency}
                     SelectProps={{
                         native: true
                     }}
-                    onChange={(event) => props.onChange(event.target.value)}
+                    onChange={event=>props.onChange(event)}
                 >
                     {/* <select defaultValue={props.currency}> */}
                     {CURRENCIES.map((option) => (

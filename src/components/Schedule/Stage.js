@@ -54,10 +54,8 @@ export const Stage = (props) => {
             <TextField
                 sx={{
                     width: "100%",
-                    // minHeight: props?.textMinHeight
                 }}
                 fullWidth
-
                 placeholder={'Add a place'}
                 value={locationString(location)}
                 onClick={listenForMarker}
@@ -68,10 +66,6 @@ export const Stage = (props) => {
                         </InputAdornment>
                     ),
                 }}
-                // onChange={(event) => {
-                //     props.onChange(event.target.value)
-                // }}
-                // value={props.value}
             />
         </>
     );
