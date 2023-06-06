@@ -10,16 +10,12 @@ import {useInterval} from "./useInterval";
 
 function App() {
     const [markers, setMarkers] = useState([]);
-
+    const [isPlanFetched, setIsPlanFetched] =useState(false)
     const TEST_PLAN_ID = "QRw3JkCK3ipyQ7PJ7ZIp"
     const [planId, setPlanId] =useState(TEST_PLAN_ID)
     const [plan, setPlan] =useState(null)
     const [DB_PLAN, setDB_PLAN] = useState(null)
     const DB_PLAN_UPDATE_INTERVAL = 1000
-
-    useEffect(()=>{
-        // console.log(plan?.timeframe)
-    },[plan])
 
     useEffect(() => {
         fetchPlan(planId)
@@ -33,6 +29,7 @@ function App() {
         const plan = await firestore.getPlan(planId)
         setDB_PLAN(plan)
         setPlan(plan)
+        setIsPlanFetched(true)
     }
 
     async function updatePlan() {
@@ -52,7 +49,7 @@ function App() {
         <div className="App">
             <div className="left-container">
                 <AppMenu/>
-                    <Plan id={planId} plan={plan} onPlanChange={(plan)=>handlePlanChange(plan)} markers={markers}/>
+                    <Plan isPlanFetched={isPlanFetched} id={planId} plan={plan} onPlanChange={(plan)=>handlePlanChange(plan)} markers={markers}/>
             </div>
             <div className="right-container">
                 <div className="map-container">

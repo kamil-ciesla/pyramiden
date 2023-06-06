@@ -22,8 +22,8 @@ export const Day = (props) => {
     }
 
     const handleChange = (e) => {
-        setPlan({...plan, [e.target.name]: e.target.value})
-        props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
+        setDay(day=>({...day, [e.target.name]: e.target.value}))
+        props.onChange(day=>({...day, [e.target.name]: e.target.value}))
     }
 
     return (<Card sx={{width: "100%"}}>
@@ -32,12 +32,15 @@ export const Day = (props) => {
                 titleTypographyProps={{
                     align: 'left',
                 }}
-                subheader={<Input
-                    defaultValue={day.name}
-                    inputProps={{'aria-label': 'description'}}
-                    size="small"
-
-                />}
+                subheader={
+                    <Input
+                        name='name'
+                        value={day.name}
+                        defaultValue={day.name}
+                        inputProps={{'aria-label': 'description'}}
+                        size="small"
+                        onChange={handleChange}
+                    />}
                 subheaderTypographyProps={{
                     align: 'left', padding: '0', margin: '0'
                 }}

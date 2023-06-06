@@ -2,11 +2,10 @@ import {DesktopDatePicker, LocalizationProvider} from "@mui/x-date-pickers"
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs"
 import {Button, Grid, TextField, Typography} from "@mui/material"
 import dayjs from "dayjs"
-import {format} from 'date-fns';
 import React, {useEffect, useState} from "react";
-import { Timestamp } from 'firebase/firestore';
 
 export function Timeframe(props) {
+
     const [timeframe, setTimeframe] = useState(props.timeframe)
 
     const [isEditable, setIsEditable] = useState(false)

@@ -9,7 +9,7 @@ import {Card, Grid, Box, CardContent, Typography, CardMedia, TextField} from "@m
 
 // Import app components
 import {PlanTitle} from "../PlanTitle/PlanTitle"
-import {Timeframe} from "../Time/Time"
+import {Timeframe} from "../Timeframe/Timeframe"
 import {Tripmates} from "../Tripmates/Tripmates"
 import {Documents} from "../Documents/Documents"
 
@@ -22,6 +22,7 @@ import planBgImage from "../../plan-bg.jpg"
 // Import othe libraries
 import {Schedule} from "../Schedule/Schedule";
 import {Currency} from "../Currency/Currency";
+import _ from "lodash";
 
 // END of imports
 // --------------
@@ -30,8 +31,13 @@ export const Plan = (props) => {
     const [plan, setPlan] = useState(props.plan)
 
     const handleChange = (e) => {
-        setPlan({...plan, [e.target.name]: e.target.value})
-        props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
+        // console.log('TIMEFRAME BEFORE')
+        // console.log(plan.timeframe.startDate.toDate())
+        // console.log('TIMEFRAME AFTER')
+        // console.log(e.target.value.startDate)
+
+        setPlan(plan=>({...plan, [e.target.name]: e.target.value}))
+        // props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
     }
 
     function convertedTimeframe(timeframe) {
@@ -51,10 +57,10 @@ export const Plan = (props) => {
         return obj instanceof Date && !isNaN(obj.valueOf());
     }
 
-
     useEffect(() => {
         setPlan(props.plan)
-    }, [props.plan])
+        console.log('xd')
+    }, [props.isPlanFetched])
 
     return plan && (<Box sx={{
         width: "100%", minHeight: "95vh",
@@ -114,6 +120,7 @@ export const Plan = (props) => {
                 <Schedule
                     days={plan.days}
                     markers={props.markers}
+                    _timeframe={plan.timeframe}
                     timeframe={convertedTimeframe(plan.timeframe)}
                     onChange={handleChange}
                 />
