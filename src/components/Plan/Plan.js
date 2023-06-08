@@ -30,6 +30,9 @@ import _ from "lodash";
 export const Plan = (props) => {
     const [plan, setPlan] = useState(props.plan)
 
+    const [planName, setPlanName] = useState('')
+
+
     const handleChange = (e) => {
         setPlan(plan=>({...plan, [e.target.name]: e.target.value}))
         props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))

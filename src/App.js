@@ -7,24 +7,29 @@ import {useEffect, useState} from "react";
 import * as firestore from "./components/Plan/firestorePlan";
 import _ from "lodash";
 import {useInterval} from "./useInterval";
+import {LoginView} from './views/LoginView/LoginView'
+import {Box, Container} from "@mui/material";
 
 function App() {
+    const [user, setUser] = useState(null)
+
     const [markers, setMarkers] = useState([]);
-    const [isPlanFetched, setIsPlanFetched] =useState(false)
+    const [isPlanFetched, setIsPlanFetched] = useState(false)
     const TEST_PLAN_ID = "QRw3JkCK3ipyQ7PJ7ZIp"
-    const [planId, setPlanId] =useState(TEST_PLAN_ID)
-    const [plan, setPlan] =useState(null)
+    const [planId, setPlanId] = useState(TEST_PLAN_ID)
+    const [plan, setPlan] = useState(null)
     const [DB_PLAN, setDB_PLAN] = useState(null)
-    const DB_PLAN_UPDATE_INTERVAL = 1000
+    const DB_PLAN_UPDATE_INTERVAL = 1
 
     useEffect(() => {
         fetchPlan(planId)
     }, [])
 
-    function handlePlanChange(plan){
+    function handlePlanChange(plan) {
         // CHECK IF PLAN  HAS SAME PROPERTIES
         setPlan(plan)
     }
+
     async function fetchPlan(planId) {
         const plan = await firestore.getPlan(planId)
         setDB_PLAN(plan)
@@ -45,19 +50,35 @@ function App() {
     const handleMapClick = (markers) => {
         setMarkers(markers)
     }
-    return (
-        <div className="App">
-            <div className="left-container">
-                <AppMenu/>
-                <Plan isPlanFetched={isPlanFetched} id={planId} plan={plan} onPlanChange={(plan)=>handlePlanChange(plan)} markers={markers}/>
-            </div>
-            <div className="right-container">
+    return (<div className="App">
+            <Box className="left-container"
+                 sx={{
+                     display: 'flex',
+                 }}
+            >
+                <div className="app-menu-container">
+                    <AppMenu/>
+                </div>
+                <Box className="left-main-content"
+                     sx={{
+                         display: "flex",
+                         flexDirection: 'column',
+                         justifyContent: 'center',
+                         alignItems: 'center',
+                         flexGrow: '1',
+                     }}
+                >
+                    {user ? // <PlanView/>
+                        <Plan isPlanFetched={isPlanFetched} id={planId} plan={plan}
+                              onPlanChange={(plan) => handlePlanChange(plan)} markers={markers}/> : <LoginView/>}
+                </Box>
+            </Box>
+            <Box className="right-container">
                 <div className="map-container">
                     <Map markers={markers} onMapClick={handleMapClick}/>
                 </div>
-            </div>
-        </div>
-    )
+            </Box>
+        </div>)
 }
 
 export default App

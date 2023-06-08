@@ -43,7 +43,6 @@ export const Stage = (props) => {
     }
 
     function updateLocationName(name) {
-        //szymon show
         // stage.locationName = name
 
         const updatedStage = {...stage, locationName: name}
