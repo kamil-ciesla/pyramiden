@@ -7,30 +7,24 @@ export const Schedule = (props) => {
     const [days, setDays] = useState(parseTimeframeToDays(props.timeframe))
 
     function handleDayChange(day, index) {
-        console.log(day)
         const newDays = [...days]
         newDays[index] = day
         setDays(newDays)
-
+        console.log('CHANGING DAY')
         props.onChange({
             target: {
                 name: 'days',
-                value: days
+                value: newDays
             }
         })
     }
 
+
     useEffect(() => {
         const days = parseTimeframeToDays(props.timeframe)
-        console.log(props.timeframe.startDate)
-        console.log(days[0].date)
         setDays(days)
-        // props.onChange({
-        //     target: {
-        //         name: 'days',
-        //         value: days
-        //     }
-        // })
+        console.log('DAYS')
+
     }, [props.timeframe])
 
     function parseTimeframeToDays(timeframe) {
@@ -38,13 +32,21 @@ export const Schedule = (props) => {
         let dayDate = new Date(timeframe.startDate)
 
         for (let i = 0; i <= getNumberOfDays(timeframe); i++) {
-            days.push({
-                name: `Day ${parseInt(days.length) + 1}`,
-                date: new Date(dayDate)
-            });
+            const dayName = `Day ${parseInt(days.length) + 1}`
+            const day = createDay(dayName, dayDate)
+            days.push(day);
+
             dayDate.setDate(dayDate.getDate() + 1)
         }
         return days;
+    }
+
+    function createDay(name, date){
+        return{
+            name: name,
+            date: new Date(date),
+            stages: []
+        }
     }
 
     function getNumberOfDays(timeframe) {
@@ -66,12 +68,10 @@ export const Schedule = (props) => {
             <Box>
                 <Stack spacing={2}>
                     {days.map((day, index) => {
-                        console.log(day.date)
                         return (<Day
                             key={day.date}
                             markers={props.markers}
                             day={day}
-                            _date={day.date}
                             onChange={(day) => handleDayChange(day, index)}
                         />)
                     })}

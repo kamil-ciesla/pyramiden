@@ -6,41 +6,52 @@ import RoomIcon from '@mui/icons-material/Room';
 import Geocoder from 'react-native-geocoding';
 
 
-export const Place = (props) => {
+export const Stage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
-
-    const [location, setLocation] = useState(null)
+    const [stage, setStage] = useState(props.stage)
     const [locationName, setLocationName] = useState(null)
-    const [places, setPlaces] = React.useState([]);
     const [isListeningForMarker, setIsListeningForMarker] = useState(false)
-    const handleAddPlace = (place) => {
-        setPlaces([...places, place]);
-    };
 
-    const handleRemovePlace = (place) => {
-        setPlaces(places.filter((p) => p !== place));
-    };
+    // const handleRemovePlace = (place) => {
+    //     setPlaces(places.filter((p) => p !== place));
+    // };
 
     useEffect(() => {
         if (props.markers && isListeningForMarker) {
-            const newLocation = props.markers.at(-1)
-            setLocation(newLocation)
-
-            reverseGeocode(newLocation).then(locationName => {
-                if (locationName) {
-                    setLocationName(locationName)
-                } else {
-                    setLocationName(locationString(newLocation))
-                }
-            }, (error) => {
-                setLocationName(locationString(newLocation))
-            })
-
             setIsListeningForMarker(false)
+
+            const lastMarkerLocation = props.markers.at(-1)
+            const newLocation = lastMarkerLocation
+            fetchAndUpdateLocationName(newLocation)
+
+            const updatedStage = {...stage, location: newLocation}
+            setStage(updatedStage)
+            props.onChange(updatedStage)
         }
     }, [props.markers])
 
-    function locationString(location) {
+    function fetchAndUpdateLocationName(location) {
+        reverseGeocode(location).then(locationName => {
+            if (locationName) {
+                updateLocationName(locationName)
+            } else {
+                updateLocationName(locationCoordinatesAsString(location))
+            }
+        }, (error) => {
+            updateLocationName(locationCoordinatesAsString(location))
+        })
+    }
+
+    function updateLocationName(name) {
+        //szymon show
+        // stage.locationName = name
+
+        const updatedStage = {...stage, locationName: name}
+        setStage(updatedStage)
+        props.onChange(updatedStage)
+    }
+
+    function locationCoordinatesAsString(location) {
         if (location) {
             location = formatLatLng(location)
             return `lat: ${location.lat}, lng: ${location.lng}`
@@ -71,21 +82,17 @@ export const Place = (props) => {
 
     function listenForMarker() {
         console.log('started listening')
-        setLocation(null)
         setIsListeningForMarker(true)
     }
 
     return (<>
-        {/*<Button variant="contained" color="primary">*/}
-        {/*    <Name name={props.number}/>*/}
-        {/*</Button>*/}
         <TextField
             sx={{
                 width: "100%",
             }}
             fullWidth
             placeholder={'Add a place'}
-            value={locationName}
+            value={stage.locationName}
             onClick={listenForMarker}
             InputProps={{
                 startAdornment: (<InputAdornment position="start">

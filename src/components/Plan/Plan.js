@@ -31,13 +31,8 @@ export const Plan = (props) => {
     const [plan, setPlan] = useState(props.plan)
 
     const handleChange = (e) => {
-        // console.log('TIMEFRAME BEFORE')
-        // console.log(plan.timeframe.startDate.toDate())
-        // console.log('TIMEFRAME AFTER')
-        // console.log(e.target.value.startDate)
-
         setPlan(plan=>({...plan, [e.target.name]: e.target.value}))
-        // props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
+        props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
     }
 
     function convertedTimeframe(timeframe) {
@@ -59,7 +54,6 @@ export const Plan = (props) => {
 
     useEffect(() => {
         setPlan(props.plan)
-        console.log('xd')
     }, [props.isPlanFetched])
 
     return plan && (<Box sx={{

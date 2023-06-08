@@ -49,7 +49,7 @@ function App() {
         <div className="App">
             <div className="left-container">
                 <AppMenu/>
-                    <Plan isPlanFetched={isPlanFetched} id={planId} plan={plan} onPlanChange={(plan)=>handlePlanChange(plan)} markers={markers}/>
+                <Plan isPlanFetched={isPlanFetched} id={planId} plan={plan} onPlanChange={(plan)=>handlePlanChange(plan)} markers={markers}/>
             </div>
             <div className="right-container">
                 <div className="map-container">
