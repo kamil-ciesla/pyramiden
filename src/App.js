@@ -7,12 +7,13 @@ import {useEffect, useState} from "react";
 import * as firestore from "./components/Plan/firestorePlan";
 import _ from "lodash";
 import {useInterval} from "./useInterval";
+
 import {LoginView} from './views/LoginView/LoginView'
+import {RegisterView} from './views/RegisterView/RegisterView'
 import {Box, Container} from "@mui/material";
 
 function App() {
     const [user, setUser] = useState(null)
-
     const [markers, setMarkers] = useState([]);
     const [isPlanFetched, setIsPlanFetched] = useState(false)
     const TEST_PLAN_ID = "QRw3JkCK3ipyQ7PJ7ZIp"
@@ -70,7 +71,11 @@ function App() {
                 >
                     {user ? // <PlanView/>
                         <Plan isPlanFetched={isPlanFetched} id={planId} plan={plan}
-                              onPlanChange={(plan) => handlePlanChange(plan)} markers={markers}/> : <LoginView/>}
+                              onPlanChange={(plan) => handlePlanChange(plan)} markers={markers}/>
+                        :
+                        <LoginView/>
+                        // <RegisterView/>
+                    }
                 </Box>
             </Box>
             <Box className="right-container">

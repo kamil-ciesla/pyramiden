@@ -1,12 +1,12 @@
 import {Button, Card, CardContent, Grid, InputAdornment, Link, TextField, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {handleLogin, handleGoogleLogin} from '../../auth/firebaseAuth'
 import {useState} from "react";
-import { Google as GoogleIcon } from '@mui/icons-material';
 
-export function LoginView() {
+import {handleRegister} from '../../auth/firebaseAuth'
+export function RegisterView() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [repeatedPassword, setRepeatedPassword] = useState('');
 
     return (<Card
             sx={{
@@ -19,7 +19,7 @@ export function LoginView() {
                 <Grid container spacing={3}>
                     <Grid item sm={12}>
                         <Typography variant={'h4'}>
-                            Login
+                            Register
                         </Typography>
                     </Grid>
                     <Grid item sm={12}>
@@ -33,17 +33,42 @@ export function LoginView() {
                     </Grid>
                     <Grid item sm={12}>
                         <TextField
-                            label="Enter your password"
+                            label="Password"
                             type="password"
-                            fullWidth
                             value={password}
-                            onChange={(event) => setPassword(event.target.value)}
+                            onChange={(event) => {
+                                setPassword(event.target.value);
+                            }}
+                            fullWidth
                             InputProps={{
-                                endAdornment: (<InputAdornment position="end">
-                                    <IconButton>
-                                        <i className="fas fa-eye"></i>
-                                    </IconButton>
-                                </InputAdornment>),
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton>
+                                            <i className="fas fa-eye"></i>
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+                    </Grid>
+
+                    <Grid item sm={12}>
+                        <TextField
+                            label="Confirm password"
+                            type="password"
+                            value={repeatedPassword}
+                            onChange={(event) => {
+                                setRepeatedPassword(event.target.value);
+                            }}
+                            fullWidth
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton>
+                                            <i className="fas fa-eye"></i>
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
                             }}
                         />
                     </Grid>
@@ -52,26 +77,16 @@ export function LoginView() {
                             variant="contained"
                             color="primary"
                             fullWidth
-                            onClick={()=>handleLogin(email, password)}
+                            onClick={()=>handleRegister(email, password, repeatedPassword)}
                         >
-                            Login
+                            Register
                         </Button>
                     </Grid>
                     <Grid item sm={12}>
                         <Typography variant="body2" color="textSecondary"
                         >
-                            Don't have an account? <Link>Register now</Link>
+                            Already have an account? <Link>Login now</Link>
                         </Typography>
-                    </Grid>
-                    <Grid item sm={12}>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<GoogleIcon />}
-                            onClick={handleGoogleLogin}
-                        >
-                            Google
-                        </Button>
                     </Grid>
                 </Grid>
                 {/*{*/}
