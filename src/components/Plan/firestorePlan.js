@@ -1,7 +1,7 @@
 import {db} from "../../db/db"
 import {app} from "../../db/db"
 
-import {collection, addDoc, doc, getDoc, updateDoc} from "firebase/firestore"
+import {collection, where, query,addDoc, doc, getDoc, getDocs, updateDoc} from "firebase/firestore"
 
 import {getStorage, ref, uploadBytes} from "firebase/storage"
 
@@ -11,7 +11,7 @@ function errorLog(message) {
     console.log(`%c [ERROR] ${message}`, "color: red;")
 }
 
-const emptyPlanData = {
+const defaultPlanData = {
     coverPhotoPath: "",
     title: "Enter title for your trip",
     description: " ",
@@ -27,11 +27,24 @@ const emptyPlanData = {
     filePaths: [],
 }
 
-export async function createPlan() {
-    await addDoc(collection(db, "plans"), emptyPlanData)
+export async function getPlanByUserId(userId) {
+    const plansRef = collection(db, "plans");
+    const q = query(plansRef, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    let result = null;
+    querySnapshot.forEach((doc) => {
+        result = {planId: doc.id, plan: doc?.data()}
+    });
+    return result
 }
 
-export async function getPlan(planId) {
+export async function createPlan(userId) {
+    const planData = {...defaultPlanData, userId: userId}
+    const docRef = await addDoc(collection(db, "plans"), planData)
+    return docRef.id
+}
+
+export async function getPlanByPlanId(planId) {
     const planRef = doc(db, "plans", planId)
     const planDoc = await getDoc(planRef)
     return planDoc.data()
@@ -56,7 +69,7 @@ export async function uploadFile(planId, file) {
 }
 
 async function addFileName(planId, fileName) {
-    const planData = await getPlan(planId)
+    const planData = await getPlanByPlanId(planId)
     const filePaths = planData.filePaths
     try {
         if (planData.filePaths.includes(fileName)) {

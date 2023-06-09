@@ -10,7 +10,6 @@ export const Schedule = (props) => {
         const newDays = [...days]
         newDays[index] = day
         setDays(newDays)
-        console.log('CHANGING DAY')
         props.onChange({
             target: {
                 name: 'days',
@@ -23,8 +22,6 @@ export const Schedule = (props) => {
     useEffect(() => {
         const days = parseTimeframeToDays(props.timeframe)
         setDays(days)
-        console.log('DAYS')
-
     }, [props.timeframe])
 
     function parseTimeframeToDays(timeframe) {

@@ -41,23 +41,8 @@ export function handleRegister(email, password, repeatedPassword) {
     }
 }
 
-export  function handleLogin(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed in
-            const user = userCredential.user;
-            console.log(
-                `%cUser with id: ${user.uid} logged in successfully`,
-                'color: green;'
-            );
-            // redirectAfterLogin(user.uid)
-        })
-        .catch((error) => {
-            // const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorMessage);
-            // setLoginError(error);
-        });
+export  async function handleLogin(email, password) {
+    return signInWithEmailAndPassword(auth, email, password)
 }
 export const AuthProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState(null);
@@ -81,15 +66,5 @@ export const AuthProvider = ({children}) => {
 };
 
 export function handleGoogleLogin() {
-    signInWithPopup(auth, googleProvider)
-        .then((result) => {
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            // const credential = GoogleAuthProvider.credentialFromResult(result);
-            // const token = credential.accessToken;
-            const user = result.user;
-            console.log(user.email)
-
-            // IdP data available using getAdditionalUserInfo(result)
-        })
-        .catch((error) => { });
+    return signInWithPopup(auth, googleProvider)
 }

@@ -6,15 +6,17 @@ import Toolbar from "@mui/material/Toolbar"
 import IconButton from "@mui/material/IconButton"
 import Typography from "@mui/material/Typography"
 import InputBase from "@mui/material/InputBase"
-import Badge from "@mui/material/Badge"
 import MenuItem from "@mui/material/MenuItem"
 import Menu from "@mui/material/Menu"
 import MenuIcon from "@mui/icons-material/Menu"
 import SearchIcon from "@mui/icons-material/Search"
 import AccountCircle from "@mui/icons-material/AccountCircle"
-import MailIcon from "@mui/icons-material/Mail"
-import NotificationsIcon from "@mui/icons-material/Notifications"
 import MoreIcon from "@mui/icons-material/MoreVert"
+import {routes} from "../../routes";
+import {useNavigate} from "react-router-dom";
+import {auth, AuthContext} from "../../auth/firebaseAuth";
+import {useContext} from "react";
+import {Avatar} from "@mui/material";
 
 const Search = styled("div")(({theme}) => ({
     position: "relative",
@@ -27,8 +29,7 @@ const Search = styled("div")(({theme}) => ({
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
-        marginLeft: theme.spacing(3),
-        width: "auto"
+        marginLeft: theme.spacing(3), width: "auto"
     }
 }))
 
@@ -43,10 +44,8 @@ const SearchIconWrapper = styled("div")(({theme}) => ({
 }))
 
 const StyledInputBase = styled(InputBase)(({theme}) => ({
-    color: "inherit",
-    "& .MuiInputBase-input": {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
+    color: "inherit", "& .MuiInputBase-input": {
+        padding: theme.spacing(1, 1, 1, 0), // vertical padding + font size from searchIcon
         paddingLeft: `calc(1em + ${theme.spacing(4)})`,
         transition: theme.transitions.create("width"),
         width: "100%",
@@ -57,6 +56,9 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }))
 
 export function AppMenu() {
+    const {currentUser} = useContext(AuthContext);
+    const navigate = useNavigate();
+
     const [anchorEl, setAnchorEl] = React.useState(null)
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null)
 
@@ -80,48 +82,56 @@ export function AppMenu() {
         setMobileMoreAnchorEl(event.currentTarget)
     }
 
+    function handleLogOut() {
+        auth.signOut().then((result) => {
+            // setProfileImage(null);
+            console.log(result)
+            console.log(`%cUser logged out successfully`, 'color: green;');
+            navigate(routes.loginView);
+        }).catch(error => console.log(error.message))
+    }
+
     const menuId = "primary-search-account-menu"
-    const renderMenu = (
-        <Menu
-            sx={{
-                border: '2px solid red'
-            }}
-            anchorEl={anchorEl}
-            anchorOrigin={{
-                vertical: "top",
-                horizontal: "right"
-            }}
-            id={menuId}
-            keepMounted
-            transformOrigin={{
-                vertical: "top",
-                horizontal: "right"
-            }}
-            open={isMenuOpen}
-            onClose={handleMenuClose}
-        >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            {/*<MenuItem onClick={handleMenuClose}>My account</MenuItem>*/}
-        </Menu>
-    )
+    const renderMenu = (<Menu
+        sx={{
+            border: '2px solid red'
+        }}
+        anchorEl={anchorEl}
+        anchorOrigin={{
+            vertical: "top", horizontal: "right"
+        }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{
+            vertical: "top", horizontal: "right"
+        }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+    >
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+
+        <MenuItem onClick={() => {
+            handleMenuClose()
+            handleLogOut()
+        }}>Log out</MenuItem>
+    </Menu>)
 
     const mobileMenuId = "primary-search-account-menu-mobile"
-    const renderMobileMenu = (
-        <Menu
-            anchorEl={mobileMoreAnchorEl}
-            anchorOrigin={{
-                vertical: "top",
-                horizontal: "right"
-            }}
-            id={mobileMenuId}
-            keepMounted
-            transformOrigin={{
-                vertical: "top",
-                horizontal: "right"
-            }}
-            open={isMobileMenuOpen}
-            onClose={handleMobileMenuClose}
-        >
+    const renderMobileMenu = (<Menu
+        anchorEl={mobileMoreAnchorEl}
+        anchorOrigin={{
+            vertical: "top", horizontal: "right"
+        }}
+        id={mobileMenuId}
+        keepMounted
+        transformOrigin={{
+            vertical: "top", horizontal: "right"
+        }}
+        open={isMobileMenuOpen}
+        onClose={handleMobileMenuClose}
+    >
+        {
+            currentUser &&
             <MenuItem onClick={handleProfileMenuOpen}>
                 <IconButton
                     size="large"
@@ -130,46 +140,55 @@ export function AppMenu() {
                     aria-haspopup="true"
                     color="inherit"
                 >
-                    <AccountCircle/>
+                    {
+                        currentUser?.photoURL ?
+                            <Avatar
+                                src={currentUser.photoURL}
+                                sx={{width: 50, height: 50}}
+                            />
+                            :
+                            <AccountCircle/>
+                    }
+
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
-        </Menu>
-    )
+        }
+    </Menu>)
 
-    return (
-        <Box sx={{flexGrow: 1}}>
-            <AppBar position="sticky">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        sx={{mr: 2}}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{display: {xs: "none", sm: "block"}}}
-                    >
-                        Travel planner
-                    </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon/>
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search map"
-                            inputProps={{"aria-label": "search"}}
-                        />
-                    </Search>
-                    <Box sx={{flexGrow: 1}}/>
-                    <Box sx={{display: {xs: "none", md: "flex"}}}>
-                            <IconButton
+    return (<Box sx={{flexGrow: 1}}>
+        <AppBar position="sticky">
+            <Toolbar>
+                <IconButton
+                    size="large"
+                    edge="start"
+                    color="inherit"
+                    aria-label="open drawer"
+                    sx={{mr: 2}}
+                >
+                    <MenuIcon/>
+                </IconButton>
+                <Typography
+                    variant="h6"
+                    noWrap
+                    component="div"
+                    sx={{display: {xs: "none", sm: "block"}}}
+                >
+                    Travel planner
+                </Typography>
+                <Search>
+                    <SearchIconWrapper>
+                        <SearchIcon/>
+                    </SearchIconWrapper>
+                    <StyledInputBase
+                        placeholder="Search map"
+                        inputProps={{"aria-label": "search"}}
+                    />
+                </Search>
+                <Box sx={{flexGrow: 1}}/>
+                <Box sx={{display: {xs: "none", md: "flex"}}}>
+                    {currentUser &&
+                        <IconButton
                             size="large"
                             edge="end"
                             aria-label="account of current user"
@@ -178,25 +197,33 @@ export function AppMenu() {
                             onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
-                            <AccountCircle/>
+                            {
+                                currentUser?.photoURL ?
+                                    <Avatar
+                                        src={currentUser.photoURL}
+                                        sx={{width: 50, height: 50}}
+                                    />
+                                    :
+                                    <AccountCircle/>
+                            }
                         </IconButton>
-                    </Box>
-                    <Box sx={{display: {xs: "flex", md: "none"}}}>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon/>
-                        </IconButton>
-                    </Box>
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-            {renderMenu}
-        </Box>
-    )
+                    }
+                </Box>
+                <Box sx={{display: {xs: "flex", md: "none"}}}>
+                    <IconButton
+                        size="large"
+                        aria-label="show more"
+                        aria-controls={mobileMenuId}
+                        aria-haspopup="true"
+                        onClick={handleMobileMenuOpen}
+                        color="inherit"
+                    >
+                        <MoreIcon/>
+                    </IconButton>
+                </Box>
+            </Toolbar>
+        </AppBar>
+        {currentUser && renderMobileMenu}
+        {currentUser && renderMenu}
+    </Box>)
 }
