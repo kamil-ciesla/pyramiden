@@ -27,13 +27,23 @@ const defaultPlanData = {
     filePaths: [],
 }
 
+export async function getAllUserPlans(userId){
+    const plansRef = collection(db, "plans");
+    const q = query(plansRef, where("userId", "==", userId));
+    const querySnapshot = await getDocs(q);
+    let plans = []
+    querySnapshot.forEach((doc) => {
+        plans.push({planId: doc.id, data: doc?.data()})
+    });
+    return plans
+}
 export async function getPlanByUserId(userId) {
     const plansRef = collection(db, "plans");
     const q = query(plansRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
     let result = null;
     querySnapshot.forEach((doc) => {
-        result = {planId: doc.id, plan: doc?.data()}
+        result = {planId: doc.id, data: doc?.data()}
     });
     return result
 }

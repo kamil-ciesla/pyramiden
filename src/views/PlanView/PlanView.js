@@ -26,7 +26,7 @@ export function PlanView() {
                 plan = await firestore.getPlanByPlanId(planId)
             } else {
                 planId = result.planId
-                plan = result.plan
+                plan = result.data
             }
             setPlanId(planId)
             setDB_PLAN(plan)

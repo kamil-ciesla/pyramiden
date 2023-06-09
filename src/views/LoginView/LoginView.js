@@ -58,10 +58,7 @@ export function LoginView() {
                         fullWidth
                         onClick={() => {
                             handleLogin(email, password).then((userCredential) => {
-                                if (userCredential.user) {
-                                    console.log(userCredential.user.email)
-                                    navigate(routes.planView)
-                                }
+                                navigate(routes.accountView)
                             }).catch(error => console.log(error.message))
                         }}
                     >
@@ -81,12 +78,8 @@ export function LoginView() {
                         startIcon={<GoogleIcon/>}
                         onClick={() => {
                             handleGoogleLogin().then(userCredential => {
-                                if (userCredential.user) {
-                                    console.log(userCredential.user.email)
-                                    navigate(routes.planView)
-                                }
-                            })
-                                .catch(error => console.log(error.message))
+                                navigate(routes.accountView)
+                            }).catch(error => console.log(error.message))
                         }}
                     >
                         Google
