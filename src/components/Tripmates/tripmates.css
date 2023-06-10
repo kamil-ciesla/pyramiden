@@ -2,11 +2,15 @@
     visibility: hidden;
 }
 
-/* .delete-tripmate-button:hover{
-    visibility: visible;
-} */
-
 .tripmate-input-container:hover > .delete-tripmate-button {
     visibility: visible;
 }
-    
+
+
+.delete-plan-button {
+    visibility: hidden;
+}
+
+.plan-list-item:hover > .delete-plan-button {
+    visibility: visible;
+}

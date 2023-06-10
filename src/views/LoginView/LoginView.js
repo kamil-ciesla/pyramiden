@@ -5,12 +5,23 @@ import {useState} from "react";
 import {Google as GoogleIcon} from '@mui/icons-material';
 import {useNavigate} from "react-router-dom";
 import {routes} from "../../routes";
+import * as firestore from "../../components/Plan/firestorePlan";
 
 export function LoginView() {
+
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    async function handleRedirectAfterLogin(userId) {
+        const userPlans = await firestore.getAllUserPlans(userId)
+        if (userPlans.length) {
+            navigate(routes.accountView)
+        } else {
+            navigate(routes.planView)
+        }
+    }
 
     return <Card
         sx={{
@@ -57,8 +68,8 @@ export function LoginView() {
                         color="primary"
                         fullWidth
                         onClick={() => {
-                            handleLogin(email, password).then((userCredential) => {
-                                navigate(routes.accountView)
+                            handleLogin(email, password).then(userCredential => {
+                                handleRedirectAfterLogin(userCredential.user.uid)
                             }).catch(error => console.log(error.message))
                         }}
                     >
@@ -77,9 +88,10 @@ export function LoginView() {
                         color="secondary"
                         startIcon={<GoogleIcon/>}
                         onClick={() => {
-                            handleGoogleLogin().then(userCredential => {
-                                navigate(routes.accountView)
-                            }).catch(error => console.log(error.message))
+                            handleGoogleLogin()
+                                .then(userCredential => {
+                                    handleRedirectAfterLogin(userCredential.user.uid)
+                                }).catch(error => console.log(error.message))
                         }}
                     >
                         Google

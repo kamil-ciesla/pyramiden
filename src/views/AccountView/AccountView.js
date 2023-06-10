@@ -1,60 +1,103 @@
 import React, {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../../auth/firebaseAuth";
-import {Box, List,ListItem, ListItemText, Typography,} from "@mui/material";
+import {Box, Button, Card, CardContent, List, ListItem, ListItemText, TextField, Typography,} from "@mui/material";
 import * as firestore from "../../components/Plan/firestorePlan";
 import IconButton from "@mui/material/IconButton";
-import DeleteIcon from '@mui/icons-material/Delete';
 import {routes} from "../../routes";
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import ClearIcon from "@mui/icons-material/Clear";
 
 export const AccountView = () => {
+    const navigate = useNavigate();
     const {currentUser} = useContext(AuthContext);
     const [plans, setPlans] = useState([])
+    const [newPlanTitle, setNewPlanTitle] = useState(null)
+
     useEffect(() => {
-        if (currentUser) fetchPlans()
+        if (currentUser) {
+            fetchPlans()
+        } else {
+            navigate(routes.loginView)
+        }
     }, [currentUser])
 
     async function fetchPlans() {
         const plans = await firestore.getAllUserPlans(currentUser.uid)
         setPlans(plans)
-        console.log(plans)
+    }
+
+    async function handleCreatePlan() {
+        await firestore.createPlan(currentUser.uid, newPlanTitle)
+        fetchPlans()
+    }
+
+    async function handleDeletePlan(planId) {
+        if (window.confirm("Are you sure you delete this plan? (It will be deleted forever)")) {
+            await firestore.deletePlan(currentUser.uid, planId)
+            fetchPlans()
+        }
     }
 
     return (
-        currentUser ?
-            <Box
-                sx={{
-                    border: '2px solid red'
-                }}>
+        currentUser &&
+        <Card
+            sx={{
+                // border: '2px solid red'
+            }}>
+            <CardContent>
                 <List>
                     {
                         plans.map((plan, index) => (
-                            <Link to={routes.planView}>
-                                <ListItem
-                                    secondaryAction={
-                                        <IconButton edge="end" aria-label="delete">
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                    }
+                            <>
+                                <ListItem className='plan-list-item'
+                                          onMouseOver={(e) => {
+                                              e.currentTarget.querySelector('.delete-plan-button').style.visibility = 'visible';
+                                          }}
+                                          onMouseOut={(e) => {
+                                              e.currentTarget.querySelector('.delete-plan-button').style.visibility = 'hidden';
+                                          }}
+                                          secondaryAction={
+                                              <IconButton
+                                                  className='delete-plan-button'
+                                                  aria-label="delete"
+                                                  size="large"
+                                                  onClick={() => {
+                                                      handleDeletePlan(plan.planId)
+                                                  }}
+                                                  style={{visibility: 'hidden'}}
+                                              >
+                                                  <ClearIcon/>
+                                              </IconButton>
+                                          }
                                 >
-                                    {/*<ListItemAvatar>*/}
-                                    {/*    <Avatar>*/}
-                                    {/*        <FolderIcon/>*/}
-                                    {/*    </Avatar>*/}
-                                    {/*</ListItemAvatar>*/}
-                                    <ListItemText
-                                        primary={plan.data.title}
-                                        // secondary={secondary ? 'Secondary text' : null}
-                                    />
+                                    <Link to={routes.planViewById(plan.planId)} style={{textDecoration: 'none'}}>
+                                        <Typography variant={'h5'} sx={{color: 'black'}}>
+                                            {plan.data.title}
+                                        </Typography>
+                                    </Link>
                                 </ListItem>
-                            </Link>
+                                <hr/>
+                            </>
                         ))
                     }
+                    <ListItem
+                        sx={{display: 'flex', alignItems: 'stretch'}}
+                    >
+                        <TextField
+                            label="Enter plan title"
+                            value={newPlanTitle}
+                            sx={{flexGrow: 1}}
+                            onChange={(e) => setNewPlanTitle(e.target.value)}
+                        />
+                        <Button variant="contained"
+                                onClick={handleCreatePlan}
+                                sx={{flexGrow: 1}}
+                        >
+                            Create plan
+                        </Button>
+                    </ListItem>
                 </List>
-            </Box>
-            :
-            <Typography>
-                YOU SHOULD NOT BE HERE
-            </Typography>
+            </CardContent>
+        </Card>
     )
 }

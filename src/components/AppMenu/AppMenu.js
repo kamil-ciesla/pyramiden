@@ -93,9 +93,6 @@ export function AppMenu() {
 
     const menuId = "primary-search-account-menu"
     const renderMenu = (<Menu
-        sx={{
-            border: '2px solid red'
-        }}
         anchorEl={anchorEl}
         anchorOrigin={{
             vertical: "top", horizontal: "right"

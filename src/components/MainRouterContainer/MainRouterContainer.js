@@ -15,6 +15,7 @@ export const MainRouterContainer = () => {
             <Route path={routes.registerView} element={<RegisterView />} />
             <Route path={routes.accountView} element={<AccountView />} />
             <Route path={routes.planView} element={<PlanView />}/>
+            <Route path={routes.planViewById(':planId')} element={<PlanView />}/>
         </Routes>
     );
 };
