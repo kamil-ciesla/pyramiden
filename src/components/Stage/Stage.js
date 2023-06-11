@@ -1,13 +1,16 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 
 import React from 'react';
 import {InputAdornment, TextField} from "@mui/material";
 import RoomIcon from '@mui/icons-material/Room';
 import Geocoder from 'react-native-geocoding';
+import {MapContext} from "../Map/Map";
 
 
 export const Stage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
+    const {markers} = useContext(MapContext)
+
     const [stage, setStage] = useState(props.stage)
     const [locationName, setLocationName] = useState(null)
     const [isListeningForMarker, setIsListeningForMarker] = useState(false)
@@ -17,10 +20,10 @@ export const Stage = (props) => {
     // };
 
     useEffect(() => {
-        if (props.markers && isListeningForMarker) {
+        if (markers && isListeningForMarker) {
             setIsListeningForMarker(false)
 
-            const lastMarkerLocation = props.markers.at(-1)
+            const lastMarkerLocation = markers.at(-1)
             const newLocation = lastMarkerLocation
             fetchAndUpdateLocationName(newLocation)
 
@@ -28,7 +31,7 @@ export const Stage = (props) => {
             setStage(updatedStage)
             props.onChange(updatedStage)
         }
-    }, [props.markers])
+    }, [markers])
 
     function fetchAndUpdateLocationName(location) {
         reverseGeocode(location).then(locationName => {

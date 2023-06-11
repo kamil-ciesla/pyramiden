@@ -1,31 +1,19 @@
 // Import react functions
-import {useState, useEffect} from "react"
-
-// Import custom hooks
-import {useInterval} from "../../useInterval"
+import {useState, useEffect, useContext} from "react"
 
 // Import MUI components
-import {Card, Grid, Box, CardContent, Typography, CardMedia, TextField} from "@mui/material"
+import {Card, Grid, Box, CardContent, Typography, TextField} from "@mui/material"
 
 // Import app components
 import {PlanTitle} from "../PlanTitle/PlanTitle"
 import {Timeframe} from "../Timeframe/Timeframe"
 import {Tripmates} from "../Tripmates/Tripmates"
 import {Documents} from "../Documents/Documents"
-
-// Import API functions
-import * as firestore from "./firestorePlan"
-import {db} from "../../db/db"
-// Import images
-import planBgImage from "../../plan-bg.jpg"
-
-// Import othe libraries
 import {Schedule} from "../Schedule/Schedule";
 import {Currency} from "../Currency/Currency";
-import _ from "lodash";
 
-// END of imports
-// --------------
+// Import images
+import planBgImage from "../../plan-bg.jpg"
 
 export const Plan = (props) => {
     const [plan, setPlan] = useState(props.plan)
@@ -87,6 +75,7 @@ export const Plan = (props) => {
                                     <Timeframe
                                         timeframe={convertedTimeframe(plan.timeframe)}
                                         onChange={handleChange}
+                                        days={plan.days}
                                     />
                                 </Grid>
                             </Grid>
@@ -113,7 +102,6 @@ export const Plan = (props) => {
             <Grid item sm={12}>
                 <Schedule
                     days={plan.days}
-                    markers={props.markers}
                     _timeframe={plan.timeframe}
                     timeframe={convertedTimeframe(plan.timeframe)}
                     onChange={handleChange}

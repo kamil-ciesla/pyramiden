@@ -6,7 +6,20 @@ import {Stage} from "../Stage/Stage";
 export const Day = (props) => {
     const [day, setDay] = useState(props.day)
 
-    const formattedDate = format(day.date, "EEEE, MMMM do")
+    function formattedDate(){
+        format(convertedDate(day.date), "EEEE, MMMM do")
+    }
+    function convertedDate(date) {
+        if (isDate(date)) {
+            return date
+        } else {
+            return date.toDate()
+        }
+    }
+
+    function isDate(obj) {
+        return obj instanceof Date && !isNaN(obj.valueOf());
+    }
 
     function addStage() {
         const newStage = {
@@ -22,8 +35,8 @@ export const Day = (props) => {
     }
 
     const handleChange = (e) => {
-        setDay(day => ({...day, [e.target.name]: e.target.value}))
-        props.onChange(day => ({...day, [e.target.name]: e.target.value}))
+        setDay({...day, [e.target.name]: e.target.value})
+        props.onChange({...day, [e.target.name]: e.target.value})
     }
 
     const handleStageChange = (stageIndex, updatedStage) => {
@@ -36,7 +49,7 @@ export const Day = (props) => {
 
     return (<Card sx={{width: "100%"}}>
             <CardHeader
-                title={formattedDate}
+                title={formattedDate()}
                 titleTypographyProps={{
                     align: 'left',
                 }}
@@ -61,7 +74,6 @@ export const Day = (props) => {
                                     // number={index}
                                     // name={stage.name}
                                     stage={stage}
-                                    markers={props.markers}
                                     onChange={(updatedStage) => {
                                         handleStageChange(index, updatedStage)
                                     }}

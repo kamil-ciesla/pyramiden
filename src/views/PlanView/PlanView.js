@@ -5,7 +5,8 @@ import {useInterval} from "../../useInterval";
 import {Plan} from "../../components/Plan/Plan";
 import {AuthContext} from "../../auth/firebaseAuth";
 import {useSearchParams} from 'react-router-dom';
-import {userHasAnyPlan} from "../../components/Plan/firestorePlan";
+
+import {MapContextProvider} from "../../components/Map/Map";
 
 export function PlanView() {
     const {currentUser} = useContext(AuthContext);
@@ -25,9 +26,9 @@ export function PlanView() {
         let planId = searchParams.get('id')
         if (planId) {
             planData = await firestore.getPlanByPlanId(planId)
-        } else if(await firestore.userHasAnyPlan(currentUser.uid)){
-            console.log('user plan ALREADY CREATED')
-        }else{
+        } else if (await firestore.userHasAnyPlan(currentUser.uid)) {
+            console.log('User already has plan, but id was not provided')
+        } else {
             planId = await firestore.createPlan(currentUser.uid)
             planData = await firestore.getPlanByPlanId(planId)
         }
@@ -55,9 +56,11 @@ export function PlanView() {
 
     useInterval(updatePlan, DB_PLAN_UPDATE_INTERVAL)
 
-    return (plan && <Plan
-        id={planId} plan={plan}
-        onPlanChange={(plan) => handlePlanChange(plan)}
-        // markers={markers}
-    />)
+    return (plan &&
+        <Plan
+            id={planId} plan={plan}
+            onPlanChange={(plan) => handlePlanChange(plan)}
+            // markers={markers}
+        />
+    )
 }

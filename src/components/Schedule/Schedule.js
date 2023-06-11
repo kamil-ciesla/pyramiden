@@ -4,7 +4,7 @@ import {Card, CardContent, Typography, Stack, Box, CardHeader} from "@mui/materi
 import {Day} from './Day'
 
 export const Schedule = (props) => {
-    const [days, setDays] = useState(parseTimeframeToDays(props.timeframe))
+    const [days, setDays] = useState(props.days)
 
     function handleDayChange(day, index) {
         const newDays = [...days]
@@ -20,8 +20,10 @@ export const Schedule = (props) => {
 
 
     useEffect(() => {
-        const days = parseTimeframeToDays(props.timeframe)
-        setDays(days)
+        const newDays = parseTimeframeToDays(props.timeframe)
+        if (newDays.length != props.days.length) {
+            setDays(newDays)
+        }
     }, [props.timeframe])
 
     function parseTimeframeToDays(timeframe) {
@@ -38,8 +40,8 @@ export const Schedule = (props) => {
         return days;
     }
 
-    function createDay(name, date){
-        return{
+    function createDay(name, date) {
+        return {
             name: name,
             date: new Date(date),
             stages: []
@@ -67,7 +69,6 @@ export const Schedule = (props) => {
                     {days.map((day, index) => {
                         return (<Day
                             key={day.date}
-                            markers={props.markers}
                             day={day}
                             onChange={(day) => handleDayChange(day, index)}
                         />)

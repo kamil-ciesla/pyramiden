@@ -10,6 +10,24 @@ export function Timeframe(props) {
 
     const [isEditable, setIsEditable] = useState(false)
 
+    function updateTimeframe(newTimeframe) {
+        if (props.days.length != 0) {
+            if (!window.confirm('Are you sure you want to change dates? You will lose all the data you have in each day.')) {
+              return
+            }
+        }
+        props.onChange(
+            {
+                target: {
+                    name: 'timeframe',
+                    value: timeframe
+                }
+            }
+        )
+        setIsEditable(false)
+
+    }
+
     function stringifyTimeframe(timeframe) {
 
         const startDay = timeframe.startDate.getDate();
@@ -19,6 +37,7 @@ export function Timeframe(props) {
 
         return `${startDay}/${startMonth} - ${endDay}/${endMonth}`
     }
+
 
     return (
         <>
@@ -52,15 +71,7 @@ export function Timeframe(props) {
                             <Grid item sm={12}>
                                 <Button variant="contained"
                                         onClick={() => {
-                                            props.onChange(
-                                                {
-                                                    target: {
-                                                        name: 'timeframe',
-                                                        value: timeframe
-                                                    }
-                                                }
-                                            )
-                                            setIsEditable(false)
+                                            updateTimeframe(timeframe)
                                         }}
                                 >
                                     Confirm dates
