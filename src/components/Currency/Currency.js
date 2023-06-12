@@ -78,7 +78,7 @@ export function Currency(props) {
                     SelectProps={{
                         native: true
                     }}
-                    onChange={event=>props.onChange(event)}
+                    onChange={event => props.onChange(event)}
                 >
                     {/* <select defaultValue={props.currency}> */}
                     {CURRENCIES.map((option) => (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
     getAuth,
@@ -41,9 +41,10 @@ export function handleRegister(email, password, repeatedPassword) {
     }
 }
 
-export  async function handleLogin(email, password) {
+export async function handleLogin(email, password) {
     return signInWithEmailAndPassword(auth, email, password)
 }
+
 export const AuthProvider = ({children}) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [pending, setPending] = useState(true);

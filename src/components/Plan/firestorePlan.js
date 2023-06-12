@@ -1,7 +1,7 @@
 import {db} from "../../db/db"
 import {app} from "../../db/db"
 
-import {collection, where, deleteDoc, query,addDoc, doc, getDoc, getDocs, updateDoc} from "firebase/firestore"
+import {collection, where, deleteDoc, query, addDoc, doc, getDoc, getDocs, updateDoc} from "firebase/firestore"
 
 import {getStorage, ref, uploadBytes} from "firebase/storage"
 
@@ -18,16 +18,16 @@ const defaultPlanData = {
     tripNotes: " ",
     budget: 0,
     currency: "EUR",
-    timeframe:{
+    timeframe: {
         startDate: new Date(),
         endDate: new Date()
     },
-    days:[],
+    days: [],
     tripmates: [],
     filePaths: [],
 }
 
-export async function getAllUserPlans(userId){
+export async function getAllUserPlans(userId) {
     const plansRef = collection(db, "plans");
     const q = query(plansRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
@@ -38,7 +38,7 @@ export async function getAllUserPlans(userId){
     return plans
 }
 
-export async function userHasAnyPlan(userId){
+export async function userHasAnyPlan(userId) {
     const plansRef = collection(db, "plans");
     const q = query(plansRef, where("userId", "==", userId));
     const querySnapshot = await getDocs(q);
@@ -60,7 +60,7 @@ export async function userHasAnyPlan(userId){
 //     return result
 // }
 
-export async function createPlan(userId, title=null) {
+export async function createPlan(userId, title = null) {
     const planData = {...defaultPlanData, userId: userId, title: title || defaultPlanData.title}
     const docRef = await addDoc(collection(db, "plans"), planData)
     return docRef.id
@@ -69,20 +69,9 @@ export async function createPlan(userId, title=null) {
 export async function deletePlan(userId, planId) {
     const planRef = doc(db, "plans", planId)
     const planDoc = await getDoc(planRef)
-    if(planDoc.data().userId === userId){
+    if (planDoc.data().userId === userId) {
         deleteDoc(planRef)
-    }else{
-        console.log('CANNOT DELETE: USER ID MISMATCH')
     }
-
-    // const collectionRef = collection(db, "plans");
-    // const q = query(collectionRef, where("userId", "==", userId), where(firebase.firestore.FieldPath.documentId(), "==", planId));
-    //
-    // getDocs(q).then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //         doc.ref.delete();
-    //     });
-    // });
 }
 
 export async function getPlanByPlanId(planId) {

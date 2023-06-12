@@ -22,9 +22,9 @@ export const PlanTitle = (props) => {
         if (isTitleNotBlank(title)) {
             setIsEditable(false)
             props.onChange({
-                target:{
-                    name:'title',
-                    value:title
+                target: {
+                    name: 'title',
+                    value: title
                 }
             })
         } else {
@@ -50,7 +50,7 @@ export const PlanTitle = (props) => {
                         }}
                         autoFocus
                     />
-                   
+
                 </>
             ) : (
                 <Typography variant={props.variant} onClick={handleClick}>

@@ -2,19 +2,17 @@ import {GoogleMap, MarkerF, useLoadScript, OverlayView} from "@react-google-maps
 import {createContext, createRef, useContext, useEffect, useMemo, useRef, useState} from "react";
 import "./Map.css"
 import LeaderLine from 'react-leader-line'
-import {Button} from "@mui/material";
 import {useInterval} from "../../useInterval";
+import {PlanContext} from "../Plan/Plan";
 
 export const MapContext = createContext();
 
 export const MapContextProvider = ({children}) => {
-
-    const [markers, setMarkers] = useState([
-        // {lat: 38.11, lng: 23.30},
-        // {lat: 38.13, lng: 23.77}
-    ]);
+    const {updatePlanMarkers} =useContext(PlanContext)
+    const [markers, setMarkers] = useState([]);
 
     const updateMarkers = (newMarkers) => {
+        // updatePlanMarkers(newMarkers)
         setMarkers(newMarkers);
     };
 
@@ -27,8 +25,8 @@ export const MapContextProvider = ({children}) => {
 
 export const Map = (props) => {
     const [lines, setLines] = useState([])
-
-    const {markers, updateMarkers} = useContext(MapContext)
+    const [linePathShape, setLinePathShape] = useState('magnet')
+    const {markers,updateMarkers} = useContext(MapContext)
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY
     })
@@ -50,20 +48,34 @@ export const Map = (props) => {
         const secondMarkerEl = document.querySelector(`[aria-label="${secondMarker.id}"]`)
 
         const newLine = new LeaderLine(
-            firstMarkerEl,
-            secondMarkerEl
+            {
+                start: firstMarkerEl,
+                end: secondMarkerEl,
+                path: linePathShape
+            }
         )
+        // newLine.path ='magnet'
         lines.push(newLine)
+        return newLine
     }
 
     function createLines() {
         if (checkMarkersRender()) {
             if (markers.length > 1) {
                 for (let i = lines.length; i < markers.length - 1; i++) {
-                    connectMarkers(markers[i], markers[i + 1])
+                    try {
+                        connectMarkers(markers[i], markers[i + 1])
+                    } catch (error) {
+                        console.log(error.message)
+                    }
                 }
             }
         }
+    }
+
+    function updateLinePathShape(path) {
+        setLinePathShape(path)
+        setLines([])
     }
 
     function checkMarkersRender() {
@@ -76,27 +88,43 @@ export const Map = (props) => {
     }
 
     async function refreshLines() {
-        for await (const line of lines) {
-            line.position()
+        if (lines.length) {
+            for (const line of lines) {
+                try {
+                    line.position()
+                } catch (error) {
+                    console.log('refreshing lines failed')
+                    try {
+                        removeLines()
+                    } catch (error) {
+                        console.log(error.message)
+                    }
+                    console.log(error.message)
+                }
+            }
         }
     }
 
-    function removeLines(){
-        for(const line of lines){
+    function removeLines() {
+        for (const line of lines) {
             line.remove()
         }
         setLines([])
     }
 
-    const updateMarker = (index, newMarker) => {
-        updateMarkers(prevState => {
-            return prevState.map((item, i) => {
-                if (i === index) {
-                    return {newMarker};
-                }
-            });
-        });
-    };
+    const handleMarkerDrop = (event, marker, markerIndex) => {
+        const {latLng} = event;
+        const updatedMarker = {
+            ...marker,
+            lat: latLng.lat(),
+            lng: latLng.lng()
+        }
+        const updatedMarkers = [...markers]
+        updatedMarkers[markerIndex] = updatedMarker
+        updateMarkers(updatedMarkers)
+        createLines()
+        removeLines()
+    }
 
     useInterval(refreshLines, 1)
     useInterval(createLines, 1)
@@ -120,27 +148,17 @@ export const Map = (props) => {
                                              key={`${marker.lat}-${marker.lng}`} position={position}
                                              draggable={true}
                                              onDragEnd={(event) => {
-                                                 const {latLng} = event;
-                                                 const updatedMarker = {
-                                                     ...marker,
-                                                     lat: latLng.lat(),
-                                                     lng: latLng.lng()
-                                                 }
-                                                 const updatedMarkers = [...markers]
-                                                 updatedMarkers[index] = updatedMarker
-                                                 updateMarkers(updatedMarkers)
-                                                 removeLines()
+                                                 // updateLinePathShape('straight')
+                                                 handleMarkerDrop(event, marker, index)
                                              }}
                                     />
                                 )
                             }
                         )}
-
                     </GoogleMap>
                 )
                 }
             </div>
         </>
-
     )
 }

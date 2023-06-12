@@ -12,7 +12,6 @@ export const Stage = (props) => {
     const {markers} = useContext(MapContext)
 
     const [stage, setStage] = useState(props.stage)
-    const [locationName, setLocationName] = useState(null)
     const [isListeningForMarker, setIsListeningForMarker] = useState(false)
 
     // const handleRemovePlace = (place) => {
@@ -21,36 +20,36 @@ export const Stage = (props) => {
 
     useEffect(() => {
         if (markers && isListeningForMarker) {
-            setIsListeningForMarker(false)
-
-            const lastMarkerLocation = markers.at(-1)
-            const newLocation = lastMarkerLocation
-            fetchAndUpdateLocationName(newLocation)
-
-            const updatedStage = {...stage, location: newLocation}
-            setStage(updatedStage)
-            props.onChange(updatedStage)
+            catchMarker()
         }
     }, [markers])
 
-    function fetchAndUpdateLocationName(location) {
-        reverseGeocode(location).then(locationName => {
-            if (locationName) {
-                updateLocationName(locationName)
-            } else {
-                updateLocationName(locationCoordinatesAsString(location))
-            }
-        }, (error) => {
-            updateLocationName(locationCoordinatesAsString(location))
-        })
-    }
+    async function catchMarker() {
+        setIsListeningForMarker(false)
+        const marker = (markers.at(-1))
+        const markerLocation = {lat: marker.lat, lng: marker.lng}
+        const locationName = await fetchLocationName(markerLocation)
 
-    function updateLocationName(name) {
-        // stage.locationName = name
+        const updatedStage = {
+            ...stage,
+            marker: marker,
+            locationName: locationName || locationCoordinatesAsString(markerLocation)
+        }
 
-        const updatedStage = {...stage, locationName: name}
         setStage(updatedStage)
         props.onChange(updatedStage)
+    }
+
+    async function fetchLocationName(location) {
+        await reverseGeocode(location).then(locationName => {
+            if (locationName) {
+                return locationName
+            } else {
+                return null
+            }
+        }, (error) => {
+            return null
+        })
     }
 
     function locationCoordinatesAsString(location) {
@@ -73,7 +72,6 @@ export const Stage = (props) => {
             console.log(e)
             return null
         }
-
     }
 
     function formatLatLng(location) {

@@ -24,15 +24,16 @@ export const Tripmates = (props) => {
         setTripmates(newTripmates)
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         props.onChange(
-            {target:{
-                    name:'tripmates',
+            {
+                target: {
+                    name: 'tripmates',
                     value: tripmates
                 }
             }
         )
-    },[tripmates])
+    }, [tripmates])
 
     return (
         <Card className="Tripmates">

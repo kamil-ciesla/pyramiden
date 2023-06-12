@@ -70,7 +70,9 @@ export const Schedule = (props) => {
                         return (<Day
                             key={day.date}
                             day={day}
-                            onChange={(day) => handleDayChange(day, index)}
+                            onChange={(updatedDay) => {
+                                handleDayChange(updatedDay, index)
+                            }}
                         />)
                     })}
                 </Stack>

@@ -16,14 +16,14 @@ export const Stage = (props) => {
         setPlaces(places.filter((p) => p !== place));
     };
 
-    useEffect(()=>{
-        if(props.markers && isListeningForMarker) {
+    useEffect(() => {
+        if (props.markers && isListeningForMarker) {
             console.log('DETECTED new LOCATION')
             setLocation(props.markers.at(-1))
             setIsListeningForMarker(false)
         }
 
-    },[props.markers])
+    }, [props.markers])
 
     function locationString(location) {
         if (location) {

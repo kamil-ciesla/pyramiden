@@ -6,9 +6,10 @@ import {Stage} from "../Stage/Stage";
 export const Day = (props) => {
     const [day, setDay] = useState(props.day)
 
-    function formattedDate(){
+    function formattedDate() {
         format(convertedDate(day.date), "EEEE, MMMM do")
     }
+
     function convertedDate(date) {
         if (isDate(date)) {
             return date
@@ -27,6 +28,8 @@ export const Day = (props) => {
             location: {lat: 0, lng: 0},
             locationName: '',
             time: new Date(),
+            marker:{}
+
         }
 
         const dayWithNewStage = {...day, stages: [...day.stages, newStage]}
@@ -71,8 +74,6 @@ export const Day = (props) => {
                         {day.stages.map((stage, index) => (<>
                             <ListItem key={index}>
                                 <Stage
-                                    // number={index}
-                                    // name={stage.name}
                                     stage={stage}
                                     onChange={(updatedStage) => {
                                         handleStageChange(index, updatedStage)

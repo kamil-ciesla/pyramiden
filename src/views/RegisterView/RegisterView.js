@@ -3,6 +3,7 @@ import IconButton from "@mui/material/IconButton";
 import {useState} from "react";
 
 import {handleRegister} from '../../auth/firebaseAuth'
+
 export function RegisterView() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -77,7 +78,7 @@ export function RegisterView() {
                             variant="contained"
                             color="primary"
                             fullWidth
-                            onClick={()=>handleRegister(email, password, repeatedPassword)}
+                            onClick={() => handleRegister(email, password, repeatedPassword)}
                         >
                             Register
                         </Button>

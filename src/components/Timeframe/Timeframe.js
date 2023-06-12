@@ -13,7 +13,7 @@ export function Timeframe(props) {
     function updateTimeframe(newTimeframe) {
         if (props.days.length != 0) {
             if (!window.confirm('Are you sure you want to change dates? You will lose all the data you have in each day.')) {
-              return
+                return
             }
         }
         props.onChange(

@@ -105,7 +105,7 @@ export function AppMenu() {
         open={isMenuOpen}
         onClose={handleMenuClose}
     >
-        <MenuItem onClick={()=>{
+        <MenuItem onClick={() => {
             handleMenuClose()
             navigate(routes.accountView)
         }}>Profile</MenuItem>

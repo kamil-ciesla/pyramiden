@@ -17,8 +17,8 @@ export function Documents(props) {
 
     const handleFileUpload = async (event) => {
         const file = event.target.files[0]
-        const isFileUploaded =  await uploadFile(props.planId, file)
-        if(isFileUploaded){
+        const isFileUploaded = await uploadFile(props.planId, file)
+        if (isFileUploaded) {
             setFiles([...files, file])
         }
     }

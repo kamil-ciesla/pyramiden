@@ -1,5 +1,5 @@
 // Import react functions
-import {useState, useEffect, useContext} from "react"
+import {useState, useEffect, useContext, createContext} from "react"
 
 // Import MUI components
 import {Card, Grid, Box, CardContent, Typography, TextField} from "@mui/material"
@@ -14,13 +14,40 @@ import {Currency} from "../Currency/Currency";
 
 // Import images
 import planBgImage from "../../plan-bg.jpg"
+import {MapContext} from "../Map/Map";
 
+export const PlanContext = createContext()
+export const PlanContextProvider = ({children}) => {
+    const [plan, setPlan] = useState()
+
+    function updatePlanMarkers(newMarkers) {
+        const updatedPlan = {...plan}
+        newMarkers.forEach(marker=>{
+            updatedPlan.forEach(day => {
+                day.stages.forEach(stage => {
+                    if(stage.marker.id === marker.id){
+                        stage.marker = marker
+                    }
+                })
+            })
+        })
+        setPlan(updatedPlan)
+    }
+
+    return (
+        <PlanContext.Provider value={{plan, updatePlanMarkers}}>
+            {children}
+        </PlanContext.Provider>
+    );
+}
 export const Plan = (props) => {
+    const {markers, updateMarkers} = useContext(MapContext)
     const [plan, setPlan] = useState(props.plan)
 
     const handleChange = (e) => {
-        setPlan(plan=>({...plan, [e.target.name]: e.target.value}))
-        props.onPlanChange(plan => ({...plan, [e.target.name]: e.target.value}))
+
+        setPlan({...plan, [e.target.name]: e.target.value})
+        props.onPlanChange({...plan, [e.target.name]: e.target.value})
     }
 
     function convertedTimeframe(timeframe) {
@@ -40,9 +67,27 @@ export const Plan = (props) => {
         return obj instanceof Date && !isNaN(obj.valueOf());
     }
 
-    useEffect(() => {
+    function loadPlan() {
         setPlan(props.plan)
-    }, [props.isPlanFetched])
+        const markersWithinDays = getMarkersWithinDays(props.plan.days)
+        updateMarkers(markersWithinDays)
+    }
+
+    function getMarkersWithinDays(days) {
+        const markers = [];
+        days.forEach(day => {
+            day.stages.forEach(stage => {
+                if (stage.marker) markers.push(stage.marker);
+            });
+        });
+        return markers;
+    }
+
+
+
+    useEffect(() => {
+        loadPlan()
+    }, [])
 
     return plan && (<Box sx={{
         width: "100%", minHeight: "95vh",
@@ -102,7 +147,6 @@ export const Plan = (props) => {
             <Grid item sm={12}>
                 <Schedule
                     days={plan.days}
-                    _timeframe={plan.timeframe}
                     timeframe={convertedTimeframe(plan.timeframe)}
                     onChange={handleChange}
                 />

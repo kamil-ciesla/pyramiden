@@ -6,8 +6,6 @@ import {Plan} from "../../components/Plan/Plan";
 import {AuthContext} from "../../auth/firebaseAuth";
 import {useSearchParams} from 'react-router-dom';
 
-import {MapContextProvider} from "../../components/Map/Map";
-
 export function PlanView() {
     const {currentUser} = useContext(AuthContext);
 
@@ -48,6 +46,7 @@ export function PlanView() {
 
     async function updatePlan() {
         if (plan && !_.isEqual(plan, DB_PLAN)) {
+
             console.log('Detected changes, sending updates to database...')
             const updatedSucceeded = firestore.updatePlan(planId, plan)
             if (updatedSucceeded) setDB_PLAN(plan)
@@ -59,8 +58,9 @@ export function PlanView() {
     return (plan &&
         <Plan
             id={planId} plan={plan}
-            onPlanChange={(plan) => handlePlanChange(plan)}
-            // markers={markers}
+            onPlanChange={(newPlan) => {
+                handlePlanChange(newPlan)
+            }}
         />
     )
 }
