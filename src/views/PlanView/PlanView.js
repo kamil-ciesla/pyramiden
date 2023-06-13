@@ -2,18 +2,20 @@ import React, {useContext, useEffect, useState} from "react";
 import * as firestore from "../../components/Plan/firestorePlan";
 import _ from "lodash";
 import {useInterval} from "../../useInterval";
-import {Plan} from "../../components/Plan/Plan";
+import {Plan, getMarkersWithinDays} from "../../components/Plan/Plan";
 import {AuthContext} from "../../auth/firebaseAuth";
 import {useSearchParams} from 'react-router-dom';
+import {MapContext} from "../../components/Map/Map";
 
 export function PlanView() {
     const {currentUser} = useContext(AuthContext);
+    const {markers, updateMarkers} = useContext(MapContext)
 
     const [searchParams] = useSearchParams();
     const [planId, setPlanId] = useState(null)
     const [plan, setPlan] = useState(null)
     const [DB_PLAN, setDB_PLAN] = useState(null)
-    const DB_PLAN_UPDATE_INTERVAL = 3000
+    const DB_PLAN_UPDATE_INTERVAL = 1000
 
     useEffect(() => {
         if (currentUser) fetchPlan()
@@ -39,27 +41,63 @@ export function PlanView() {
         setPlan(planData)
     }
 
-    function handlePlanChange(plan) {
-        // CHECK IF PLAN  HAS SAME PROPERTIES
-        setPlan(plan)
-    }
-
-    async function updatePlan() {
-        if (plan && !_.isEqual(plan, DB_PLAN)) {
-
+    async function updateDbPlan() {
+        let planToUpdate = {...plan}
+        if (!_.isEqual(markers, getMarkersWithinDays(planToUpdate.days))) {
+            console.log(markers, getMarkersWithinDays(planToUpdate.days))
+            console.log('MARKERS ARE DIFFERENT, updating markers in plan')
+            planToUpdate = updatePlanMarkers(planToUpdate, markers)
+            setPlan(planToUpdate)
+        }
+        if (planToUpdate && !_.isEqual(planToUpdate, DB_PLAN)) {
             console.log('Detected changes, sending updates to database...')
-            const updatedSucceeded = firestore.updatePlan(planId, plan)
-            if (updatedSucceeded) setDB_PLAN(plan)
+            const updatedSucceeded = firestore.updatePlan(planId, planToUpdate)
+            if (updatedSucceeded) setDB_PLAN(planToUpdate)
         }
     }
 
-    useInterval(updatePlan, DB_PLAN_UPDATE_INTERVAL)
+    function updatePlanMarkers(plan, newMarkers) {
+        if (plan) {
+            let updatedPlan = {...plan}
+            if (newMarkers && newMarkers.length) {
+                for (const marker of newMarkers) {
+                    for (const [dayIndex, day] of updatedPlan.days.entries()) {
+                        for (const [stageIndex, stage] of day.stages.entries()) {
+                            if (stage.marker.id === marker.id) {
+                                updatedPlan = {
+                                    ...updatedPlan,
+                                    days: [
+                                        ...updatedPlan.days.slice(0, dayIndex),
+                                        {
+                                            ...day,
+                                            stages: [
+                                                ...day.stages.slice(0, stageIndex),
+                                                {
+                                                    ...stage,
+                                                    marker: marker
+                                                },
+                                                ...day.stages.slice(stageIndex + 1)
+                                            ]
+                                        },
+                                        ...updatedPlan.days.slice(dayIndex + 1)
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return updatedPlan
+        }
+    }
+
+    useInterval(updateDbPlan, DB_PLAN_UPDATE_INTERVAL)
 
     return (plan &&
         <Plan
             id={planId} plan={plan}
             onPlanChange={(newPlan) => {
-                handlePlanChange(newPlan)
+                setPlan(newPlan)
             }}
         />
     )

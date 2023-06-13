@@ -7,13 +7,11 @@ import {PlanContextProvider} from "./components/Plan/Plan";
 function App() {
     return (
         <AuthProvider>
-            <PlanContextProvider>
                 <MapContextProvider>
                     <BrowserRouter basename="/">
                         <Layout/>
                     </BrowserRouter>
                 </MapContextProvider>
-            </PlanContextProvider>
         </AuthProvider>
     )
 }

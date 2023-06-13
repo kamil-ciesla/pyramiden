@@ -16,36 +16,20 @@ import {Currency} from "../Currency/Currency";
 import planBgImage from "../../plan-bg.jpg"
 import {MapContext} from "../Map/Map";
 
-export const PlanContext = createContext()
-export const PlanContextProvider = ({children}) => {
-    const [plan, setPlan] = useState()
-
-    function updatePlanMarkers(newMarkers) {
-        const updatedPlan = {...plan}
-        newMarkers.forEach(marker=>{
-            updatedPlan.forEach(day => {
-                day.stages.forEach(stage => {
-                    if(stage.marker.id === marker.id){
-                        stage.marker = marker
-                    }
-                })
-            })
-        })
-        setPlan(updatedPlan)
-    }
-
-    return (
-        <PlanContext.Provider value={{plan, updatePlanMarkers}}>
-            {children}
-        </PlanContext.Provider>
-    );
+export function getMarkersWithinDays(days) {
+    const markers = [];
+    days.forEach(day => {
+        day.stages.forEach(stage => {
+            if (stage.marker) markers.push(stage.marker);
+        });
+    });
+    return markers;
 }
+
 export const Plan = (props) => {
-    const {markers, updateMarkers} = useContext(MapContext)
     const [plan, setPlan] = useState(props.plan)
-
+    const {updateMarkers} = useContext(MapContext)
     const handleChange = (e) => {
-
         setPlan({...plan, [e.target.name]: e.target.value})
         props.onPlanChange({...plan, [e.target.name]: e.target.value})
     }
@@ -67,26 +51,9 @@ export const Plan = (props) => {
         return obj instanceof Date && !isNaN(obj.valueOf());
     }
 
-    function loadPlan() {
-        setPlan(props.plan)
-        const markersWithinDays = getMarkersWithinDays(props.plan.days)
-        updateMarkers(markersWithinDays)
-    }
-
-    function getMarkersWithinDays(days) {
-        const markers = [];
-        days.forEach(day => {
-            day.stages.forEach(stage => {
-                if (stage.marker) markers.push(stage.marker);
-            });
-        });
-        return markers;
-    }
-
-
-
     useEffect(() => {
-        loadPlan()
+        setPlan(props.plan)
+        updateMarkers(getMarkersWithinDays(props.plan.days))
     }, [])
 
     return plan && (<Box sx={{

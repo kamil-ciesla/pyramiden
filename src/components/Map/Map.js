@@ -8,11 +8,9 @@ import {PlanContext} from "../Plan/Plan";
 export const MapContext = createContext();
 
 export const MapContextProvider = ({children}) => {
-    const {updatePlanMarkers} =useContext(PlanContext)
     const [markers, setMarkers] = useState([]);
 
     const updateMarkers = (newMarkers) => {
-        // updatePlanMarkers(newMarkers)
         setMarkers(newMarkers);
     };
 
