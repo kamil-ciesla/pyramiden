@@ -15,7 +15,7 @@ export function PlanView() {
     const [planId, setPlanId] = useState(null)
     const [plan, setPlan] = useState(null)
     const [DB_PLAN, setDB_PLAN] = useState(null)
-    const DB_PLAN_UPDATE_INTERVAL = 1000
+    const DB_PLAN_UPDATE_INTERVAL = 3000
 
     useEffect(() => {
         if (currentUser) fetchPlan()
@@ -44,9 +44,8 @@ export function PlanView() {
     async function updateDbPlan() {
         let planToUpdate = {...plan}
         if (!_.isEqual(markers, getMarkersWithinDays(planToUpdate.days))) {
-            console.log(markers, getMarkersWithinDays(planToUpdate.days))
-            console.log('MARKERS ARE DIFFERENT, updating markers in plan')
             planToUpdate = updatePlanMarkers(planToUpdate, markers)
+            // updateMarkers(getMarkersWithinDays(planToUpdate))
             setPlan(planToUpdate)
         }
         if (planToUpdate && !_.isEqual(planToUpdate, DB_PLAN)) {

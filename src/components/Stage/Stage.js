@@ -33,7 +33,7 @@ export const Stage = (props) => {
         const updatedStage = {
             ...stage,
             marker: marker,
-            locationName: locationName || locationCoordinatesAsString(markerLocation)
+            locationName: locationName ? locationName : locationCoordinatesAsString(markerLocation)
         }
 
         setStage(updatedStage)
@@ -41,7 +41,7 @@ export const Stage = (props) => {
     }
 
     async function fetchLocationName(location) {
-        await reverseGeocode(location).then(locationName => {
+        return reverseGeocode(location).then(locationName => {
             if (locationName) {
                 return locationName
             } else {
@@ -81,7 +81,6 @@ export const Stage = (props) => {
     }
 
     function listenForMarker() {
-        console.log('started listening')
         setIsListeningForMarker(true)
     }
 

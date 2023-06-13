@@ -28,8 +28,7 @@ export const Day = (props) => {
             location: {lat: 0, lng: 0},
             locationName: '',
             time: new Date(),
-            marker:{}
-
+            marker: {}
         }
 
         const dayWithNewStage = {...day, stages: [...day.stages, newStage]}

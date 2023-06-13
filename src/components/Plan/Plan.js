@@ -20,7 +20,7 @@ export function getMarkersWithinDays(days) {
     const markers = [];
     days.forEach(day => {
         day.stages.forEach(stage => {
-            if (stage.marker) markers.push(stage.marker);
+            if (Object.keys(stage.marker).length) markers.push(stage.marker);
         });
     });
     return markers;
