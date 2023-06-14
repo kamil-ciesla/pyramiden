@@ -6,11 +6,3 @@
     visibility: visible;
 }
 
-
-.delete-plan-button {
-    visibility: hidden;
-}
-
-.plan-list-item:hover > .delete-plan-button {
-    visibility: visible;
-}

@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from "react";
 
 import React from 'react';
-import {InputAdornment, TextField} from "@mui/material";
+import {IconButton, InputAdornment, TextField} from "@mui/material";
 import RoomIcon from '@mui/icons-material/Room';
 import Geocoder from 'react-native-geocoding';
 import {MapContext} from "../Map/Map";
-
+import ClearIcon from "@mui/icons-material/Clear";
 
 export const Stage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
@@ -13,10 +13,6 @@ export const Stage = (props) => {
 
     const [stage, setStage] = useState(props.stage)
     const [isListeningForMarker, setIsListeningForMarker] = useState(false)
-
-    // const handleRemovePlace = (place) => {
-    //     setPlaces(places.filter((p) => p !== place));
-    // };
 
     useEffect(() => {
         if (markers && isListeningForMarker) {
@@ -93,10 +89,29 @@ export const Stage = (props) => {
             placeholder={'Add a place'}
             value={stage.locationName}
             onClick={listenForMarker}
+            onMouseOver={(e) => {
+                e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
+            }}
+            onMouseOut={(e) => {
+                e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'hidden';
+            }}
             InputProps={{
                 startAdornment: (<InputAdornment position="start">
                     <RoomIcon/>
                 </InputAdornment>),
+                endAdornment:(
+                    <InputAdornment position="end">
+                        <IconButton
+                            className='delete-stage-button'
+                            aria-label="delete"
+                            size="large"
+                            onClick={props.handleDeleteStage}
+                            style={{visibility: 'hidden'}}
+                        >
+                            <ClearIcon/>
+                        </IconButton>
+                    </InputAdornment>
+                )
             }}
         />
     </>);

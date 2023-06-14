@@ -24,6 +24,7 @@ export const Day = (props) => {
 
     function addStage() {
         const newStage = {
+            id: createRandomStageId(),
             note: '',
             location: {lat: 0, lng: 0},
             locationName: '',
@@ -36,6 +37,14 @@ export const Day = (props) => {
         props.onChange(dayWithNewStage)
     }
 
+    function createRandomStageId(){
+        let randomId = ''
+        for(let i=0;i<4;i++){
+            randomId += Math.random().toString(36).substring(2,32+2)
+        }
+        return randomId
+    }
+
     const handleChange = (e) => {
         setDay({...day, [e.target.name]: e.target.value})
         props.onChange({...day, [e.target.name]: e.target.value})
@@ -44,6 +53,15 @@ export const Day = (props) => {
     const handleStageChange = (stageIndex, updatedStage) => {
         const updatedStages = [...day.stages]
         updatedStages[stageIndex] = updatedStage
+        const updatedDay = {...day, stages: updatedStages}
+        setDay(updatedDay)
+        props.onChange(updatedDay)
+    }
+
+    const handleDeleteStage = (id) => {
+        const updatedStages = [...day.stages].filter(function(stage) {
+            return stage.id !== id;
+        });
         const updatedDay = {...day, stages: updatedStages}
         setDay(updatedDay)
         props.onChange(updatedDay)
@@ -71,12 +89,14 @@ export const Day = (props) => {
                 <Box>
                     <List>
                         {day.stages.map((stage, index) => (<>
-                            <ListItem key={index}>
+                            <ListItem >
                                 <Stage
+                                    key={stage.id}
                                     stage={stage}
                                     onChange={(updatedStage) => {
                                         handleStageChange(index, updatedStage)
                                     }}
+                                    handleDeleteStage={() => {handleDeleteStage(stage.id)}}
                                 />
                             </ListItem>
                             <Divider light/>
