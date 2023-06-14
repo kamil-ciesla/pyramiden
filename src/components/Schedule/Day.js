@@ -1,13 +1,14 @@
 import {Card, CardContent, List, ListItem, Box, Button, CardHeader, Input, TextField, Divider} from "@mui/material";
 import {useState} from "react";
 import {format} from "date-fns";
-import {Stage} from "../Stage/Stage";
+import {PlaceStage} from "../Stage/PlaceStage";
+import {NoteStage} from "../Stage/NoteStage";
 
 export const Day = (props) => {
     const [day, setDay] = useState(props.day)
 
     function formattedDate() {
-        format(convertedDate(day.date), "EEEE, MMMM do")
+        return format(convertedDate(day.date), "EEEE, MMMM do")
     }
 
     function convertedDate(date) {
@@ -22,12 +23,12 @@ export const Day = (props) => {
         return obj instanceof Date && !isNaN(obj.valueOf());
     }
 
-    function addStage() {
+    function addStage(type) {
         const newStage = {
             id: createRandomStageId(),
             note: '',
-            location: {lat: 0, lng: 0},
             locationName: '',
+            type: type,
             time: new Date(),
             marker: {}
         }
@@ -37,10 +38,10 @@ export const Day = (props) => {
         props.onChange(dayWithNewStage)
     }
 
-    function createRandomStageId(){
+    function createRandomStageId() {
         let randomId = ''
-        for(let i=0;i<4;i++){
-            randomId += Math.random().toString(36).substring(2,32+2)
+        for (let i = 0; i < 4; i++) {
+            randomId += Math.random().toString(36).substring(2, 32 + 2)
         }
         return randomId
     }
@@ -59,7 +60,7 @@ export const Day = (props) => {
     }
 
     const handleDeleteStage = (id) => {
-        const updatedStages = [...day.stages].filter(function(stage) {
+        const updatedStages = [...day.stages].filter(function (stage) {
             return stage.id !== id;
         });
         const updatedDay = {...day, stages: updatedStages}
@@ -89,20 +90,36 @@ export const Day = (props) => {
                 <Box>
                     <List>
                         {day.stages.map((stage, index) => (<>
-                            <ListItem >
-                                <Stage
-                                    key={stage.id}
-                                    stage={stage}
-                                    onChange={(updatedStage) => {
-                                        handleStageChange(index, updatedStage)
-                                    }}
-                                    handleDeleteStage={() => {handleDeleteStage(stage.id)}}
-                                />
+                            <ListItem>
+                                {
+                                    stage.type === 'place' &&
+                                    <PlaceStage
+                                        key={stage.id}
+                                        stage={stage}
+                                        onChange={(updatedStage) => {
+                                            handleStageChange(index, updatedStage)
+                                        }}
+                                        handleDeleteStage={() => {
+                                            handleDeleteStage(stage.id)
+                                        }}
+                                    />
+                                }
+                                {
+                                    stage.type === 'note' &&
+                                    <NoteStage
+                                        key={stage.id}
+                                        stage={stage}
+                                        onChange={(updatedStage) => {
+                                            handleStageChange(index, updatedStage)
+                                        }}
+                                    />
+                                }
                             </ListItem>
                             <Divider light/>
                         </>))}
                     </List>
-                    <Button onClick={addStage}>Add stage</Button>
+                    <Button onClick={()=>{addStage('note')}}>Add note</Button>
+                    <Button onClick={()=>{addStage('place')}}>Add place</Button>
                 </Box>
             </CardContent>
         </Card>

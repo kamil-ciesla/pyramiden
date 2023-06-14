@@ -1,13 +1,13 @@
 import {useContext, useEffect, useState} from "react";
 
 import React from 'react';
-import {IconButton, InputAdornment, TextField} from "@mui/material";
+import {Box, IconButton, InputAdornment, TextField} from "@mui/material";
 import RoomIcon from '@mui/icons-material/Room';
 import Geocoder from 'react-native-geocoding';
 import {MapContext} from "../Map/Map";
 import ClearIcon from "@mui/icons-material/Clear";
 
-export const Stage = (props) => {
+export const PlaceStage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
     const {markers} = useContext(MapContext)
 
@@ -80,39 +80,42 @@ export const Stage = (props) => {
         setIsListeningForMarker(true)
     }
 
-    return (<>
-        <TextField
-            sx={{
-                width: "100%",
-            }}
-            fullWidth
-            placeholder={'Add a place'}
-            value={stage.locationName}
-            onClick={listenForMarker}
-            onMouseOver={(e) => {
-                e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
-            }}
-            onMouseOut={(e) => {
-                e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'hidden';
-            }}
-            InputProps={{
-                startAdornment: (<InputAdornment position="start">
-                    <RoomIcon/>
-                </InputAdornment>),
-                endAdornment:(
-                    <InputAdornment position="end">
-                        <IconButton
-                            className='delete-stage-button'
-                            aria-label="delete"
-                            size="large"
-                            onClick={props.handleDeleteStage}
-                            style={{visibility: 'hidden'}}
-                        >
-                            <ClearIcon/>
-                        </IconButton>
-                    </InputAdornment>
-                )
-            }}
-        />
-    </>);
+    return (
+        <Box
+        sx={{
+            width:"100%"
+        }}
+        >
+
+            <TextField
+                fullWidth
+                placeholder={'Add a place'}
+                value={stage.locationName}
+                onClick={listenForMarker}
+                onMouseOver={(e) => {
+                    e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
+                }}
+                onMouseOut={(e) => {
+                    e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'hidden';
+                }}
+                InputProps={{
+                    startAdornment: (<InputAdornment position="start">
+                        <RoomIcon/>
+                    </InputAdornment>),
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton
+                                className='delete-stage-button'
+                                aria-label="delete"
+                                size="large"
+                                onClick={props.handleDeleteStage}
+                                style={{visibility: 'hidden'}}
+                            >
+                                <ClearIcon/>
+                            </IconButton>
+                        </InputAdornment>
+                    )
+                }}
+            />
+        </Box>);
 }
