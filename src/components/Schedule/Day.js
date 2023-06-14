@@ -1,5 +1,5 @@
 import {Card, CardContent, List, ListItem, Box, Button, CardHeader, Input, TextField, Divider} from "@mui/material";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {format} from "date-fns";
 import {PlaceStage} from "../Stage/PlaceStage";
 import {NoteStage} from "../Stage/NoteStage";
@@ -64,6 +64,7 @@ export const Day = (props) => {
         setDay(updatedDay)
         props.onChange(updatedDay)
     }
+
 
     return (<Card sx={{width: "100%"}}>
             <CardHeader

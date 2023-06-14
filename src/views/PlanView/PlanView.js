@@ -53,6 +53,7 @@ export function PlanView() {
 
     function updatePlan(newPlan) {
         setPlan(newPlan)
+        console.log('xd')
         updateMarkers(getMarkersWithinDays(newPlan.days))
     }
 
@@ -91,14 +92,6 @@ export function PlanView() {
         }
     }
 
-    useEffect(() => {
-        if (plan) {
-            console.log('adjusting marker postions')
-            const planWithNewMarkers = updatePlanMarkers(
-                plan, markers)
-            setPlan(planWithNewMarkers)
-        }
-    }, [markers])
 
     useEffect(() => {
         if (currentUser) fetchPlan()

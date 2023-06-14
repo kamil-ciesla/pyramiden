@@ -9,10 +9,28 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 export const PlaceStage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
-    const {markers, currentMarker, setCurrentMarker} = useContext(MapContext)
+    const {
+        currentMarker,
+        setCurrentMarker,
+        movedMarker,
+        setMovedMarker
+    } = useContext(MapContext)
 
     const [stage, setStage] = useState(props.stage)
     const [isListeningForMarker, setIsListeningForMarker] = useState(stageHasMarker(stage) ? false : true)
+
+    useEffect(() => {
+        if (!movedMarker) return
+
+        if (movedMarker.id === stage.marker.id) {
+            const updatedStage = {...stage}
+            updatedStage.marker = movedMarker
+            setStage(updatedStage)
+            props.onChange(updatedStage)
+            setMovedMarker(null)
+
+        }
+    }, [movedMarker])
 
     useEffect(() => {
         if (currentMarker && isListeningForMarker) {
@@ -20,7 +38,7 @@ export const PlaceStage = (props) => {
         }
     }, [currentMarker])
 
-    function stageHasMarker(stage){
+    function stageHasMarker(stage) {
         return !!(Object.keys(stage.marker).length)
     }
 
@@ -87,9 +105,9 @@ export const PlaceStage = (props) => {
 
     return (
         <Box
-        sx={{
-            width:"100%"
-        }}
+            sx={{
+                width: "100%"
+            }}
         >
 
             <TextField

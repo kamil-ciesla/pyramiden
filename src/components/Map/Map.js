@@ -10,12 +10,23 @@ export const MapContext = createContext();
 export const MapContextProvider = ({children}) => {
     const [markers, setMarkers] = useState([]);
     const [currentMarker, setCurrentMarker] = useState(null)
+    const [movedMarker, setMovedMarker] = useState(null)
     const updateMarkers = (newMarkers) => {
+
         setMarkers(newMarkers);
     };
 
     return (
-        <MapContext.Provider value={{markers, updateMarkers, currentMarker, setCurrentMarker}}>
+        <MapContext.Provider value={
+            {
+                markers,
+                updateMarkers,
+                currentMarker,
+                setCurrentMarker,
+                movedMarker,
+                setMovedMarker
+            }
+        }>
             {children}
         </MapContext.Provider>
     );
@@ -24,7 +35,7 @@ export const MapContextProvider = ({children}) => {
 export const Map = (props) => {
     const [lines, setLines] = useState([])
     const [linePathShape, setLinePathShape] = useState('magnet')
-    const {markers,updateMarkers, setCurrentMarker} = useContext(MapContext)
+    const {markers, updateMarkers, setCurrentMarker, setMovedMarker} = useContext(MapContext)
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY
     })
@@ -38,8 +49,6 @@ export const Map = (props) => {
             lng: latLng.lng(),
         }
         setCurrentMarker(newMarker)
-        // const newMarkers = [...markers, newMarker]
-        // updateMarkers(newMarkers)
     };
 
     function connectMarkers(firstMarker, secondMarker) {
@@ -113,15 +122,15 @@ export const Map = (props) => {
 
     const handleMarkerDrop = (event, marker, markerIndex) => {
         const {latLng} = event;
-        const updatedMarker = {
+        const movedMarker = {
             ...marker,
-            id: createRandomId(),
             lat: latLng.lat(),
             lng: latLng.lng()
         }
         const updatedMarkers = [...markers]
-        updatedMarkers[markerIndex] = updatedMarker
+        updatedMarkers[markerIndex] = movedMarker
         updateMarkers(updatedMarkers)
+        setMovedMarker(movedMarker)
         createLines()
         removeLines()
     }
