@@ -96,20 +96,24 @@ export const Plan = (props) => {
                 </div>
             </Grid>
             <Grid item sm={12}>
-                <TextField
-                    sx={{
-                        width: "100%",
-                    }}
-                    name={'tripNotes'}
-                    value={plan.tripNotes}
-                    onChange={handleChange}
-                    id="standard-multiline-flexible"
-                    label={"Trip notes"}
-                    multiline={true}
-                    rows={4}
-                    placeholder={"Put here some useful notes e.g. what to take for the trip"}
-                    textMinHeight={'30vh'}
-                />
+                <Card>
+                    <CardContent>
+                        <TextField
+                            sx={{
+                                width: "100%",
+                            }}
+                            name={'tripNotes'}
+                            value={plan.tripNotes}
+                            onChange={handleChange}
+                            id="standard-multiline-flexible"
+                            label={"Trip notes"}
+                            multiline={true}
+                            rows={4}
+                            placeholder={"Put here some useful notes e.g. what to take for the trip"}
+                            textMinHeight={'30vh'}
+                        />
+                    </CardContent>
+                </Card>
             </Grid>
             <Grid item sm={12}>
                 <Schedule
