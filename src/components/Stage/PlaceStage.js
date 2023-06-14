@@ -9,20 +9,25 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 export const PlaceStage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
-    const {markers} = useContext(MapContext)
+    const {markers, currentMarker, setCurrentMarker} = useContext(MapContext)
 
     const [stage, setStage] = useState(props.stage)
-    const [isListeningForMarker, setIsListeningForMarker] = useState(false)
+    const [isListeningForMarker, setIsListeningForMarker] = useState(stageHasMarker(stage) ? false : true)
 
     useEffect(() => {
-        if (markers && isListeningForMarker) {
+        if (currentMarker && isListeningForMarker) {
             catchMarker()
         }
-    }, [markers])
+    }, [currentMarker])
+
+    function stageHasMarker(stage){
+        return !!(Object.keys(stage.marker).length)
+    }
 
     async function catchMarker() {
         setIsListeningForMarker(false)
-        const marker = (markers.at(-1))
+        const marker = (currentMarker)
+        setCurrentMarker(null)
         const markerLocation = {lat: marker.lat, lng: marker.lng}
         const locationName = await fetchLocationName(markerLocation)
 
@@ -89,7 +94,7 @@ export const PlaceStage = (props) => {
 
             <TextField
                 fullWidth
-                placeholder={'Add a place'}
+                placeholder={'Type the place or click on the map'}
                 value={stage.locationName}
                 onClick={listenForMarker}
                 onMouseOver={(e) => {

@@ -1,10 +1,13 @@
 import {Card, CardContent, List, ListItem, Box, Button, CardHeader, Input, TextField, Divider} from "@mui/material";
-import {useState} from "react";
+import {useContext, useState} from "react";
 import {format} from "date-fns";
 import {PlaceStage} from "../Stage/PlaceStage";
 import {NoteStage} from "../Stage/NoteStage";
+import {createRandomId} from "../../idGenerator";
+import {MapContext} from "../Map/Map";
 
 export const Day = (props) => {
+    const {setCurrentMarker} = useContext(MapContext)
     const [day, setDay] = useState(props.day)
 
     function formattedDate() {
@@ -25,25 +28,19 @@ export const Day = (props) => {
 
     function addStage(type) {
         const newStage = {
-            id: createRandomStageId(),
+            id: createRandomId(),
             note: '',
             locationName: '',
             type: type,
             time: new Date(),
             marker: {}
         }
-
         const dayWithNewStage = {...day, stages: [...day.stages, newStage]}
         setDay(dayWithNewStage)
         props.onChange(dayWithNewStage)
-    }
 
-    function createRandomStageId() {
-        let randomId = ''
-        for (let i = 0; i < 4; i++) {
-            randomId += Math.random().toString(36).substring(2, 32 + 2)
-        }
-        return randomId
+        // Set map marker to null to prevent catching previous marker when setting new place
+        setCurrentMarker(null)
     }
 
     const handleChange = (e) => {
@@ -111,6 +108,9 @@ export const Day = (props) => {
                                         stage={stage}
                                         onChange={(updatedStage) => {
                                             handleStageChange(index, updatedStage)
+                                        }}
+                                        handleDeleteStage={() => {
+                                            handleDeleteStage(stage.id)
                                         }}
                                     />
                                 }

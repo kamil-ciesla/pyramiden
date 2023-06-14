@@ -1,21 +1,21 @@
-import {GoogleMap, MarkerF, useLoadScript, OverlayView} from "@react-google-maps/api";
-import {createContext, createRef, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {GoogleMap, MarkerF, useLoadScript} from "@react-google-maps/api";
+import {createContext, useContext, useMemo, useState} from "react";
 import "./Map.css"
 import LeaderLine from 'react-leader-line'
 import {useInterval} from "../../useInterval";
-import {PlanContext} from "../Plan/Plan";
+import {createRandomId} from "../../idGenerator";
 
 export const MapContext = createContext();
 
 export const MapContextProvider = ({children}) => {
     const [markers, setMarkers] = useState([]);
-
+    const [currentMarker, setCurrentMarker] = useState(null)
     const updateMarkers = (newMarkers) => {
         setMarkers(newMarkers);
     };
 
     return (
-        <MapContext.Provider value={{markers, updateMarkers}}>
+        <MapContext.Provider value={{markers, updateMarkers, currentMarker, setCurrentMarker}}>
             {children}
         </MapContext.Provider>
     );
@@ -24,7 +24,7 @@ export const MapContextProvider = ({children}) => {
 export const Map = (props) => {
     const [lines, setLines] = useState([])
     const [linePathShape, setLinePathShape] = useState('magnet')
-    const {markers,updateMarkers} = useContext(MapContext)
+    const {markers,updateMarkers, setCurrentMarker} = useContext(MapContext)
     const {isLoaded} = useLoadScript({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY
     })
@@ -33,12 +33,13 @@ export const Map = (props) => {
     const handleMapClick = (event) => {
         const {latLng} = event;
         const newMarker = {
-            id: 'map-marker-' + (markers.length + 1),
+            id: createRandomId(),
             lat: latLng.lat(),
             lng: latLng.lng(),
         }
-        const newMarkers = [...markers, newMarker]
-        updateMarkers(newMarkers)
+        setCurrentMarker(newMarker)
+        // const newMarkers = [...markers, newMarker]
+        // updateMarkers(newMarkers)
     };
 
     function connectMarkers(firstMarker, secondMarker) {
@@ -114,6 +115,7 @@ export const Map = (props) => {
         const {latLng} = event;
         const updatedMarker = {
             ...marker,
+            id: createRandomId(),
             lat: latLng.lat(),
             lng: latLng.lng()
         }
@@ -143,7 +145,7 @@ export const Map = (props) => {
                                 const position = {lat: marker.lat, lng: marker.lng}
                                 return (
                                     <MarkerF title={marker.id}
-                                             key={`${marker.lat}-${marker.lng}`} position={position}
+                                             key={marker.id} position={position}
                                              draggable={true}
                                              onDragEnd={(event) => {
                                                  // updateLinePathShape('straight')

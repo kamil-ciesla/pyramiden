@@ -15,11 +15,7 @@ export function PlanView() {
     const [planId, setPlanId] = useState(null)
     const [plan, setPlan] = useState(null)
     const [DB_PLAN, setDB_PLAN] = useState(null)
-    const DB_PLAN_UPDATE_INTERVAL = 3000
-
-    useEffect(() => {
-        if (currentUser) fetchPlan()
-    }, [currentUser])
+    const DB_PLAN_UPDATE_INTERVAL = 1000
 
     async function fetchPlan() {
         let planData
@@ -53,6 +49,11 @@ export function PlanView() {
             const updatedSucceeded = firestore.updatePlan(planId, planToUpdate)
             if (updatedSucceeded) setDB_PLAN(planToUpdate)
         }
+    }
+
+    function updatePlan(newPlan) {
+        setPlan(newPlan)
+        updateMarkers(getMarkersWithinDays(newPlan.days))
     }
 
     function updatePlanMarkers(plan, newMarkers) {
@@ -90,13 +91,27 @@ export function PlanView() {
         }
     }
 
+    useEffect(() => {
+        if (plan) {
+            console.log('adjusting marker postions')
+            const planWithNewMarkers = updatePlanMarkers(
+                plan, markers)
+            setPlan(planWithNewMarkers)
+        }
+    }, [markers])
+
+    useEffect(() => {
+        if (currentUser) fetchPlan()
+    }, [currentUser])
+
     useInterval(updateDbPlan, DB_PLAN_UPDATE_INTERVAL)
 
     return (plan &&
         <Plan
             id={planId} plan={plan}
+            markers={markers}
             onPlanChange={(newPlan) => {
-                setPlan(newPlan)
+                updatePlan(newPlan)
             }}
         />
     )
