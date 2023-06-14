@@ -53,7 +53,6 @@ export function PlanView() {
 
     function updatePlan(newPlan) {
         setPlan(newPlan)
-        console.log('xd')
         updateMarkers(getMarkersWithinDays(newPlan.days))
     }
 

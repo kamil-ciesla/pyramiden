@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {MainRouterContainer} from '../MainRouterContainer/MainRouterContainer';
+import React from 'react';
+import {Router} from '../MainRouterContainer/Router';
 import {Box} from "@mui/material";
 import {AppMenu} from "../AppMenu/AppMenu";
 import {Map} from "../Map/Map";
@@ -25,7 +25,7 @@ export const Layout = () => {
                          flexGrow: '1',
                      }}
                 >
-                    <MainRouterContainer/>
+                    <Router/>
                 </Box>
             </Box>
             <Box className="right-container">

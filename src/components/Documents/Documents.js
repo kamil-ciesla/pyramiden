@@ -52,7 +52,7 @@ export function Documents(props) {
 
     return (
         <>
-            <Typography variant="h5">Documents</Typography>
+            <Typography variant="h5">Attachments</Typography>
             <Box
                 className="files"
                 sx={{

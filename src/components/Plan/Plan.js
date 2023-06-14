@@ -115,13 +115,7 @@ export const Plan = (props) => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item sm={12}>
-                <Schedule
-                    days={plan.days}
-                    timeframe={convertedTimeframe(plan.timeframe)}
-                    onChange={handleChange}
-                />
-            </Grid>
+
             <Grid item sm={6}>
                 <Tripmates
                     tripmates={plan.tripmates}
@@ -166,13 +160,13 @@ export const Plan = (props) => {
                     </CardContent>
                 </Card>
             </Grid>
-            {/*<Grid item sm={12}>*/}
-            {/*    <Card className="reservations">*/}
-            {/*        <CardContent>*/}
-            {/*            <Typography variant="h5">Reservations</Typography>*/}
-            {/*        </CardContent>*/}
-            {/*    </Card>*/}
-            {/*</Grid>*/}
+            <Grid item sm={12}>
+                <Schedule
+                    days={plan.days}
+                    timeframe={convertedTimeframe(plan.timeframe)}
+                    onChange={handleChange}
+                />
+            </Grid>
         </Grid>
     </Box>)
 }

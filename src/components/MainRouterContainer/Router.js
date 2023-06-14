@@ -7,7 +7,7 @@ import {PlanView} from '../../views/PlanView/PlanView';
 import {routes} from '../../routes';
 // import PrivateRoute from '../PrivateRoute/PrivateRoute';
 
-export const MainRouterContainer = () => {
+export const Router = () => {
     return (
         <Routes>
             <Route path={routes.homeView} element={<LoginView/>}/>
