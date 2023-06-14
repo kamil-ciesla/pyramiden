@@ -38,7 +38,7 @@ export const Tripmates = (props) => {
     return (
         <Card className="Tripmates">
             <CardContent sx={{display: "flex", flexDirection: "column"}}>
-                <Typography>Tripmates</Typography>
+                <Typography variant='h6'>Tripmates</Typography>
                 {props.tripmates.map((input, index) => (
                     <div className="tripmate-input-container" key={index}>
                         <Input
@@ -48,7 +48,7 @@ export const Tripmates = (props) => {
                         <IconButton
                             className="delete-tripmate-button"
                             aria-label="delete"
-                            size="large"
+                            size="small"
                             onClick={() => {
                                 handleDeleteTripmate(index)
                             }}

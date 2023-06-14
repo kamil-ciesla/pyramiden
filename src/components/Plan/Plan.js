@@ -115,14 +115,7 @@ export const Plan = (props) => {
                     </CardContent>
                 </Card>
             </Grid>
-
-            <Grid item sm={6}>
-                <Tripmates
-                    tripmates={plan.tripmates}
-                    onChange={handleChange}
-                />
-            </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={12}>
                 <Card>
                     <CardContent
                         sx={{
@@ -149,16 +142,17 @@ export const Plan = (props) => {
                     </CardContent>
                 </Card>
             </Grid>
-            <Grid item sm={12}>
-                <Card className="documents">
-                    <CardContent>
-                        <Typography variant="h5">
-                            <Documents
-                                planId={props.id}
-                            />
-                        </Typography>
-                    </CardContent>
-                </Card>
+            <Grid item sm={6}>
+                <Tripmates
+                    tripmates={plan.tripmates}
+                    onChange={handleChange}
+                />
+            </Grid>
+
+            <Grid item sm={12} md={6}>
+                <Documents
+                    planId={props.id}
+                />
             </Grid>
             <Grid item sm={12}>
                 <Schedule

@@ -1,7 +1,6 @@
-import {useState, useEffect} from "react"
-import {Fab} from "@mui/material"
+import React, {useState, useEffect} from "react"
+import {Card, CardContent, Fab, Grid, IconButton, Input, InputAdornment, TextField} from "@mui/material"
 import {
-    Tooltip,
     Typography,
     Box
 } from "@mui/material"
@@ -11,6 +10,10 @@ import AddIcon from "@mui/icons-material/Add"
 import {uploadFile} from "../Plan/firestorePlan"
 
 import {getStorage, ref, listAll, getDownloadURL} from 'firebase/storage';
+import ClearIcon from "@mui/icons-material/Clear";
+import NoteIcon from "@mui/icons-material/Note";
+import * as PropTypes from "prop-types";
+
 
 export function Documents(props) {
     const [files, setFiles] = useState([])
@@ -51,57 +54,82 @@ export function Documents(props) {
     }, []);
 
     return (
-        <>
-            <Typography variant="h5">Attachments</Typography>
-            <Box
-                className="files"
-                sx={{
-                    display: "flex"
-                }}
-            >
-                {files.map((file) => (
-                    <Box
-                        className="file"
-                        sx={{
-                            width: "10rem"
-                        }}
-                    >
+        <Card className="Tripmates">
+            <CardContent sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent:"space-between",
+                mb:'2'
+            }} >
+                <Grid container spacing={2}>
+                    <Grid item sm={12}>
+                        <Typography variant='h6'>Documents</Typography>
+                        {files.map((file, index) => (
+                            <Box className="file-container" key={index}
+                                 sx={{
+                                     cursor: "pointer",
+                                     display: 'flex',
+                                     alignItems: 'center'
+                                 }}
+                            >
 
-                        <Tooltip key={file.name} title={file.name}>
-                            <Box className="file-container" style={{cursor: "pointer"}}>
-                                <DescriptionIcon
-                                    key={file.name}
-                                    alt={file.name}
-                                    // src={URL.createObjectURL(file)}
-                                    fontSize="large"
+                                <TextField
+                                    variant='filled'
+                                    InputProps={{
+                                        readOnly: true,
+                                        startAdornment: (<InputAdornment position="start">
+                                            <DescriptionIcon
+                                                key={file.name}
+                                                alt={file.name}
+                                                fontSize="medium"
+                                            />
+                                        </InputAdornment>),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    className="delete-file-button"
+                                                    aria-label="delete"
+                                                    size="small"
+                                                    onClick={() => {
+                                                        // handleDeleteTripmate(index)
+                                                    }}
+                                                >
+                                                    <ClearIcon/>
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                    value={file.name}
+                                    fullWidth
                                     onClick={() => handleFileDownload(file)}
-                                    download
                                 />
-                                <Typography noWrap="false">{file.name}</Typography>
+
                             </Box>
-                        </Tooltip>
-                    </Box>
-                ))}
-            </Box>
-            <label htmlFor="upload-photo">
-                <input
-                    style={{display: "none"}}
-                    id="upload-photo"
-                    name="upload-photo"
-                    type="file"
-                    onChange={handleFileUpload}
-                />
-                <Fab
-                    color="secondary"
-                    siz
-                    e="small"
-                    component="span"
-                    aria-label="add"
-                    variant="extended"
-                >
-                    <AddIcon/> Upload File
-                </Fab>
-            </label>
-        </>
+                        ))}
+                    </Grid>
+                    <Grid item sm={12}>
+                        <label>
+                            <input
+                                style={{display: "none"}}
+                                type="file"
+                                onChange={handleFileUpload}
+                            />
+                            <Fab
+                                color="secondary"
+                                size='medium'
+                                e="small"
+                                component="span"
+                                aria-label="add"
+                                variant="extended"
+                            >
+                                <AddIcon/> Upload File
+                            </Fab>
+                        </label>
+                    </Grid>
+                </Grid>
+            </CardContent>
+        </Card>
     )
 }
+
+
