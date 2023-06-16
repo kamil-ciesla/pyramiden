@@ -13,7 +13,6 @@ export const MapContextProvider = ({children}) => {
     const [currentMarker, setCurrentMarker] = useState(null)
     const [movedMarker, setMovedMarker] = useState(null)
     const updateMarkers = (newMarkers) => {
-
         setMarkers(newMarkers);
     };
 
@@ -48,11 +47,12 @@ export const Map = (props) => {
             id: createRandomId(),
             lat: latLng.lat(),
             lng: latLng.lng(),
+            isNew: true
         }
         setCurrentMarker(newMarker)
     };
 
-    function connectMarkers(firstMarker, secondMarker) {
+    function connectMarkers(firstMarker, secondMarker, options = {}) {
         const firstMarkerEl = document.querySelector(`[aria-label="${firstMarker.id}"]`)
         const secondMarkerEl = document.querySelector(`[aria-label="${secondMarker.id}"]`)
 
@@ -60,9 +60,14 @@ export const Map = (props) => {
             {
                 start: firstMarkerEl,
                 end: secondMarkerEl,
-                path: linePathShape
+                path: linePathShape,
+                dropShadow: true,
+                hide: !!options?.isNew,
+                dash: options?.isMoving ? {animation: true} : false
             }
         )
+
+        if (options.isNew) newLine.show(['draw'])
         // newLine.path ='magnet'
         lines.push(newLine)
         return newLine
@@ -73,7 +78,11 @@ export const Map = (props) => {
             if (markers.length > 1) {
                 for (let i = lines.length; i < markers.length - 1; i++) {
                     try {
-                        connectMarkers(markers[i], markers[i + 1])
+                        connectMarkers(markers[i], markers[i + 1], {
+                            isNew: markers[i + 1]?.isNew,
+                            isMoving: markers[i + 1].isMoving
+                        })
+                        markers[i + 1].isNew = false
                     } catch (error) {
                         console.log(error.message)
                     }
@@ -125,8 +134,9 @@ export const Map = (props) => {
         const {latLng} = event;
         const movedMarker = {
             ...marker,
+            isMoving: false,
             lat: latLng.lat(),
-            lng: latLng.lng()
+            lng: latLng.lng(),
         }
         const updatedMarkers = [...markers]
         updatedMarkers[markerIndex] = movedMarker
@@ -152,8 +162,11 @@ export const Map = (props) => {
                     <GoogleMap
                         mapContainerClassName="map-container"
                         center={center}
-                        zoom={10}
+                        zoom={8}
                         onClick={handleMapClick}
+                        options={{
+                            mapTypeId: 'terrain'
+                        }}
                     >
                         {markers.map((marker, index) => {
                                 const position = {lat: marker.lat, lng: marker.lng}
@@ -161,9 +174,13 @@ export const Map = (props) => {
                                     <MarkerF title={marker.id}
                                              key={marker.id} position={position}
                                              draggable={true}
-                                        // onDragStart={()=>{
-                                        //
-                                        // }}
+                                             onDragStart={() => {
+                                                 marker.isMoving = true
+                                                 const updatedMarkers = [...markers]
+                                                 markers[index] = marker
+                                                 updateMarkers(updatedMarkers)
+                                                 removeLines()
+                                             }}
                                              onDragEnd={(event) => {
                                                  // updateLinePathShape('straight')
                                                  handleMarkerDrop(event, marker, index)
