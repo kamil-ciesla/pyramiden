@@ -1,5 +1,16 @@
 import React, {useEffect, useState} from "react"
-import {Box, Card, CardContent, Fab, Grid, IconButton, InputAdornment, TextField, Typography} from "@mui/material"
+import {
+    Box,
+    Card,
+    CardContent,
+    Fab,
+    Grid,
+    IconButton,
+    InputAdornment,
+    TextField,
+    Tooltip,
+    Typography
+} from "@mui/material"
 import DescriptionIcon from "@mui/icons-material/Description"
 import AddIcon from "@mui/icons-material/Add"
 
@@ -103,49 +114,50 @@ export function Documents(props) {
                                      alignItems: 'center'
                                  }}
                             >
+                                <Tooltip key={file.name} title={file.name}>
+                                    <TextField
+                                        variant='filled'
+                                        InputProps={{
+                                            readOnly: true,
+                                            startAdornment: (<InputAdornment position="start">
+                                                <DescriptionIcon
+                                                    key={file.name}
+                                                    alt={file.name}
+                                                    fontSize="medium"
+                                                />
+                                            </InputAdornment>),
+                                            endAdornment: (
+                                                <>
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            className="delete-file-button"
+                                                            aria-label="delete"
+                                                            size="small"
+                                                            onClick={() => handleFileDownload(file)}
 
-                                <TextField
-                                    variant='filled'
-                                    InputProps={{
-                                        readOnly: true,
-                                        startAdornment: (<InputAdornment position="start">
-                                            <DescriptionIcon
-                                                key={file.name}
-                                                alt={file.name}
-                                                fontSize="medium"
-                                            />
-                                        </InputAdornment>),
-                                        endAdornment: (
-                                            <>
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        className="delete-file-button"
-                                                        aria-label="delete"
-                                                        size="small"
-                                                        onClick={() => handleFileDownload(file)}
-
-                                                    >
-                                                        <DownloadIcon/>
-                                                    </IconButton>
-                                                </InputAdornment>
-                                                <InputAdornment position="end">
-                                                    <IconButton
-                                                        className="delete-file-button"
-                                                        aria-label="delete"
-                                                        size="small"
-                                                        onClick={() => {
-                                                            handleDeleteDocument(file.name)
-                                                        }}
-                                                    >
-                                                        <ClearIcon/>
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            </>
-                                        )
-                                    }}
-                                    value={file.name}
-                                    fullWidth
-                                />
+                                                        >
+                                                            <DownloadIcon/>
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                    <InputAdornment position="end">
+                                                        <IconButton
+                                                            className="delete-file-button"
+                                                            aria-label="delete"
+                                                            size="small"
+                                                            onClick={() => {
+                                                                handleDeleteDocument(file.name)
+                                                            }}
+                                                        >
+                                                            <ClearIcon/>
+                                                        </IconButton>
+                                                    </InputAdornment>
+                                                </>
+                                            )
+                                        }}
+                                        value={file.name}
+                                        fullWidth
+                                    />
+                                </Tooltip>
                             </Box>
                         ))}
                     </Grid>
