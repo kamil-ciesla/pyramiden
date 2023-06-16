@@ -39,8 +39,6 @@ export function PlanView() {
 
     async function updateDbPlan() {
         let planToUpdate = {...plan}
-        console.log('XD')
-        console.log('routes base is' + routes.baseUrl)
 
         if (!_.isEqual(markers, getMarkersWithinDays(planToUpdate.days))) {
             planToUpdate = updatePlanMarkers(planToUpdate, markers)

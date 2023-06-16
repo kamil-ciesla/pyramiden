@@ -1,5 +1,5 @@
 import {AuthProvider} from "./auth/firebaseAuth";
-import {BrowserRouter} from 'react-router-dom';
+import {HashRouter} from 'react-router-dom';
 import {Layout} from './components/Layout/Layout'
 import {MapContextProvider} from "./components/Map/Map";
 import {mainTheme} from './theme'
@@ -10,9 +10,9 @@ function App() {
         <AuthProvider>
             <ThemeProvider theme={mainTheme}>
                 <MapContextProvider>
-                    <BrowserRouter basename="/">
+                    <HashRouter basename="/">
                         <Layout/>
-                    </BrowserRouter>
+                    </HashRouter>
                 </MapContextProvider>
             </ThemeProvider>
         </AuthProvider>
