@@ -131,7 +131,9 @@ export const Map = (props) => {
         const updatedMarkers = [...markers]
         updatedMarkers[markerIndex] = movedMarker
         updateMarkers(updatedMarkers)
+
         setMovedMarker(movedMarker)
+        //maybe two below not necessary
         createLines()
         removeLines()
     }
@@ -159,6 +161,9 @@ export const Map = (props) => {
                                     <MarkerF title={marker.id}
                                              key={marker.id} position={position}
                                              draggable={true}
+                                        // onDragStart={()=>{
+                                        //
+                                        // }}
                                              onDragEnd={(event) => {
                                                  // updateLinePathShape('straight')
                                                  handleMarkerDrop(event, marker, index)

@@ -1,5 +1,5 @@
-import {Card, CardContent, List, ListItem, Box, Button, CardHeader, Input, TextField, Divider} from "@mui/material";
-import {useContext, useEffect, useState} from "react";
+import {Box, Button, Card, CardContent, CardHeader, Divider, Input, List, ListItem} from "@mui/material";
+import {useContext, useState} from "react";
 import {format} from "date-fns";
 import {PlaceStage} from "../Stage/PlaceStage";
 import {NoteStage} from "../Stage/NoteStage";
@@ -9,6 +9,7 @@ import {MapContext} from "../Map/Map";
 export const Day = (props) => {
     const {setCurrentMarker} = useContext(MapContext)
     const [day, setDay] = useState(props.day)
+    const [selectedStageId, setSelectedStageId] = useState(null)
 
     function formattedDate() {
         return format(convertedDate(day.date), "EEEE, MMMM do")
@@ -33,12 +34,13 @@ export const Day = (props) => {
             locationName: '',
             type: type,
             time: new Date(),
-            marker: {}
+            marker: {},
+            isSelected: true
         }
+        setSelectedStageId(newStage.id)
         const dayWithNewStage = {...day, stages: [...day.stages, newStage]}
         setDay(dayWithNewStage)
         props.onChange(dayWithNewStage)
-
         // Set map marker to null to prevent catching previous marker when setting new place
         setCurrentMarker(null)
     }
@@ -64,7 +66,6 @@ export const Day = (props) => {
         setDay(updatedDay)
         props.onChange(updatedDay)
     }
-
 
     return (<Card sx={{width: "100%"}}>
             <CardHeader
@@ -94,12 +95,18 @@ export const Day = (props) => {
                                     <PlaceStage
                                         key={stage.id}
                                         stage={stage}
+                                        selectedStageId={selectedStageId}
                                         onChange={(updatedStage) => {
                                             handleStageChange(index, updatedStage)
                                         }}
                                         handleDeleteStage={() => {
                                             handleDeleteStage(stage.id)
                                         }}
+                                        onSelect={
+                                            () => {
+                                                setSelectedStageId(stage.id)
+                                            }
+                                        }
                                     />
                                 }
                                 {
@@ -119,8 +126,12 @@ export const Day = (props) => {
                             <Divider light/>
                         </>))}
                     </List>
-                    <Button onClick={()=>{addStage('note')}}>Add note</Button>
-                    <Button onClick={()=>{addStage('place')}}>Add place</Button>
+                    <Button onClick={() => {
+                        addStage('note')
+                    }}>Add note</Button>
+                    <Button onClick={() => {
+                        addStage('place')
+                    }}>Add place</Button>
                 </Box>
             </CardContent>
         </Card>

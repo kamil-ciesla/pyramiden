@@ -1,6 +1,4 @@
-import {useContext, useEffect, useState} from "react";
-
-import React from 'react';
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {Box, IconButton, InputAdornment, TextField} from "@mui/material";
 import RoomIcon from '@mui/icons-material/Room';
 import Geocoder from 'react-native-geocoding';
@@ -16,25 +14,33 @@ export const PlaceStage = (props) => {
         setMovedMarker
     } = useContext(MapContext)
 
+    const stageInputRef = useRef(null);
     const [stage, setStage] = useState(props.stage)
-    const [isListeningForMarker, setIsListeningForMarker] = useState(stageHasMarker(stage) ? false : true)
+    const [isListeningForMarker, setIsListeningForMarker] = useState(
+        props.selectedStageId === stage.id
+    )
+
+    useEffect(() => {
+        setIsListeningForMarker(props.selectedStageId === stage.id)
+    }, [props.selectedStageId])
 
     useEffect(() => {
         if (!movedMarker) return
+        catchMovedMarker()
+    }, [movedMarker])
 
+    function catchMovedMarker() {
         if (movedMarker.id === stage.marker.id) {
-            const updatedStage = {...stage}
-            updatedStage.marker = movedMarker
-            setStage(updatedStage)
-            props.onChange(updatedStage)
+            updateMarker(movedMarker)
             setMovedMarker(null)
 
+            stageInputRef.current.focus()
         }
-    }, [movedMarker])
+    }
 
     useEffect(() => {
         if (currentMarker && isListeningForMarker) {
-            catchMarker()
+            catchNewMarker()
         }
     }, [currentMarker])
 
@@ -42,10 +48,13 @@ export const PlaceStage = (props) => {
         return !!(Object.keys(stage.marker).length)
     }
 
-    async function catchMarker() {
+    async function catchNewMarker() {
         setIsListeningForMarker(false)
-        const marker = (currentMarker)
+        updateMarker(currentMarker)
         setCurrentMarker(null)
+    }
+
+    async function updateMarker(marker) {
         const markerLocation = {lat: marker.lat, lng: marker.lng}
         const locationName = await fetchLocationName(markerLocation)
 
@@ -99,22 +108,23 @@ export const PlaceStage = (props) => {
         return {lat, lng};
     }
 
-    function listenForMarker() {
-        setIsListeningForMarker(true)
-    }
-
     return (
         <Box
             sx={{
                 width: "100%"
             }}
         >
-
             <TextField
+                id={'stage-input-' + stage.id}
+                inputRef={stageInputRef}
                 fullWidth
                 placeholder={'Type the place or click on the map'}
                 value={stage.locationName}
-                onClick={listenForMarker}
+                onClick={() => {
+                    setIsListeningForMarker(true)
+                    props.onSelect()
+                }}
+
                 onMouseOver={(e) => {
                     e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
                 }}
