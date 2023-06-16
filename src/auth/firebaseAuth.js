@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 
 import {
-    getAuth,
     createUserWithEmailAndPassword,
+    getAuth,
+    GoogleAuthProvider,
     signInWithEmailAndPassword,
     signInWithPopup,
-    GoogleAuthProvider,
 } from 'firebase/auth';
 
 import {app} from "../db/db"
@@ -24,20 +24,7 @@ export const AuthContext = React.createContext();
 
 export function handleRegister(email, password, repeatedPassword) {
     if (password === repeatedPassword) {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Signed up
-                const user = userCredential.user;
-                console.log(
-                    `%cUser with id: ${user.uid} created successfully`,
-                    'color: green;'
-                );
-            })
-            .catch((error) => {
-                const errorMessage = error.message;
-                console.log(errorMessage);
-                // setSignUpError(error);
-            });
+        return createUserWithEmailAndPassword(auth, email, password)
     }
 }
 

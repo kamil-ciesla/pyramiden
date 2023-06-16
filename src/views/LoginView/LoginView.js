@@ -1,14 +1,14 @@
-import {Button, Card, CardContent, Grid, InputAdornment, Link, TextField, Typography} from "@mui/material";
+import {Button, Card, CardContent, Grid, InputAdornment, Link as MuiLink, TextField, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {handleLogin, handleGoogleLogin} from '../../auth/firebaseAuth'
+import {handleGoogleLogin, handleLogin} from '../../auth/firebaseAuth'
 import {useState} from "react";
 import {Google as GoogleIcon} from '@mui/icons-material';
-import {useNavigate} from "react-router-dom";
+import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {routes} from "../../routes";
+
 import * as firestore from "../../components/Plan/firestorePlan";
 
 export function LoginView() {
-
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
@@ -28,9 +28,7 @@ export function LoginView() {
             width: '70%'
         }}
     >
-        <CardContent
-
-        >
+        <CardContent>
             <Grid container spacing={3}>
                 <Grid item sm={12}>
                     <Typography variant={'h4'}>
@@ -76,10 +74,16 @@ export function LoginView() {
                         Login
                     </Button>
                 </Grid>
-                <Grid item sm={12}>
-                    <Typography variant="body2" color="textSecondary"
-                    >
-                        Don't have an account? <Link>Register now</Link>
+                <Grid item sm={12} sx={{display: 'flex', justifyContent: 'center'}}>
+                    <Typography variant="body2" color="textSecondary">
+                        Don't have an account?
+                    </Typography>
+                    <Typography variant="body2" sx={{marginLeft: '0.5rem'}}>
+                        <RouterLink to={routes.registerView} style={{textDecoration: 'none'}}>
+                            <MuiLink underline='none'>
+                                Register now
+                            </MuiLink>
+                        </RouterLink>
                     </Typography>
                 </Grid>
                 <Grid item sm={12}>

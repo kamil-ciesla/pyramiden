@@ -2,11 +2,11 @@ import React, {useContext, useEffect, useState} from "react";
 import * as firestore from "../../components/Plan/firestorePlan";
 import _ from "lodash";
 import {useInterval} from "../../useInterval";
-import {Plan, getMarkersWithinDays} from "../../components/Plan/Plan";
+import {getMarkersWithinDays, Plan} from "../../components/Plan/Plan";
 import {AuthContext} from "../../auth/firebaseAuth";
 import {useSearchParams} from 'react-router-dom';
 import {MapContext} from "../../components/Map/Map";
-import {routes} from '../../routes'
+
 export function PlanView() {
     const {currentUser} = useContext(AuthContext);
     const {markers, updateMarkers} = useContext(MapContext)
