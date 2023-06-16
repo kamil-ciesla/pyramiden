@@ -6,7 +6,7 @@ import {Plan, getMarkersWithinDays} from "../../components/Plan/Plan";
 import {AuthContext} from "../../auth/firebaseAuth";
 import {useSearchParams} from 'react-router-dom';
 import {MapContext} from "../../components/Map/Map";
-
+import {routes} from '../../routes'
 export function PlanView() {
     const {currentUser} = useContext(AuthContext);
     const {markers, updateMarkers} = useContext(MapContext)
@@ -39,6 +39,9 @@ export function PlanView() {
 
     async function updateDbPlan() {
         let planToUpdate = {...plan}
+        console.log('XD')
+        console.log('routes base is' + routes.baseUrl)
+
         if (!_.isEqual(markers, getMarkersWithinDays(planToUpdate.days))) {
             planToUpdate = updatePlanMarkers(planToUpdate, markers)
             // updateMarkers(getMarkersWithinDays(planToUpdate))
@@ -94,6 +97,7 @@ export function PlanView() {
 
     useEffect(() => {
         if (currentUser) fetchPlan()
+
     }, [currentUser])
 
     useInterval(updateDbPlan, DB_PLAN_UPDATE_INTERVAL)

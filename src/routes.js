@@ -1,14 +1,15 @@
 const base = window.location.origin;
 
 export const routes = {
-    homeView: '/',
-    loginView: '/login',
-    registerView: '/register',
-    accountView: '/account',
-    planView: '/plan',
-    planViewById: (planId) => `/plan?id=${planId}`,
+    homeView: '/pyramiden',
+    loginView: '/pyramiden/login',
+    registerView: '/pyramiden/register',
+    accountView: '/pyramiden/account',
+    planView: '/pyramiden/plan',
+    planViewById: (planId) => `/pyramiden/plan?id=${planId}`,
 
     get baseUrl() {
+
         return base;
     },
 };

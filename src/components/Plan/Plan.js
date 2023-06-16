@@ -61,6 +61,13 @@ export const Plan = (props) => {
     }}>
         <Grid className="plan-grid" container spacing={2}>
             <Grid item sm={12}>
+                <Schedule
+                    days={plan.days}
+                    timeframe={convertedTimeframe(plan.timeframe)}
+                    onChange={handleChange}
+                />
+            </Grid>
+            <Grid item sm={12}>
                 <div
                     style={{
                         backgroundImage: `url(${planBgImage})`,
@@ -154,13 +161,7 @@ export const Plan = (props) => {
                     planId={props.id}
                 />
             </Grid>
-            <Grid item sm={12}>
-                <Schedule
-                    days={plan.days}
-                    timeframe={convertedTimeframe(plan.timeframe)}
-                    onChange={handleChange}
-                />
-            </Grid>
+
         </Grid>
     </Box>)
 }
