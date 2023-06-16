@@ -85,34 +85,9 @@ export async function updatePlan(planId, newPlanData) {
 }
 
 export async function uploadFile(planId, file) {
-    if (planId === undefined) return false
-
-    const filePath = planId + "/" + file.name
+    const filePath = planId + '/' + file.name
     const fileRef = ref(storage, filePath)
-    const isFilePathAdded = await addFileName(planId, file.name)
-    if (isFilePathAdded) {
-        await uploadBytes(fileRef, file)
-        console.log('FILE UPLOADED')
-        return true
-    } else return false
-}
-
-async function addFileName(planId, fileName) {
-    const planData = await getPlanByPlanId(planId)
-    const filePaths = planData.filePaths
-    try {
-        if (planData.filePaths.includes(fileName)) {
-            throw new Error('File with this name has been already uploaded')
-        } else {
-            filePaths.push(fileName)
-            planData.filePaths = filePaths
-            await updatePlan(planId, planData)
-            return true
-        }
-    } catch (error) {
-        errorLog(error.message)
-        return false
-    }
+    return uploadBytes(fileRef, file)
 }
 
 export async function deleteFile(planId, fileName) {

@@ -18,6 +18,12 @@ export function Documents(props) {
         const isFileUploaded = await uploadFile(props.planId, file)
         if (isFileUploaded) {
             setFiles([...files, file])
+            props.onChange({
+                target: {
+                    name: 'filePaths',
+                    value: [...props.filePaths, file.name]
+                }
+            })
         }
     }
 
@@ -36,6 +42,8 @@ export function Documents(props) {
         if (deletingFileResult) {
             deleteFileFromPlan(deletedFileName)
             deleteFileFromLocalState(deletedFileName)
+        } else {
+            console.log('FILE CACHE DELETING ERROR')
         }
     }
 
