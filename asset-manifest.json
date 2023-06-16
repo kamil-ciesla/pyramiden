@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/pyramiden/static/css/main.984c537e.css",
+    "main.js": "/pyramiden/static/js/main.1151f01e.js",
+    "static/js/787.8e3b00bb.chunk.js": "/pyramiden/static/js/787.8e3b00bb.chunk.js",
+    "static/media/plan-bg.jpg": "/pyramiden/static/media/plan-bg.a0b8ebbe4190e34424af.jpg",
+    "index.html": "/pyramiden/index.html",
+    "main.984c537e.css.map": "/pyramiden/static/css/main.984c537e.css.map",
+    "main.1151f01e.js.map": "/pyramiden/static/js/main.1151f01e.js.map",
+    "787.8e3b00bb.chunk.js.map": "/pyramiden/static/js/787.8e3b00bb.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.984c537e.css",
+    "static/js/main.1151f01e.js"
+  ]
+}
