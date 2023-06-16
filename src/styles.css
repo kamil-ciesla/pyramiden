@@ -6,7 +6,6 @@
 }
 
 .left-container {
-    width: 50vw;
     height: 100vh;
     text-align: center;
     display: flex;
@@ -27,7 +26,6 @@
 }
 
 .map-container {
-    width: 50vw;
     height: 100vh;
     background-color: green;
 }

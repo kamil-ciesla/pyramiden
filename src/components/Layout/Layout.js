@@ -1,38 +1,60 @@
 import React from 'react';
 import {Router} from '../MainRouterContainer/Router';
-import {Box} from "@mui/material";
-import {AppMenu} from "../AppMenu/AppMenu";
+import {Box, Grid} from "@mui/material";
 import {Map} from "../Map/Map";
 import "../../styles.css"
+import {AppMenu} from "../AppMenu/AppMenu";
 
 export const Layout = () => {
     return (<>
         <div id="App" className="App">
-            <Box className="left-container"
-                 sx={{
-                     display: 'flex',
-                 }}
+            <Grid container
             >
-                <div className="app-menu-container">
-                    <AppMenu/>
-                </div>
-                <Box className="left-main-content"
-                     sx={{
-                         display: "flex",
-                         flexDirection: 'column',
-                         justifyContent: 'center',
-                         alignItems: 'center',
-                         flexGrow: '1',
-                     }}
-                >
-                    <Router/>
-                </Box>
-            </Box>
-            <Box className="right-container">
-                <div className="map-container">
+                <Grid item className="left-container"
+                      sm={12}
+                      md={6}
+                      lg={4}
+                      sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+
+                      }}>
+                    <Box sx={{
+                        position: 'sticky',
+                        top: '0',
+                        zIndex: '3'
+                    }}>
+                        <AppMenu/>
+                    </Box>
+                    <Box className="left-main-content"
+                         sx={{
+                             scrollbarGutter: 'stable',
+                             overflow: 'auto',
+                             direction: 'rtl',
+                             overflowX: 'hidden',
+                             flexGrow: '1',
+
+                         }}
+                    >
+                        <Box className="content" sx={{
+                            direction: 'ltr',
+                            display: "flex",
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            height: '100%',
+                            alignItems: 'center',
+                        }}>
+                            <Router/>
+                        </Box>
+                    </Box>
+                </Grid>
+                <Grid item sm={12} md={6} lg={8} className="right-container"
+                      sx={{
+                          overflow: 'hidden'
+                      }}>
                     <Map/>
-                </div>
-            </Box>
+                </Grid>
+            </Grid>
         </div>
     </>);
 };

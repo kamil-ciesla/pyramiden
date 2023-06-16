@@ -4,6 +4,7 @@ import "./Map.css"
 import LeaderLine from 'react-leader-line'
 import {useInterval} from "../../useInterval";
 import {createRandomId} from "../../idGenerator";
+import {Box} from "@mui/material";
 
 export const MapContext = createContext();
 
@@ -139,11 +140,13 @@ export const Map = (props) => {
     useInterval(createLines, 1)
 
     return (
-        <>
-            <div className="Map">
-                {!isLoaded ? (
-                    <h1>Loading...</h1>
-                ) : (
+        <Box
+            position="sticky"
+            sx={{
+                height: '100vh',
+            }}>
+            {isLoaded &&
+                (
                     <GoogleMap
                         mapContainerClassName="map-container"
                         center={center}
@@ -166,8 +169,7 @@ export const Map = (props) => {
                         )}
                     </GoogleMap>
                 )
-                }
-            </div>
-        </>
+            }
+        </Box>
     )
 }

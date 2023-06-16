@@ -1,8 +1,8 @@
 // Import react functions
-import {useState, useEffect, useContext} from "react"
+import {useContext, useEffect, useState} from "react"
 
 // Import MUI components
-import {Card, Grid, Box, CardContent, Typography, TextField} from "@mui/material"
+import {Box, Card, CardContent, Grid, TextField} from "@mui/material"
 
 // Import app components
 import {PlanTitle} from "../PlanTitle/PlanTitle"
@@ -60,13 +60,7 @@ export const Plan = (props) => {
         width: "100%", minHeight: "95vh",
     }}>
         <Grid className="plan-grid" container spacing={2}>
-            <Grid item sm={12}>
-                <Schedule
-                    days={plan.days}
-                    timeframe={convertedTimeframe(plan.timeframe)}
-                    onChange={handleChange}
-                />
-            </Grid>
+
             <Grid item sm={12}>
                 <div
                     style={{
@@ -101,6 +95,13 @@ export const Plan = (props) => {
                         </CardContent>
                     </Card>
                 </div>
+            </Grid>
+            <Grid item sm={12}>
+                <Schedule
+                    days={plan.days}
+                    timeframe={convertedTimeframe(plan.timeframe)}
+                    onChange={handleChange}
+                />
             </Grid>
             <Grid item sm={12}>
                 <Card>
@@ -159,6 +160,8 @@ export const Plan = (props) => {
             <Grid item sm={12} md={6}>
                 <Documents
                     planId={props.id}
+                    filePaths={plan.filePaths}
+                    onChange={handleChange}
                 />
             </Grid>
 

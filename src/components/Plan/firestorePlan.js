@@ -1,9 +1,8 @@
-import {db} from "../../db/db"
-import {app} from "../../db/db"
+import {app, db} from "../../db/db"
 
-import {collection, where, deleteDoc, query, addDoc, doc, getDoc, getDocs, updateDoc} from "firebase/firestore"
+import {addDoc, collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where} from "firebase/firestore"
 
-import {getStorage, ref, uploadBytes} from "firebase/storage"
+import {deleteObject, getStorage, ref, uploadBytes} from "firebase/storage"
 
 const storage = getStorage(app)
 
@@ -116,7 +115,20 @@ async function addFileName(planId, fileName) {
     }
 }
 
-// async function removeFilePath(){
+export async function deleteFile(planId, fileName) {
+    const fullFilePath = planId + '/' + fileName
+    const desertRef = ref(storage, fullFilePath);
 
-// }
+// Delete the file
+    return deleteObject(desertRef).then(() => {
+        console.log('DELETED FILE')
+        return true
+    }).catch((error) => {
+        console.log('FAILED DELETING FILE')
+
+        return false
+    });
+
+
+}
 
