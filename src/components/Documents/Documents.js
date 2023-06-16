@@ -28,7 +28,7 @@ export function Documents(props) {
         const file = event.target.files[0]
         const isFileUploaded = await uploadFile(props.planId, file)
         if (isFileUploaded) {
-            setFiles([...files, file])
+            await fetchAllFiles()
             props.onChange({
                 target: {
                     name: 'filePaths',
