@@ -1,11 +1,28 @@
 import React, {useEffect, useState} from "react"
-import {Button, Card, CardContent, IconButton, Input, Typography} from "@mui/material"
+import {
+    Box,
+    Button,
+    Card,
+    CardContent,
+    Collapse,
+    IconButton,
+    InputAdornment,
+    ListItem,
+    ListItemText,
+    TextField,
+    Typography
+} from "@mui/material"
 import ClearIcon from "@mui/icons-material/Clear"
-
-import "./tripmates.css"
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
 
 export const Tripmates = (props) => {
     const [tripmates, setTripmates] = useState(props.tripmates)
+
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(!open);
+    };
     const handleAddTripmate = () => {
         const newTripmate = ""
         setTripmates([...tripmates, newTripmate])
@@ -33,33 +50,76 @@ export const Tripmates = (props) => {
     }, [tripmates])
 
     return (
-        <Card className="Tripmates">
-            <CardContent sx={{display: "flex", flexDirection: "column"}}>
-                <Typography variant='h6'>Tripmates</Typography>
-                {props.tripmates.map((input, index) => (
-                    <div className="tripmate-input-container" key={index}>
-                        <Input
-                            value={input}
-                            onChange={(event) => handleChange(event, index)}
-                        />
-                        <IconButton
-                            className="delete-tripmate-button"
-                            aria-label="delete"
-                            size="small"
-                            onClick={() => {
-                                handleDeleteTripmate(index)
+        <Card className="Tripmates"
+              onMouseOver={(e) => {
+                  if (document.querySelector('.add-tripmate-button')) {
+                      document.querySelector('.add-tripmate-button').style.visibility = 'visible'
+                  }
+              }}
+              onMouseOut={(e) => {
+                  if (document.querySelector('.add-tripmate-button')) {
+                      document.querySelector('.add-tripmate-button').style.visibility = 'hidden'
+                  }
+              }}
+        >
+            <CardContent>
+                <ListItem onClick={handleClick}>
+                    <ListItemText>
+                        <Typography variant='h6' textAlign='left'>Tripmates</Typography>
+                    </ListItemText>
+                    {open ? <ExpandLess/> : <ExpandMore/>}
+                </ListItem>
+                <Box sx={{display: "flex", flexDirection: "column", alignItems: 'center', justifyContent: 'center'}}>
+                    <Collapse in={open} timeout="auto" unmountOnExit>
+
+                        {props.tripmates.map((input, index) => (
+                            <div className="tripmate-input-container" key={index}>
+                                <TextField
+                                    value={input}
+                                    variant='standard'
+                                    onChange={(event) => handleChange(event, index)}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.querySelector('.delete-tripmate-button').style.visibility = 'visible'
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.querySelector('.delete-tripmate-button').style.visibility = 'hidden';
+                                    }}
+                                    InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    className="delete-tripmate-button"
+                                                    aria-label="delete"
+                                                    size="small"
+                                                    style={{visibility: 'hidden'}}
+                                                    onClick={() => {
+                                                        handleDeleteTripmate(index)
+                                                    }}
+                                                >
+                                                    <ClearIcon/>
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }}
+                                />
+
+                            </div>
+                        ))}
+                        <Button
+                            className='add-tripmate-button'
+                            onClick={handleAddTripmate}
+                            variant='outlined'
+                            size='small'
+                            sx={{
+                                width: '50%',
+                                marginTop: 2,
+                                visibility: tripmates.length > 0 ? 'hidden' : 'visible'
                             }}
                         >
-                            <ClearIcon/>
-                        </IconButton>
-                    </div>
-                ))}
-                <Button
-                    onClick={handleAddTripmate}
-                >
-                    Add tripmate
-                </Button>
-
+                            Add tripmate
+                        </Button>
+                    </Collapse>
+                </Box>
             </CardContent>
         </Card>
     )

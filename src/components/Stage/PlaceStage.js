@@ -108,12 +108,20 @@ export const PlaceStage = (props) => {
         return {lat, lng};
     }
 
+    // const onPlacesChanged = () => console.log(this.searchBox.getPlaces());
+    // const onLoad = ref => {
+    //     this.searchBox = ref
+    // };
+
     return (
         <Box
             sx={{
                 width: "100%"
             }}
         >
+            {/*<StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>*/}
+            {/*    <input type="text" placeholder="Search places..."/>*/}
+            {/*</StandaloneSearchBox>*/}
             <TextField
                 id={'stage-input-' + stage.id}
                 inputRef={stageInputRef}

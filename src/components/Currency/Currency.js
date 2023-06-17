@@ -84,8 +84,7 @@ export function Currency(props) {
                     {CURRENCIES.map((option) => (
                         <option
                             key={option.value}
-                            value={option.value}
-                            selected={option.value == props.currency ? true : false}
+                            defaultValue={props.currency}
                         >
                             {option.label}
                         </option>

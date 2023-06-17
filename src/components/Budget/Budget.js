@@ -24,12 +24,12 @@ export function Budget(props) {
                         // label="Budget"
                         placeholder={"set up a budget for your trip"}
                         value={props.budget}
-                        onChange={props.handleChange}
+                        onChange={props.onChange}
                     />
                     <Currency
                         name='currency'
                         currency={props.currency}
-                        onChange={props.handleChange}
+                        onChange={props.onChange}
                     />
                 </Box>
             </CardContent>

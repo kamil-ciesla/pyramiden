@@ -103,7 +103,6 @@ export const Day = (props) => {
                             <Input
                                 name='name'
                                 value={day.name}
-                                defaultValue={day.name}
                                 inputProps={{'aria-label': 'description'}}
                                 size="small"
                                 onChange={handleChange}
@@ -114,43 +113,45 @@ export const Day = (props) => {
                 <Box>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
-                            {day.stages.map((stage, index) => (<>
-                                <ListItem>
-                                    {
-                                        stage.type === 'place' &&
-                                        <PlaceStage
-                                            key={stage.id}
-                                            stage={stage}
-                                            selectedStageId={selectedStageId}
-                                            onChange={(updatedStage) => {
-                                                handleStageChange(index, updatedStage)
-                                            }}
-                                            handleDeleteStage={() => {
-                                                handleDeleteStage(stage.id)
-                                            }}
-                                            onSelect={
-                                                () => {
-                                                    setSelectedStageId(stage.id)
+                            {day.stages.map((stage, index) => (
+                                <Box key={stage.id}>
+                                    <ListItem key={stage.id}>
+                                        {
+                                            stage.type === 'place' &&
+                                            <PlaceStage
+                                                key={stage.id}
+                                                stage={stage}
+                                                selectedStageId={selectedStageId}
+                                                onChange={(updatedStage) => {
+                                                    handleStageChange(index, updatedStage)
+                                                }}
+                                                handleDeleteStage={() => {
+                                                    handleDeleteStage(stage.id)
+                                                }}
+                                                onSelect={
+                                                    () => {
+                                                        setSelectedStageId(stage.id)
+                                                    }
                                                 }
-                                            }
-                                        />
-                                    }
-                                    {
-                                        stage.type === 'note' &&
-                                        <NoteStage
-                                            key={stage.id}
-                                            stage={stage}
-                                            onChange={(updatedStage) => {
-                                                handleStageChange(index, updatedStage)
-                                            }}
-                                            handleDeleteStage={() => {
-                                                handleDeleteStage(stage.id)
-                                            }}
-                                        />
-                                    }
-                                </ListItem>
-                                <Divider light/>
-                            </>))}
+                                            />
+                                        }
+                                        {
+                                            stage.type === 'note' &&
+                                            <NoteStage
+                                                key={stage.id}
+                                                stage={stage}
+                                                onChange={(updatedStage) => {
+                                                    handleStageChange(index, updatedStage)
+                                                }}
+                                                handleDeleteStage={() => {
+                                                    handleDeleteStage(stage.id)
+                                                }}
+                                            />
+                                        }
+                                    </ListItem>
+                                    <Divider key={'divider-' + stage.id + '-' + index} light/>
+
+                                </Box>))}
                         </List>
 
                         <Button onClick={() => {

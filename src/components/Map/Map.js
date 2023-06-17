@@ -1,5 +1,5 @@
-import {GoogleMap, MarkerF, useLoadScript} from "@react-google-maps/api";
-import {createContext, useContext, useMemo, useState} from "react";
+import {GoogleMap, MarkerF, StandaloneSearchBox} from "@react-google-maps/api";
+import React, {createContext, useContext, useMemo, useState} from "react";
 import "./Map.css"
 import LeaderLine from 'react-leader-line'
 import {useInterval} from "../../useInterval";
@@ -33,12 +33,11 @@ export const MapContextProvider = ({children}) => {
 };
 
 export const Map = (props) => {
+    const libraries = ["places"]
     const [lines, setLines] = useState([])
     const [linePathShape, setLinePathShape] = useState('magnet')
     const {markers, updateMarkers, setCurrentMarker, setMovedMarker} = useContext(MapContext)
-    const {isLoaded} = useLoadScript({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY
-    })
+
     const center = useMemo(() => ({lat: 37.9838, lng: 23.7275}), []);
 
     const handleMapClick = (event) => {
@@ -147,6 +146,12 @@ export const Map = (props) => {
         removeLines()
     }
 
+    const [searchBox, setSearchBox] = useState(null)
+    const onPlacesChanged = () => console.log(searchBox.getPlaces());
+    const onLoad = ref => {
+        setSearchBox(ref)
+    };
+
     useInterval(refreshLines, 1)
     useInterval(createLines, 1)
 
@@ -156,41 +161,59 @@ export const Map = (props) => {
             sx={{
                 height: '100vh',
             }}>
-            {isLoaded &&
-                (
-                    <GoogleMap
-                        mapContainerClassName="map-container"
-                        center={center}
-                        zoom={8}
-                        onClick={handleMapClick}
-                        options={{
-                            mapTypeId: 'terrain'
+            <GoogleMap
+                mapContainerClassName="map-container"
+                center={center}
+                zoom={8}
+                onClick={handleMapClick}
+                options={{
+                    mapTypeId: 'terrain'
+                }}
+            >
+                <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+                    <input
+                        type="text"
+                        placeholder="Customized your placeholder"
+                        style={{
+                            boxSizing: `border-box`,
+                            border: `1px solid transparent`,
+                            width: `240px`,
+                            height: `32px`,
+                            padding: `0 12px`,
+                            borderRadius: `3px`,
+                            boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                            fontSize: `14px`,
+                            outline: `none`,
+                            textOverflow: `ellipses`,
+                            position: "absolute",
+                            left: "50%",
+                            marginLeft: "-120px"
                         }}
-                    >
-                        {markers.map((marker, index) => {
-                                const position = {lat: marker.lat, lng: marker.lng}
-                                return (
-                                    <MarkerF title={marker.id}
-                                             key={marker.id} position={position}
-                                             draggable={true}
-                                             onDragStart={() => {
-                                                 marker.isMoving = true
-                                                 const updatedMarkers = [...markers]
-                                                 markers[index] = marker
-                                                 updateMarkers(updatedMarkers)
-                                                 removeLines()
-                                             }}
-                                             onDragEnd={(event) => {
-                                                 // updateLinePathShape('straight')
-                                                 handleMarkerDrop(event, marker, index)
-                                             }}
-                                    />
-                                )
-                            }
-                        )}
-                    </GoogleMap>
-                )
-            }
+                    />
+                </StandaloneSearchBox>
+
+                {markers.map((marker, index) => {
+                        const position = {lat: marker.lat, lng: marker.lng}
+                        return (
+                            <MarkerF title={marker.id}
+                                     key={marker.id} position={position}
+                                     draggable={true}
+                                     onDragStart={() => {
+                                         marker.isMoving = true
+                                         const updatedMarkers = [...markers]
+                                         markers[index] = marker
+                                         updateMarkers(updatedMarkers)
+                                         removeLines()
+                                     }}
+                                     onDragEnd={(event) => {
+                                         // updateLinePathShape('straight')
+                                         handleMarkerDrop(event, marker, index)
+                                     }}
+                            />
+                        )
+                    }
+                )}
+            </GoogleMap>
         </Box>
     )
 }

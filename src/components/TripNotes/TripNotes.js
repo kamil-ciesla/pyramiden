@@ -5,10 +5,11 @@ import {ExpandLess, ExpandMore} from "@mui/icons-material";
 
 export const TripNotes = (props) => {
     const [open, setOpen] = useState(true);
-
+    const [tripNotes, setTripNotes] = useState(props.tripNotes)
     const handleClick = () => {
         setOpen(!open);
     };
+
     return (
         <Card>
             <CardContent>
@@ -19,19 +20,20 @@ export const TripNotes = (props) => {
                     {open ? <ExpandLess/> : <ExpandMore/>}
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
-
                     <TextField
                         sx={{
                             width: "100%",
                         }}
                         name={'tripNotes'}
-                        value={props.tripNotes}
-                        onChange={props.handleChange}
+                        value={tripNotes}
+                        onChange={(event) => {
+                            props.onChange(event)
+                            setTripNotes(event.target.value)
+                        }}
                         id="standard-multiline-flexible"
                         multiline={true}
                         rows={4}
-                        placeholder={"Put here some useful notes e.g. what to take for the trip"}
-                        textMinHeight={'30vh'}
+                        placeholder="Put here some useful notes e.g. what to take for the trip"
                     />
                 </Collapse>
             </CardContent>
