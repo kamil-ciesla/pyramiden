@@ -1,5 +1,5 @@
 import * as React from "react"
-import {useContext} from "react"
+import {useContext, useState} from "react"
 import {alpha, styled} from "@mui/material/styles"
 import AppBar from "@mui/material/AppBar"
 import Box from "@mui/material/Box"
@@ -17,6 +17,8 @@ import {routes} from "../../routes";
 import {useNavigate} from "react-router-dom";
 import {auth, AuthContext} from "../../auth/firebaseAuth";
 import {Avatar} from "@mui/material";
+import {StandaloneSearchBox} from "@react-google-maps/api";
+import {MapContext} from "../Map/Map";
 
 const Search = styled("div")(({theme}) => ({
     position: "relative",
@@ -64,6 +66,25 @@ export function AppMenu() {
 
     const isMenuOpen = Boolean(anchorEl)
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+
+    const [searchBox, setSearchBox] = useState(null)
+    const {setCenter, setZoom} = useContext(MapContext)
+
+    const onPlacesChanged = () => {
+        const catchedPlace = searchBox?.getPlaces()[0]
+        if (catchedPlace) {
+            const location = {
+                lat: catchedPlace.geometry.location.lat(),
+                lng: catchedPlace.geometry.location.lng()
+            }
+            console.log(location)
+            setZoom(13)
+            setCenter(location)
+        }
+    };
+    const onLoad = ref => {
+        setSearchBox(ref)
+    };
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget)
@@ -177,15 +198,17 @@ export function AppMenu() {
                     >
                         Travel planner
                     </Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon/>
-                        </SearchIconWrapper>
-                        <StyledInputBase
-                            placeholder="Search map"
-                            inputProps={{"aria-label": "search"}}
-                        />
-                    </Search>
+                    <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+                        <Search>
+                            <SearchIconWrapper>
+                                <SearchIcon/>
+                            </SearchIconWrapper>
+                            <StyledInputBase
+                                placeholder="Search map"
+                                inputProps={{"aria-label": "search"}}
+                            />
+                        </Search>
+                    </StandaloneSearchBox>
                     <Box sx={{flexGrow: 1}}/>
                     <Box sx={{display: {xs: "none", md: "flex"}}}>
                         {currentUser &&

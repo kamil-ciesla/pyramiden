@@ -1,5 +1,5 @@
-import {GoogleMap, MarkerF, StandaloneSearchBox} from "@react-google-maps/api";
-import React, {createContext, useContext, useMemo, useState} from "react";
+import {GoogleMap, MarkerF} from "@react-google-maps/api";
+import React, {createContext, useContext, useState} from "react";
 import "./Map.css"
 import LeaderLine from 'react-leader-line'
 import {useInterval} from "../../useInterval";
@@ -12,6 +12,8 @@ export const MapContextProvider = ({children}) => {
     const [markers, setMarkers] = useState([]);
     const [currentMarker, setCurrentMarker] = useState(null)
     const [movedMarker, setMovedMarker] = useState(null)
+    const [center, setCenter] = useState({lat: 37.9838, lng: 23.7275})
+    const [zoom, setZoom] = useState(8)
     const updateMarkers = (newMarkers) => {
         setMarkers(newMarkers);
     };
@@ -24,7 +26,11 @@ export const MapContextProvider = ({children}) => {
                 currentMarker,
                 setCurrentMarker,
                 movedMarker,
-                setMovedMarker
+                setMovedMarker,
+                center,
+                setCenter,
+                zoom,
+                setZoom
             }
         }>
             {children}
@@ -33,12 +39,9 @@ export const MapContextProvider = ({children}) => {
 };
 
 export const Map = (props) => {
-    const libraries = ["places"]
     const [lines, setLines] = useState([])
     const [linePathShape, setLinePathShape] = useState('magnet')
-    const {markers, updateMarkers, setCurrentMarker, setMovedMarker} = useContext(MapContext)
-
-    const center = useMemo(() => ({lat: 37.9838, lng: 23.7275}), []);
+    const {markers, updateMarkers, setCurrentMarker, setMovedMarker, center, zoom} = useContext(MapContext)
 
     const handleMapClick = (event) => {
         const {latLng} = event;
@@ -146,11 +149,6 @@ export const Map = (props) => {
         removeLines()
     }
 
-    const [searchBox, setSearchBox] = useState(null)
-    const onPlacesChanged = () => console.log(searchBox.getPlaces());
-    const onLoad = ref => {
-        setSearchBox(ref)
-    };
 
     useInterval(refreshLines, 1)
     useInterval(createLines, 1)
@@ -164,33 +162,13 @@ export const Map = (props) => {
             <GoogleMap
                 mapContainerClassName="map-container"
                 center={center}
-                zoom={8}
+                zoom={zoom}
                 onClick={handleMapClick}
                 options={{
                     mapTypeId: 'terrain'
                 }}
             >
-                <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
-                    <input
-                        type="text"
-                        placeholder="Customized your placeholder"
-                        style={{
-                            boxSizing: `border-box`,
-                            border: `1px solid transparent`,
-                            width: `240px`,
-                            height: `32px`,
-                            padding: `0 12px`,
-                            borderRadius: `3px`,
-                            boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                            fontSize: `14px`,
-                            outline: `none`,
-                            textOverflow: `ellipses`,
-                            position: "absolute",
-                            left: "50%",
-                            marginLeft: "-120px"
-                        }}
-                    />
-                </StandaloneSearchBox>
+
 
                 {markers.map((marker, index) => {
                         const position = {lat: marker.lat, lng: marker.lng}

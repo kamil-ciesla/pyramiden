@@ -4,6 +4,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import Geocoder from 'react-native-geocoding';
 import {MapContext} from "../Map/Map";
 import ClearIcon from "@mui/icons-material/Clear";
+import {StandaloneSearchBox} from "@react-google-maps/api";
 
 export const PlaceStage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
@@ -19,6 +20,7 @@ export const PlaceStage = (props) => {
     const [isListeningForMarker, setIsListeningForMarker] = useState(
         props.selectedStageId === stage.id
     )
+    const [searchBox, setSearchBox] = useState(null)
 
     useEffect(() => {
         setIsListeningForMarker(props.selectedStageId === stage.id)
@@ -38,6 +40,7 @@ export const PlaceStage = (props) => {
         }
     }
 
+
     useEffect(() => {
         if (currentMarker && isListeningForMarker) {
             catchNewMarker()
@@ -54,16 +57,18 @@ export const PlaceStage = (props) => {
         setCurrentMarker(null)
     }
 
-    async function updateMarker(marker) {
+    async function updateMarker(marker, locationName = null) {
         const markerLocation = {lat: marker.lat, lng: marker.lng}
-        const locationName = await fetchLocationName(markerLocation)
+        if (!locationName) {
+            locationName = await fetchLocationName(markerLocation)
+        }
 
         const updatedStage = {
             ...stage,
             marker: marker,
             locationName: locationName ? locationName : locationCoordinatesAsString(markerLocation)
         }
-
+        console.log(updatedStage.marker.location)
         setStage(updatedStage)
         props.onChange(updatedStage)
     }
@@ -108,55 +113,79 @@ export const PlaceStage = (props) => {
         return {lat, lng};
     }
 
-    // const onPlacesChanged = () => console.log(this.searchBox.getPlaces());
-    // const onLoad = ref => {
-    //     this.searchBox = ref
-    // };
-
+    const onPlacesChanged = () => {
+        const catchedPlace = searchBox?.getPlaces()[0]
+        if (catchedPlace) {
+            console.log('CATCHED PLACE')
+            const location = {
+                lat: catchedPlace.geometry.location.lat(),
+                lng: catchedPlace.geometry.location.lng()
+            }
+            console.log(location)
+            const newMarker = {
+                ...stage.marker,
+                lat: location.lat,
+                lng: location.lng
+            }
+            let locationName = catchedPlace.address_components[1].long_name
+            if (!locationName) {
+                locationName = locationCoordinatesAsString(location)
+            }
+            updateMarker(newMarker, locationName)
+        }
+    };
+    const onLoad = ref => {
+        setSearchBox(ref)
+    };
     return (
         <Box
             sx={{
                 width: "100%"
             }}
         >
-            {/*<StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>*/}
-            {/*    <input type="text" placeholder="Search places..."/>*/}
-            {/*</StandaloneSearchBox>*/}
-            <TextField
-                id={'stage-input-' + stage.id}
-                inputRef={stageInputRef}
-                fullWidth
-                placeholder={'Type the place or click on the map'}
-                value={stage.locationName}
-                onClick={() => {
-                    setIsListeningForMarker(true)
-                    props.onSelect()
-                }}
+            <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
 
-                onMouseOver={(e) => {
-                    e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
-                }}
-                onMouseOut={(e) => {
-                    e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'hidden';
-                }}
-                InputProps={{
-                    startAdornment: (<InputAdornment position="start">
-                        <RoomIcon/>
-                    </InputAdornment>),
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton
-                                className='delete-stage-button'
-                                aria-label="delete"
-                                size="large"
-                                onClick={props.handleDeleteStage}
-                                style={{visibility: 'hidden'}}
-                            >
-                                <ClearIcon/>
-                            </IconButton>
-                        </InputAdornment>
-                    )
-                }}
-            />
+                <TextField
+                    id={'stage-input-' + stage.id}
+                    inputRef={stageInputRef}
+                    fullWidth
+                    placeholder={'Type the place or click on the map'}
+                    value={stage.locationName}
+                    onClick={() => {
+                        setIsListeningForMarker(true)
+                        props.onSelect()
+                    }}
+                    onChange={(event) => {
+                        setStage({...stage, locationName: event.target.value})
+                    }}
+
+                    onMouseOver={(e) => {
+                        e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'hidden';
+                    }}
+                    InputProps={{
+                        autoComplete: "off",
+                        startAdornment: (<InputAdornment position="start">
+                            <RoomIcon/>
+                        </InputAdornment>),
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    className='delete-stage-button'
+                                    aria-label="delete"
+                                    size="large"
+                                    onClick={props.handleDeleteStage}
+                                    style={{visibility: 'hidden'}}
+                                >
+                                    <ClearIcon/>
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                />
+            </StandaloneSearchBox>
+
         </Box>);
 }
