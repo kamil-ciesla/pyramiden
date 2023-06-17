@@ -38,17 +38,21 @@ export function PlanView() {
     }
 
     async function updateDbPlan() {
-        let planToUpdate = {...plan}
-
-        if (!_.isEqual(markers, getMarkersWithinDays(planToUpdate.days))) {
-            planToUpdate = updatePlanMarkers(planToUpdate, markers)
-            // updateMarkers(getMarkersWithinDays(planToUpdate))
-            setPlan(planToUpdate)
-        }
-        if (planToUpdate && !_.isEqual(planToUpdate, DB_PLAN)) {
-            console.log('Detected changes, sending updates to database...')
-            const updatedSucceeded = firestore.updatePlan(planId, planToUpdate)
-            if (updatedSucceeded) setDB_PLAN(planToUpdate)
+        if (plan) {
+            let planToUpdate = {...plan}
+            if (!_.isEqual(markers, getMarkersWithinDays(planToUpdate.days))) {
+                planToUpdate = updatePlanMarkers(planToUpdate, markers)
+                setPlan(planToUpdate)
+            }
+            if (planToUpdate && !_.isEqual(planToUpdate, DB_PLAN)) {
+                console.log('Detected changes, sending updates to database...')
+                if (planToUpdate) {
+                    if (currentUser) {
+                        const updatedSucceeded = firestore.updatePlan(planId, planToUpdate)
+                        if (updatedSucceeded) setDB_PLAN(planToUpdate)
+                    }
+                }
+            }
         }
     }
 
@@ -94,7 +98,11 @@ export function PlanView() {
 
 
     useEffect(() => {
-        if (currentUser) fetchPlan()
+        if (currentUser) {
+            fetchPlan()
+        } else {
+            setPlan(null)
+        }
 
     }, [currentUser])
 

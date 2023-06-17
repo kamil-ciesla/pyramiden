@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react"
-import {Card, CardContent, Typography, Input, Button} from "@mui/material"
+import React, {useEffect, useState} from "react"
+import {TextField, Typography} from "@mui/material"
 
 export const PlanTitle = (props) => {
     const [title, setTitle] = useState(props.title)
@@ -40,9 +40,16 @@ export const PlanTitle = (props) => {
         <>
             {isEditable ? (
                 <>
-                    <Input
+                    <TextField
                         required
                         value={title}
+                        variant='standard'
+                        inputProps={{
+                            style: {
+                                fontSize: '2rem',
+                                fontWeight: 'bold'
+                            }
+                        }}
                         onBlur={handleTitleChange}
                         onChange={event => onChange(event.target.value)}
                         onKeyPress={event => {
@@ -53,7 +60,7 @@ export const PlanTitle = (props) => {
 
                 </>
             ) : (
-                <Typography variant={props.variant} onClick={handleClick}>
+                <Typography variant='h4' fontWeight='bold' onClick={handleClick}>
                     {title}
                 </Typography>
             )}

@@ -22,6 +22,7 @@ export const AuthContext = React.createContext();
 // END AUTH SETUP
 // ##############
 
+
 export function handleRegister(email, password, repeatedPassword) {
     if (password === repeatedPassword) {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -47,7 +48,7 @@ export const AuthProvider = ({children}) => {
     }
 
     return (
-        <AuthContext.Provider value={{currentUser}}>
+        <AuthContext.Provider value={{currentUser, setCurrentUser}}>
             {children}
         </AuthContext.Provider>
     );

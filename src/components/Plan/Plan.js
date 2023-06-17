@@ -1,20 +1,21 @@
 // Import react functions
-import {useContext, useEffect, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 
 // Import MUI components
-import {Box, Card, CardContent, Grid, TextField} from "@mui/material"
+import {Box, Card, CardContent, Grid} from "@mui/material"
 
 // Import app components
 import {PlanTitle} from "../PlanTitle/PlanTitle"
 import {Timeframe} from "../Timeframe/Timeframe"
 import {Tripmates} from "../Tripmates/Tripmates"
-import {Documents} from "../Documents/Documents"
 import {Schedule} from "../Schedule/Schedule";
-import {Currency} from "../Currency/Currency";
 
 // Import images
 import planBgImage from "../../plan-bg.jpg"
 import {MapContext} from "../Map/Map";
+import {TripNotes} from "../TripNotes/TripNotes";
+import {Documents} from "../Documents/Documents";
+import {Budget} from "../Budget/Budget";
 
 export function getMarkersWithinDays(days) {
     const markers = [];
@@ -29,6 +30,8 @@ export function getMarkersWithinDays(days) {
 export const Plan = (props) => {
     const [plan, setPlan] = useState(props.plan)
     const {updateMarkers} = useContext(MapContext)
+
+
     const handleChange = (e) => {
         setPlan({...plan, [e.target.name]: e.target.value})
         props.onPlanChange({...plan, [e.target.name]: e.target.value})
@@ -54,13 +57,12 @@ export const Plan = (props) => {
     useEffect(() => {
         setPlan(props.plan)
         updateMarkers(getMarkersWithinDays(props.plan.days))
-    }, [])
+    }, [props.plan])
 
     return plan && (<Box sx={{
         width: "100%", minHeight: "95vh",
     }}>
         <Grid className="plan-grid" container spacing={2}>
-
             <Grid item sm={12}>
                 <div
                     style={{
@@ -73,20 +75,20 @@ export const Plan = (props) => {
                     }}
                 >
                     <Card sx={{
-                        width: "50%",
+                        width: "fit-content",
+
                     }}>
                         <CardContent>
                             <Grid container>
                                 <Grid item sm={12}>
                                     <PlanTitle
-                                        variant="h4"
                                         title={plan.title}
                                         onChange={handleChange}
                                     />
                                 </Grid>
                                 <Grid item sm={12}>
                                     <Timeframe
-                                        timeframe={convertedTimeframe(plan.timeframe)}
+                                        timeframe={plan.timeframe ? convertedTimeframe(plan.timeframe) : null}
                                         onChange={handleChange}
                                         days={plan.days}
                                     />
@@ -97,66 +99,17 @@ export const Plan = (props) => {
                 </div>
             </Grid>
             <Grid item sm={12}>
-                <Schedule
-                    days={plan.days}
-                    timeframe={convertedTimeframe(plan.timeframe)}
+                <TripNotes
+                    tripNotes={plan.tripNotes}
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item sm={12}>
-                <Card>
-                    <CardContent>
-                        <TextField
-                            sx={{
-                                width: "100%",
-                            }}
-                            name={'tripNotes'}
-                            value={plan.tripNotes}
-                            onChange={handleChange}
-                            id="standard-multiline-flexible"
-                            label={"Trip notes"}
-                            multiline={true}
-                            rows={4}
-                            placeholder={"Put here some useful notes e.g. what to take for the trip"}
-                            textMinHeight={'30vh'}
-                        />
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Grid item sm={12}>
-                <Card>
-                    <CardContent
-                        sx={{
-                            display: "flex", flexDirection: "column", alignItems: "center"
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: "flex", flexDirection: "row"
-                            }}
-                        >
-                            <TextField
-                                name='budget'
-                                label="Budget"
-                                placeholder={"set up a budget for your trip"}
-                                value={plan.budget}
-                                onChange={handleChange}
-                            />
-                            <Currency
-                                currency={plan.currency}
-                                onChange={handleChange}
-                            />
-                        </Box>
-                    </CardContent>
-                </Card>
-            </Grid>
-            <Grid item sm={6}>
+            <Grid item sm={12} md={6}>
                 <Tripmates
                     tripmates={plan.tripmates}
                     onChange={handleChange}
                 />
             </Grid>
-
             <Grid item sm={12} md={6}>
                 <Documents
                     planId={props.id}
@@ -164,7 +117,51 @@ export const Plan = (props) => {
                     onChange={handleChange}
                 />
             </Grid>
+            {
+                plan.timeframe && (
+                    <Grid item sm={12}>
+                        <Schedule
+                            days={plan.days}
+                            timeframe={convertedTimeframe(plan.timeframe)}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                )
+            }
 
+            <Grid item sm={12}>
+                <Budget
+                    budget={plan.budget}
+                    currency={plan.currency}
+                    onChange={handleChange}
+                />
+            </Grid>
         </Grid>
     </Box>)
 }
+
+// const [open, setOpen] = useState(false);
+//
+// const handleClick = () => {
+//     setOpen(!open);
+// };
+
+// <div>
+//     <ListItem button onClick={handleClick}>
+//         <ListItemText primary="My List"/>
+//         {open ? <ExpandLess/> : <ExpandMore/>}
+//     </ListItem>
+//     <Collapse in={open} timeout="auto" unmountOnExit>
+//         <List component="div" disablePadding>
+//             <ListItem button>
+//                 <ListItemText primary="Item 1"/>
+//             </ListItem>
+//             <ListItem button>
+//                 <ListItemText primary="Item 2"/>
+//             </ListItem>
+//             <ListItem button>
+//                 <ListItemText primary="Item 3"/>
+//             </ListItem>
+//         </List>
+//     </Collapse>
+// // </div>

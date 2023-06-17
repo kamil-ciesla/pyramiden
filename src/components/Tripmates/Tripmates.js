@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react"
-import {Input, Card, CardContent, Typography, IconButton} from "@mui/material"
-import AddBoxIcon from "@mui/icons-material/AddBox"
+import {Button, Card, CardContent, IconButton, Input, Typography} from "@mui/material"
 import ClearIcon from "@mui/icons-material/Clear"
 
 import "./tripmates.css"
@@ -25,14 +24,12 @@ export const Tripmates = (props) => {
     }
 
     useEffect(() => {
-        props.onChange(
-            {
-                target: {
-                    name: 'tripmates',
-                    value: tripmates
-                }
+        props.onChange({
+            target: {
+                name: 'tripmates',
+                value: tripmates
             }
-        )
+        })
     }, [tripmates])
 
     return (
@@ -57,13 +54,12 @@ export const Tripmates = (props) => {
                         </IconButton>
                     </div>
                 ))}
-                <IconButton
-                    aria-label="delete"
-                    size="large"
+                <Button
                     onClick={handleAddTripmate}
                 >
-                    <AddBoxIcon color="primary"/>
-                </IconButton>
+                    Add tripmate
+                </Button>
+
             </CardContent>
         </Card>
     )

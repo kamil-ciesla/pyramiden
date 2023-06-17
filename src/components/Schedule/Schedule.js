@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Card, CardContent, Typography, Stack, Box, CardHeader} from "@mui/material";
+import {Box, Card, CardContent, CardHeader, Stack} from "@mui/material";
 
 import {Day} from './Day'
 
@@ -17,14 +17,6 @@ export const Schedule = (props) => {
             }
         })
     }
-
-
-    useEffect(() => {
-        const newDays = parseTimeframeToDays(props.timeframe)
-        if (newDays.length != props.days.length) {
-            setDays(newDays)
-        }
-    }, [props.timeframe])
 
     function parseTimeframeToDays(timeframe) {
         const days = [];
@@ -54,6 +46,14 @@ export const Schedule = (props) => {
         const diffInDays = Math.round(diffInTime / oneDay);
         return diffInDays;
     }
+
+
+    useEffect(() => {
+        const newDays = parseTimeframeToDays(props.timeframe)
+        if (newDays.length != props.days.length) {
+            setDays(newDays)
+        }
+    }, [props.timeframe])
 
     return (<Card>
         <CardContent>

@@ -144,7 +144,6 @@ export const Map = (props) => {
 
         setMovedMarker(movedMarker)
         //maybe two below not necessary
-        createLines()
         removeLines()
     }
 

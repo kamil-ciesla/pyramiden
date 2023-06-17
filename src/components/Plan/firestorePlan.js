@@ -13,14 +13,10 @@ function errorLog(message) {
 const defaultPlanData = {
     coverPhotoPath: "",
     title: "Trip plan",
-    description: " ",
-    tripNotes: " ",
+    tripNotes: "",
     budget: 0,
     currency: "EUR",
-    timeframe: {
-        startDate: new Date(),
-        endDate: new Date()
-    },
+    timeframe: null,
     days: [],
     tripmates: [],
     filePaths: [],

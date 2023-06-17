@@ -1,7 +1,7 @@
 import {Button, Card, CardContent, Grid, InputAdornment, Link as MuiLink, TextField, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import {handleGoogleLogin, handleLogin} from '../../auth/firebaseAuth'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Google as GoogleIcon} from '@mui/icons-material';
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {routes} from "../../routes";
@@ -22,6 +22,10 @@ export function LoginView() {
             navigate(routes.planView)
         }
     }
+
+    useEffect(() => {
+
+    })
 
     return <Card
         sx={{

@@ -3,13 +3,16 @@ import {
     Box,
     Card,
     CardContent,
+    Collapse,
     Fab,
     Grid,
     IconButton,
     InputAdornment,
+    List,
+    ListItem,
+    ListItemText,
     TextField,
-    Tooltip,
-    Typography
+    Tooltip
 } from "@mui/material"
 import DescriptionIcon from "@mui/icons-material/Description"
 import AddIcon from "@mui/icons-material/Add"
@@ -20,10 +23,16 @@ import {getDownloadURL, getStorage, listAll, ref} from 'firebase/storage';
 import ClearIcon from "@mui/icons-material/Clear";
 import * as firestore from "../../components/Plan/firestorePlan";
 import DownloadIcon from '@mui/icons-material/Download';
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
+import Typography from "@mui/material/Typography";
 
 export function Documents(props) {
     const [files, setFiles] = useState([])
+    const [open, setOpen] = useState(!props.filePaths.length);
 
+    const handleClick = () => {
+        setOpen(!open);
+    };
     const handleFileUpload = async (event) => {
         const file = event.target.files[0]
         const isFileUploaded = await uploadFile(props.planId, file)
@@ -96,7 +105,7 @@ export function Documents(props) {
     }
 
     return (
-        <Card className="Tripmates">
+        <Card>
             <CardContent sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -105,80 +114,95 @@ export function Documents(props) {
             }}>
                 <Grid container spacing={2}>
                     <Grid item sm={12}>
-                        <Typography variant='h6'>Documents</Typography>
-                        {files.map((file, index) => (
-                            <Box className="file-container" key={index}
-                                 sx={{
-                                     cursor: "pointer",
-                                     display: 'flex',
-                                     alignItems: 'center'
-                                 }}
-                            >
-                                <Tooltip key={file.name} title={file.name}>
-                                    <TextField
-                                        variant='filled'
-                                        InputProps={{
-                                            readOnly: true,
-                                            startAdornment: (<InputAdornment position="start">
-                                                <DescriptionIcon
-                                                    key={file.name}
-                                                    alt={file.name}
-                                                    fontSize="medium"
-                                                />
-                                            </InputAdornment>),
-                                            endAdornment: (
-                                                <>
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            className="delete-file-button"
-                                                            aria-label="delete"
-                                                            size="small"
-                                                            onClick={() => handleFileDownload(file)}
+                        {/*<Typography variant='h6'>Documents</Typography>*/}
+                        <ListItem onClick={handleClick}>
+                            <ListItemText>
+                                <Typography variant='h6'>Documents</Typography>
+                            </ListItemText>
+                            {open ? <ExpandLess/> : <ExpandMore/>}
+                        </ListItem>
+                        <Collapse in={open} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                {
+                                    files.map((file, index) => (
 
-                                                        >
-                                                            <DownloadIcon/>
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                    <InputAdornment position="end">
-                                                        <IconButton
-                                                            className="delete-file-button"
-                                                            aria-label="delete"
-                                                            size="small"
-                                                            onClick={() => {
-                                                                handleDeleteDocument(file.name)
-                                                            }}
-                                                        >
-                                                            <ClearIcon/>
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                </>
-                                            )
-                                        }}
-                                        value={file.name}
-                                        fullWidth
-                                    />
-                                </Tooltip>
-                            </Box>
-                        ))}
-                    </Grid>
-                    <Grid item sm={12}>
-                        <label>
-                            <input
-                                style={{display: "none"}}
-                                type="file"
-                                onChange={handleFileUpload}
-                            />
-                            <Fab
-                                color="secondary"
-                                size='medium'
-                                e="small"
-                                component="span"
-                                aria-label="add"
-                                variant="extended"
-                            >
-                                <AddIcon/> Upload File
-                            </Fab>
-                        </label>
+                                        <Box className="file-container" key={index}
+                                             sx={{
+                                                 cursor: "pointer",
+                                                 display: 'flex',
+                                                 alignItems: 'center'
+                                             }}
+                                        >
+                                            <Tooltip key={file.name} title={file.name}>
+                                                <TextField
+                                                    variant='standard'
+                                                    InputProps={{
+                                                        readOnly: true,
+                                                        startAdornment: (<InputAdornment position="start">
+                                                            <DescriptionIcon
+                                                                key={file.name}
+                                                                alt={file.name}
+                                                                fontSize="medium"
+                                                            />
+                                                        </InputAdornment>),
+                                                        endAdornment: (
+                                                            <>
+                                                                <InputAdornment position="end">
+                                                                    <IconButton
+                                                                        className="delete-file-button"
+                                                                        aria-label="delete"
+                                                                        size="small"
+                                                                        onClick={() => handleFileDownload(file)}
+
+                                                                    >
+                                                                        <DownloadIcon/>
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                                <InputAdornment position="end">
+                                                                    <IconButton
+                                                                        className="delete-file-button"
+                                                                        aria-label="delete"
+                                                                        size="small"
+                                                                        onClick={() => {
+                                                                            handleDeleteDocument(file.name)
+                                                                        }}
+                                                                    >
+                                                                        <ClearIcon/>
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                            </>
+                                                        )
+                                                    }}
+                                                    value={file.name}
+                                                    fullWidth
+                                                />
+                                            </Tooltip>
+                                        </Box>
+                                    ))}
+                                <Box sx={{marginTop: 2}}>
+                                    <label>
+                                        <input
+                                            style={{display: "none"}}
+                                            type="file"
+                                            onChange={handleFileUpload}
+                                            onClick={() => {
+                                                setOpen(true)
+                                            }}
+                                        />
+                                        <Fab
+                                            color="secondary"
+                                            size='small'
+                                            e="small"
+                                            component="span"
+                                            aria-label="add"
+                                            variant="extended"
+                                        >
+                                            <AddIcon/> Upload File
+                                        </Fab>
+                                    </label>
+                                </Box>
+                            </List>
+                        </Collapse>
                     </Grid>
                 </Grid>
             </CardContent>

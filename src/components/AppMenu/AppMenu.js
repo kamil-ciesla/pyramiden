@@ -56,7 +56,7 @@ const StyledInputBase = styled(InputBase)(({theme}) => ({
 }))
 
 export function AppMenu() {
-    const {currentUser} = useContext(AuthContext);
+    const {currentUser, setCurrentUser} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = React.useState(null)
@@ -84,9 +84,7 @@ export function AppMenu() {
 
     function handleLogOut() {
         auth.signOut().then((result) => {
-            // setProfileImage(null);
-            console.log(result)
-            console.log(`%cUser logged out successfully`, 'color: green;');
+            setCurrentUser(null)
             navigate(routes.loginView);
         }).catch(error => console.log(error.message))
     }
@@ -147,7 +145,7 @@ export function AppMenu() {
                                 sx={{width: 50, height: 50}}
                             />
                             :
-                            <AccountCircle/>
+                            <AccountCircle style={{fill: 'white'}}/>
                     }
 
                 </IconButton>
@@ -167,12 +165,14 @@ export function AppMenu() {
                         aria-label="open drawer"
                         sx={{mr: 2}}
                     >
-                        <MenuIcon/>
+                        <MenuIcon sx={{fill: 'white'}}/>
                     </IconButton>
                     <Typography
-                        variant="h6"
+                        variant="h5"
                         noWrap
                         component="div"
+                        fontFamily='Koulen'
+                        color='white'
                         sx={{display: {xs: "none", sm: "block"}}}
                     >
                         Travel planner
@@ -205,7 +205,7 @@ export function AppMenu() {
                                             sx={{width: 50, height: 50}}
                                         />
                                         :
-                                        <AccountCircle/>
+                                        <AccountCircle fontSize='large' style={{color: 'white'}}/>
                                 }
                             </IconButton>
                         }

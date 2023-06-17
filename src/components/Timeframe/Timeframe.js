@@ -2,30 +2,35 @@ import {DesktopDatePicker, LocalizationProvider} from "@mui/x-date-pickers"
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs"
 import {Button, Grid, TextField, Typography} from "@mui/material"
 import dayjs from "dayjs"
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 export function Timeframe(props) {
 
-    const [timeframe, setTimeframe] = useState(props.timeframe)
+    const [timeframe, setTimeframe] = useState(props.timeframe ?
+        props.timeframe
+        :
+        {
+            startDate: new Date(),
+            endDate: new Date()
+        }
+    )
+    const [isEditable, setIsEditable] = useState(!props.timeframe)
 
-    const [isEditable, setIsEditable] = useState(false)
-
-    function updateTimeframe(newTimeframe) {
+    function updateTimeframe() {
         if (props.days.length != 0) {
-            if (!window.confirm('Are you sure you want to change dates? You will lose all the data you have in each day.')) {
+            if (!window.confirm(
+                'Are you sure you want to change dates?' +
+                ' You will lose all the data you have in each day.')) {
                 return
             }
         }
-        props.onChange(
-            {
-                target: {
-                    name: 'timeframe',
-                    value: timeframe
-                }
+        props.onChange({
+            target: {
+                name: 'timeframe',
+                value: timeframe
             }
-        )
+        })
         setIsEditable(false)
-
     }
 
     function stringifyTimeframe(timeframe) {
@@ -37,7 +42,6 @@ export function Timeframe(props) {
 
         return `${startDay}/${startMonth} - ${endDay}/${endMonth}`
     }
-
 
     return (
         <>
@@ -71,10 +75,10 @@ export function Timeframe(props) {
                             <Grid item sm={12}>
                                 <Button variant="contained"
                                         onClick={() => {
-                                            updateTimeframe(timeframe)
+                                            updateTimeframe()
                                         }}
                                 >
-                                    Confirm dates
+                                    Set dates
                                 </Button>
                             </Grid>
                         </Grid>
