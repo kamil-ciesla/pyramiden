@@ -9,7 +9,7 @@ import {MapContext} from "../../components/Map/Map";
 
 export function PlanView() {
     const {currentUser} = useContext(AuthContext);
-    const {markers, updateMarkers} = useContext(MapContext)
+    const {markers, updateMarkers, currentCenter, setCenter} = useContext(MapContext)
 
     const [searchParams] = useSearchParams();
     const [planId, setPlanId] = useState(null)
@@ -34,8 +34,19 @@ export function PlanView() {
     function handlePlanData(planId, planData) {
         setPlanId(planId)
         setDB_PLAN(planData)
-        setPlan(planData)
+        updatePlan(planData)
+        let mapCenter = null
+        try {
+            mapCenter = {
+                lat: planData.days[0].stages[0].marker.lat,
+                lng: planData.days[0].stages[0].marker.lng,
+            }
+        } catch (error) {
+            mapCenter = {lat: 51.13, lng: 21.42}
+        }
+        setCenter(mapCenter)
     }
+
 
     async function updateDbPlan() {
         if (plan) {
@@ -103,7 +114,6 @@ export function PlanView() {
         } else {
             setPlan(null)
         }
-
     }, [currentUser])
 
     useInterval(updateDbPlan, DB_PLAN_UPDATE_INTERVAL)

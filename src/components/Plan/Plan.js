@@ -57,6 +57,7 @@ export const Plan = (props) => {
     useEffect(() => {
         setPlan(props.plan)
         updateMarkers(getMarkersWithinDays(props.plan.days))
+        console.log('SETTING MARKERS')
     }, [props.plan])
 
     return plan && (<Box sx={{
@@ -76,7 +77,6 @@ export const Plan = (props) => {
                 >
                     <Card sx={{
                         width: "fit-content",
-
                     }}>
                         <CardContent>
                             <Grid container>

@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Koulen&display=swap');
 
+body {
+    overflow-y: hidden; /* Hide vertical scrollbar */
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
 .App {
     text-align: center;
     display: flex;

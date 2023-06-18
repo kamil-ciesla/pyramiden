@@ -1,5 +1,5 @@
 import {GoogleMap, MarkerF} from "@react-google-maps/api";
-import React, {createContext, useContext, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import "./Map.css"
 import LeaderLine from 'react-leader-line'
 import {useInterval} from "../../useInterval";
@@ -12,8 +12,10 @@ export const MapContextProvider = ({children}) => {
     const [markers, setMarkers] = useState([]);
     const [currentMarker, setCurrentMarker] = useState(null)
     const [movedMarker, setMovedMarker] = useState(null)
-    const [center, setCenter] = useState({lat: 37.9838, lng: 23.7275})
+    const [center, setCenter] = useState(null)
+    const [currentCenter, setCurrentCenter] = useState(null)
     const [zoom, setZoom] = useState(8)
+
     const updateMarkers = (newMarkers) => {
         setMarkers(newMarkers);
     };
@@ -21,16 +23,12 @@ export const MapContextProvider = ({children}) => {
     return (
         <MapContext.Provider value={
             {
-                markers,
-                updateMarkers,
-                currentMarker,
-                setCurrentMarker,
-                movedMarker,
-                setMovedMarker,
-                center,
-                setCenter,
-                zoom,
-                setZoom
+                markers, updateMarkers,
+                currentMarker, setCurrentMarker,
+                movedMarker, setMovedMarker,
+                center, setCenter,
+                currentCenter, setCurrentCenter,
+                zoom, setZoom
             }
         }>
             {children}
@@ -41,7 +39,13 @@ export const MapContextProvider = ({children}) => {
 export const Map = (props) => {
     const [lines, setLines] = useState([])
     const [linePathShape, setLinePathShape] = useState('magnet')
-    const {markers, updateMarkers, setCurrentMarker, setMovedMarker, center, zoom} = useContext(MapContext)
+
+    const {
+        markers, updateMarkers,
+        setCurrentMarker, setMovedMarker,
+        center, setCurrentCenter,
+        zoom
+    } = useContext(MapContext)
 
     const handleMapClick = (event) => {
         const {latLng} = event;
@@ -49,8 +53,8 @@ export const Map = (props) => {
             lat: latLng.lat(),
             lng: latLng.lng()
         }
-        const newMarker = createMarker(location)
-
+        const newMarker = createMarker(location, true)
+        setCurrentCenter(location)
         setCurrentMarker(newMarker)
     };
 
@@ -65,13 +69,22 @@ export const Map = (props) => {
                 path: linePathShape,
                 dropShadow: true,
                 hide: !!options?.isNew,
-                dash: options?.isMoving ? {animation: true} : false
+                // dash: options?.isMoving ? {animation: true} : false
             }
         )
 
         if (options.isNew) newLine.show(['draw'])
         lines.push(newLine)
         return newLine
+    }
+
+    function areThereNewMarkers() {
+        for (const marker of markers) {
+            if (marker.isNew) {
+                return true
+            }
+        }
+        return false
     }
 
     function createLines() {
@@ -112,13 +125,10 @@ export const Map = (props) => {
                 try {
                     line.position()
                 } catch (error) {
-                    console.log('refreshing lines failed')
                     try {
                         removeLines()
                     } catch (error) {
-                        console.log(error.message)
                     }
-                    console.log(error.message)
                 }
             }
         }
@@ -144,14 +154,15 @@ export const Map = (props) => {
         updateMarkers(updatedMarkers)
 
         setMovedMarker(movedMarker)
-        //maybe two below not necessary
-        removeLines()
     }
 
+    useEffect(() => {
+        console.log('removing lines!!!')
+        removeLines()
+    }, [markers.length])
 
     useInterval(refreshLines, 1)
     useInterval(createLines, 1)
-
 
     return (
         <Box
@@ -159,6 +170,7 @@ export const Map = (props) => {
             sx={{
                 height: '100vh',
             }}>
+
             <GoogleMap
                 mapContainerClassName="map-container"
                 center={center}

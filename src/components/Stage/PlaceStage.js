@@ -22,17 +22,6 @@ export const PlaceStage = (props) => {
     )
     const [searchBox, setSearchBox] = useState(null)
 
-    useEffect(() => {
-        setStage(props.stage)
-    }, [props.stage])
-    useEffect(() => {
-        setIsListeningForMarker(props.selectedStageId === stage.id)
-    }, [props.selectedStageId])
-
-    useEffect(() => {
-        if (!movedMarker) return
-        catchMovedMarker()
-    }, [movedMarker])
 
     function catchMovedMarker() {
         if (movedMarker.id === stage.marker.id) {
@@ -43,11 +32,6 @@ export const PlaceStage = (props) => {
         }
     }
 
-    useEffect(() => {
-        if (currentMarker && isListeningForMarker) {
-            catchNewMarker()
-        }
-    }, [currentMarker])
 
     function stageHasMarker(stage) {
         return !!(Object.keys(stage.marker).length)
@@ -139,6 +123,25 @@ export const PlaceStage = (props) => {
         setStage(updatedStage)
         props.onChange(updatedStage)
     }
+
+    useEffect(() => {
+        setStage(props.stage)
+    }, [props.stage])
+
+    useEffect(() => {
+        setIsListeningForMarker(props.selectedStageId === stage.id)
+    }, [props.selectedStageId])
+
+    useEffect(() => {
+        if (!movedMarker) return
+        catchMovedMarker()
+    }, [movedMarker])
+
+    useEffect(() => {
+        if (currentMarker && isListeningForMarker) {
+            catchNewMarker()
+        }
+    }, [currentMarker])
 
     return (
         <Box
