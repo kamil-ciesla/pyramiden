@@ -26,7 +26,7 @@ export function RegisterView() {
 
     useEffect(() => {
         if (currentUser) {
-            navigate(routes.AccountView)
+            navigate(routes.accountView)
         }
     }, [])
 

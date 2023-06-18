@@ -26,9 +26,9 @@ export function LoginView() {
 
     useEffect(() => {
         if (currentUser) {
-            navigate(routes.AccountView)
+            navigate(routes.accountView)
         }
-    }, [])
+    }, [currentUser])
 
     return <Card
         sx={{
