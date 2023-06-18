@@ -78,6 +78,12 @@ export function Currency(props) {
                     SelectProps={{
                         native: true
                     }}
+                    inputProps={{
+                        style: {
+                            fontWeight: 'bold'
+                        }
+                    }}
+
                     onChange={event => props.onChange(event)}
                 >
                     {/* <select defaultValue={props.currency}> */}

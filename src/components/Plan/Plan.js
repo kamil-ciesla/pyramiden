@@ -132,6 +132,7 @@ export const Plan = (props) => {
             <Grid item sm={12}>
                 <Budget
                     budget={plan.budget}
+                    costs={plan.costs}
                     currency={plan.currency}
                     onChange={handleChange}
                 />

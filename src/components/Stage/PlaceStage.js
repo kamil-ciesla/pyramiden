@@ -13,7 +13,6 @@ export const PlaceStage = (props) => {
     const {
         currentMarker, setCurrentMarker,
         movedMarker, setMovedMarker,
-        markers, updateMarkers
     } = useContext(MapContext)
 
     const stageInputRef = useRef(null);

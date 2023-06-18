@@ -15,6 +15,7 @@ const defaultPlanData = {
     title: "Trip plan",
     tripNotes: "",
     budget: 0,
+    costs: [],
     currency: "EUR",
     timeframe: null,
     days: [],
@@ -96,10 +97,7 @@ export async function deleteFile(planId, fileName) {
         return true
     }).catch((error) => {
         console.log('FAILED DELETING FILE')
-
         return false
     });
-
-
 }
 

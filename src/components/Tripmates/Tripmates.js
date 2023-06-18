@@ -65,7 +65,7 @@ export const Tripmates = (props) => {
             <CardContent>
                 <ListItem onClick={handleClick}>
                     <ListItemText>
-                        <Typography variant='h6' textAlign='left'>Tripmates</Typography>
+                        <Typography variant='h6' textAlign='left'>{tripmates.length} Tripmates</Typography>
                     </ListItemText>
                     {open ? <ExpandLess/> : <ExpandMore/>}
                 </ListItem>
