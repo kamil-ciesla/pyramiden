@@ -12,7 +12,7 @@ export const MapContextProvider = ({children}) => {
     const [markers, setMarkers] = useState([]);
     const [currentMarker, setCurrentMarker] = useState(null)
     const [movedMarker, setMovedMarker] = useState(null)
-    const [center, setCenter] = useState(null)
+    const [center, setCenter] = useState({lat: 51.13, lng: 21.42})
     const [currentCenter, setCurrentCenter] = useState(null)
     const [zoom, setZoom] = useState(8)
 
@@ -157,7 +157,6 @@ export const Map = (props) => {
     }
 
     useEffect(() => {
-        console.log('removing lines!!!')
         removeLines()
     }, [markers.length])
 

@@ -244,7 +244,7 @@ export function AppMenu() {
                             aria-label="show more"
                             aria-controls={mobileMenuId}
                             aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
+                            onClick={handleProfileMenuOpen}
                             color="inherit"
                         >
                             <MoreIcon/>
@@ -252,7 +252,7 @@ export function AppMenu() {
                     </Box>
                 </Toolbar>
             </AppBar>
-            {currentUser && renderMobileMenu}
+            {/*{currentUser && renderMobileMenu}*/}
             {currentUser && renderMenu}
         </Box>
     )

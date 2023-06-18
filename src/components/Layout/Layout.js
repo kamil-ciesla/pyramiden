@@ -15,6 +15,7 @@ export const Layout = () => {
                       md={6}
                       lg={4}
                       sx={{
+                          width: '100%',
                           display: 'flex',
                           flexDirection: 'column',
 
@@ -24,10 +25,13 @@ export const Layout = () => {
                         top: '0',
                         zIndex: '3'
                     }}>
-                        <AppMenu/>
+                        <AppMenu
+
+                        />
                     </Box>
                     <Box id="left-main-content" className="left-main-content"
                          sx={{
+                             width: '100%',
                              scrollbarGutter: 'stable',
                              overflow: 'auto',
                              direction: 'rtl',

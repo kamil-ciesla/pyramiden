@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Koulen&display=swap');
 
-body {
-    overflow-y: hidden; /* Hide vertical scrollbar */
-    overflow-x: hidden; /* Hide horizontal scrollbar */
+@media (min-width: 768px) {
+    body {
+        overflow-y: hidden; /* Hide vertical scrollbar */
+        overflow-x: hidden; /* Hide horizontal scrollbar */
+    }
 }
 
 .App {
@@ -29,6 +31,13 @@ body {
 .right-container {
     width: 50vw;
     height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .right-container {
+        width: 100vw;
+        height: 100vh;
+    }
 }
 
 .map-container {

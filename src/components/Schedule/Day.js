@@ -79,7 +79,10 @@ export const Day = (props) => {
     return (<Card sx={{width: "100%"}}>
             <CardContent sx={{padding: 0.5}}>
                 <ListItem onClick={handleClick}>
-                    <Grid container>
+                    <Grid container sx={{
+                        display: 'flex',
+                        flexDirection: 'column'
+                    }}>
                         <Grid item sm={12} sx={{display: 'flex'}}>
                             <ListItemText>
                                 <Typography variant='title' variant='h5'>

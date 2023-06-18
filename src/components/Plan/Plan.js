@@ -64,7 +64,8 @@ export const Plan = (props) => {
         width: "100%", minHeight: "95vh",
     }}>
         <Grid className="plan-grid" container spacing={2}>
-            <Grid item sm={12}>
+            <Grid item sm={12}
+                  sx={{width: "100%"}}>
                 <div
                     style={{
                         backgroundImage: `url(${planBgImage})`,
@@ -79,8 +80,13 @@ export const Plan = (props) => {
                         width: "fit-content",
                     }}>
                         <CardContent>
-                            <Grid container>
-                                <Grid item sm={12}>
+                            <Grid container
+                                  sx={{
+                                      display: 'flex',
+                                      flexDirection: 'column'
+                                  }}>
+                                <Grid item sm={12}
+                                >
                                     <PlanTitle
                                         title={plan.title}
                                         onChange={handleChange}
@@ -98,19 +104,28 @@ export const Plan = (props) => {
                     </Card>
                 </div>
             </Grid>
-            <Grid item sm={12}>
+            <Grid item sm={12}
+                  sx={{
+                      width: '100%'
+                  }}>
                 <TripNotes
                     tripNotes={plan.tripNotes}
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item sm={12} md={6}>
+            <Grid item sm={12} md={6}
+                  sx={{
+                      width: '100%'
+                  }}>
                 <Tripmates
                     tripmates={plan.tripmates}
                     onChange={handleChange}
                 />
             </Grid>
-            <Grid item sm={12} md={6}>
+            <Grid item sm={12} md={6}
+                  sx={{
+                      width: '100%'
+                  }}>
                 <Documents
                     planId={props.id}
                     filePaths={plan.filePaths}
@@ -119,7 +134,8 @@ export const Plan = (props) => {
             </Grid>
             {
                 plan.timeframe && (
-                    <Grid item sm={12}>
+                    <Grid item sm={12}
+                          sx={{width: "100%"}}>
                         <Schedule
                             days={plan.days}
                             timeframe={convertedTimeframe(plan.timeframe)}

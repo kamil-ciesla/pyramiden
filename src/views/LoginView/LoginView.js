@@ -2,9 +2,9 @@ import {Button, Card, CardContent, Grid, InputAdornment, Link as MuiLink, TextFi
 import IconButton from "@mui/material/IconButton";
 import {handleGoogleLogin, handleLogin} from '../../auth/firebaseAuth'
 import {useEffect, useState} from "react";
-import {Google as GoogleIcon} from '@mui/icons-material';
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {routes} from "../../routes";
+import GoogleIcon from '@mui/icons-material/Google';
 
 import * as firestore from "../../components/Plan/firestorePlan";
 
@@ -102,7 +102,7 @@ export function LoginView() {
                                 }).catch(error => console.log(error.message))
                         }}
                     >
-                        Google
+                        Login with Google
                     </Button>
                 </Grid>
             </Grid>

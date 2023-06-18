@@ -105,22 +105,25 @@ export function Documents(props) {
     }
 
     return (
-        <Card>
-            <CardContent sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                mb: '2'
-            }}>
+        <Card
+        >
+            <CardContent
+
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    mb: '2'
+                }}>
+                <ListItem onClick={handleClick}>
+                    <ListItemText>
+                        <Typography variant='h6'>Documents</Typography>
+                    </ListItemText>
+                    {open ? <ExpandLess/> : <ExpandMore/>}
+                </ListItem>
                 <Grid container spacing={2}>
                     <Grid item sm={12}>
-                        {/*<Typography variant='h6'>Documents</Typography>*/}
-                        <ListItem onClick={handleClick}>
-                            <ListItemText>
-                                <Typography variant='h6'>Documents</Typography>
-                            </ListItemText>
-                            {open ? <ExpandLess/> : <ExpandMore/>}
-                        </ListItem>
+
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {

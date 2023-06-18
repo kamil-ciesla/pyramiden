@@ -1,10 +1,16 @@
-import {useEffect, useState} from "react";
-import {Box, Card, CardContent, CardHeader, Stack} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Box, Card, CardContent, CardHeader, Collapse, ListItem, ListItemText, Stack} from "@mui/material";
 
 import {Day} from './Day'
+import {ExpandLess, ExpandMore} from "@mui/icons-material";
 
 export const Schedule = (props) => {
     const [days, setDays] = useState(props.days)
+    const [open, setOpen] = useState(true);
+
+    const handleClick = () => {
+        setOpen(!open);
+    };
 
     function handleDayChange(day, index) {
         const newDays = [...days]
@@ -58,27 +64,33 @@ export const Schedule = (props) => {
 
     return (<Card>
         <CardContent>
-            <CardHeader
-                title={"Trip schedule"}
-                titleTypographyProps={{
-                    align: 'left',
-                    variant: 'h4'
-                }}
-            />
-            <Box>
-                <Stack spacing={2}>
-                    {days.map((day, index) => {
-                        return (<Day
-                            key={day.date}
-                            day={day}
-                            onChange={(updatedDay) => {
-                                handleDayChange(updatedDay, index)
-                            }}
-                        />)
-                    })}
-                </Stack>
-            </Box>
-
+            <ListItem button onClick={handleClick}>
+                <ListItemText>
+                    <CardHeader
+                        title={"Trip schedule"}
+                        titleTypographyProps={{
+                            align: 'left',
+                            variant: 'h4'
+                        }}
+                    />
+                </ListItemText>
+                {open ? <ExpandLess/> : <ExpandMore/>}
+            </ListItem>
+            <Collapse in={open} timeout="auto" unmountOnExit>
+                <Box>
+                    <Stack spacing={2}>
+                        {days.map((day, index) => {
+                            return (<Day
+                                key={day.date}
+                                day={day}
+                                onChange={(updatedDay) => {
+                                    handleDayChange(updatedDay, index)
+                                }}
+                            />)
+                        })}
+                    </Stack>
+                </Box>
+            </Collapse>
         </CardContent>
     </Card>)
 }
