@@ -1,7 +1,7 @@
 import {Button, Card, CardContent, Grid, InputAdornment, Link as MuiLink, TextField, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {handleGoogleLogin, handleLogin} from '../../auth/firebaseAuth'
-import {useEffect, useState} from "react";
+import {AuthContext, handleGoogleLogin, handleLogin} from '../../auth/firebaseAuth'
+import {useContext, useEffect, useState} from "react";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import {routes} from "../../routes";
 import GoogleIcon from '@mui/icons-material/Google';
@@ -13,6 +13,7 @@ export function LoginView() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const {currentUser} = useContext(AuthContext)
 
     async function handleRedirectAfterLogin(userId) {
         const userPlans = await firestore.getAllUserPlans(userId)
@@ -24,8 +25,10 @@ export function LoginView() {
     }
 
     useEffect(() => {
-
-    })
+        if (currentUser) {
+            navigate(routes.AccountView)
+        }
+    }, [])
 
     return <Card
         sx={{

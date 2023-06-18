@@ -1,8 +1,8 @@
 import {Button, Card, CardContent, Grid, InputAdornment, Link as MuiLink, TextField, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
 
-import {handleGoogleLogin, handleRegister} from '../../auth/firebaseAuth'
+import {AuthContext, handleGoogleLogin, handleRegister} from '../../auth/firebaseAuth'
 import {routes} from "../../routes";
 import {Link as RouterLink, useNavigate} from "react-router-dom";
 import * as firestore from "../../components/Plan/firestorePlan";
@@ -10,7 +10,7 @@ import {Google as GoogleIcon} from "@mui/icons-material";
 
 export function RegisterView() {
     const navigate = useNavigate();
-
+    const {currentUser} = useContext(AuthContext)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatedPassword, setRepeatedPassword] = useState('');
@@ -23,6 +23,12 @@ export function RegisterView() {
             navigate(routes.planView)
         }
     }
+
+    useEffect(() => {
+        if (currentUser) {
+            navigate(routes.AccountView)
+        }
+    }, [])
 
     return (<Card
             sx={{
