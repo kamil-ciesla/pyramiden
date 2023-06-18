@@ -19,31 +19,21 @@ import {createRandomId} from "../../idGenerator";
 import {MapContext} from "../Map/Map";
 import {ExpandLess, ExpandMore} from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
+import {convertDateIfNeeded} from "../../time";
 
 export const Day = (props) => {
-    const [open, setOpen] = useState(!props.day.stages.length);
-
     const {setCurrentMarker} = useContext(MapContext)
     const [day, setDay] = useState(props.day)
     const [selectedStageId, setSelectedStageId] = useState(null)
     const handleClick = () => {
-        setOpen(!open);
+        const updatedDay = {...day}
+        updatedDay.isOpen = !updatedDay.isOpen
+        setDay(updatedDay)
+        props.onChange(updatedDay)
     };
 
     function formattedDate() {
-        return format(convertedDate(day.date), "EEEE, MMMM do")
-    }
-
-    function convertedDate(date) {
-        if (isDate(date)) {
-            return date
-        } else {
-            return date.toDate()
-        }
-    }
-
-    function isDate(obj) {
-        return obj instanceof Date && !isNaN(obj.valueOf());
+        return format(convertDateIfNeeded(day.date), "EEEE, MMMM do")
     }
 
     function addStage(type) {
@@ -52,9 +42,9 @@ export const Day = (props) => {
             note: '',
             locationName: '',
             type: type,
-            time: new Date(),
             marker: {},
-            isSelected: true
+            time: null,
+            isSelected: true,
         }
         setSelectedStageId(newStage.id)
         const dayWithNewStage = {...day, stages: [...day.stages, newStage]}
@@ -96,7 +86,7 @@ export const Day = (props) => {
                                     {formattedDate()}
                                 </Typography>
                             </ListItemText>
-                            {open ? <ExpandLess/> : <ExpandMore/>}
+                            {day.isOpen ? <ExpandLess/> : <ExpandMore/>}
 
                         </Grid>
                         <Grid item sm={12}>
@@ -111,7 +101,7 @@ export const Day = (props) => {
                     </Grid>
                 </ListItem>
                 <Box>
-                    <Collapse in={open} timeout="auto" unmountOnExit>
+                    <Collapse in={day.isOpen} timeout="auto" unmountOnExit>
                         <List component="div" disablePadding>
                             {day.stages.map((stage, index) => (
                                 <Box key={stage.id}>

@@ -36,7 +36,8 @@ export const Schedule = (props) => {
         return {
             name: name,
             date: new Date(date),
-            stages: []
+            stages: [],
+            isOpened: true
         }
     }
 

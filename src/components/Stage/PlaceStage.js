@@ -5,14 +5,15 @@ import Geocoder from 'react-native-geocoding';
 import {MapContext} from "../Map/Map";
 import ClearIcon from "@mui/icons-material/Clear";
 import {StandaloneSearchBox} from "@react-google-maps/api";
+import {convertDateIfNeeded} from "../../time";
+import {createMarker} from "../Map/marker";
 
 export const PlaceStage = (props) => {
     Geocoder.init(process.env.REACT_APP_GOOGLE_API_KEY); // use a valid API key
     const {
-        currentMarker,
-        setCurrentMarker,
-        movedMarker,
-        setMovedMarker
+        currentMarker, setCurrentMarker,
+        movedMarker, setMovedMarker,
+        markers, updateMarkers
     } = useContext(MapContext)
 
     const stageInputRef = useRef(null);
@@ -22,6 +23,9 @@ export const PlaceStage = (props) => {
     )
     const [searchBox, setSearchBox] = useState(null)
 
+    useEffect(() => {
+        setStage(props.stage)
+    }, [props.stage])
     useEffect(() => {
         setIsListeningForMarker(props.selectedStageId === stage.id)
     }, [props.selectedStageId])
@@ -39,7 +43,6 @@ export const PlaceStage = (props) => {
             stageInputRef.current.focus()
         }
     }
-
 
     useEffect(() => {
         if (currentMarker && isListeningForMarker) {
@@ -68,7 +71,6 @@ export const PlaceStage = (props) => {
             marker: marker,
             locationName: locationName ? locationName : locationCoordinatesAsString(markerLocation)
         }
-        console.log(updatedStage.marker.location)
         setStage(updatedStage)
         props.onChange(updatedStage)
     }
@@ -116,17 +118,11 @@ export const PlaceStage = (props) => {
     const onPlacesChanged = () => {
         const catchedPlace = searchBox?.getPlaces()[0]
         if (catchedPlace) {
-            console.log('CATCHED PLACE')
             const location = {
                 lat: catchedPlace.geometry.location.lat(),
                 lng: catchedPlace.geometry.location.lng()
             }
-            console.log(location)
-            const newMarker = {
-                ...stage.marker,
-                lat: location.lat,
-                lng: location.lng
-            }
+            const newMarker = createMarker(location)
             let locationName = catchedPlace.address_components[1].long_name
             if (!locationName) {
                 locationName = locationCoordinatesAsString(location)
@@ -137,55 +133,104 @@ export const PlaceStage = (props) => {
     const onLoad = ref => {
         setSearchBox(ref)
     };
+
+    function handleTimeChange(newTime) {
+        const date = convertDateIfNeeded(newTime)
+        const updatedStage = {...stage, time: date}
+        setStage(updatedStage)
+        props.onChange(updatedStage)
+    }
+
     return (
         <Box
             sx={{
-                width: "100%"
+                width: "100%",
+                display: 'flex'
             }}
         >
-            <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+            <Box
+                sx={{
+                    flexGrow: 1
+                }}
+            >
 
-                <TextField
-                    id={'stage-input-' + stage.id}
-                    inputRef={stageInputRef}
-                    fullWidth
-                    placeholder={'Type the place or click on the map'}
-                    value={stage.locationName}
-                    onClick={() => {
-                        setIsListeningForMarker(true)
-                        props.onSelect()
-                    }}
-                    onChange={(event) => {
-                        setStage({...stage, locationName: event.target.value})
-                    }}
+                <StandaloneSearchBox onLoad={onLoad} onPlacesChanged={onPlacesChanged}>
+                    <TextField
+                        fullWidth
+                        id={'stage-input-' + stage.id}
+                        inputRef={stageInputRef}
+                        placeholder={'Type the place or click on the map'}
+                        value={stage.locationName}
+                        onClick={() => {
+                            setIsListeningForMarker(true)
+                            props.onSelect()
+                        }}
+                        onChange={(event) => {
+                            setStage({...stage, locationName: event.target.value})
+                        }}
 
-                    onMouseOver={(e) => {
-                        e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'visible';
-                    }}
-                    onMouseOut={(e) => {
-                        e.currentTarget.querySelector('.delete-stage-button').style.visibility = 'hidden';
-                    }}
-                    InputProps={{
-                        autoComplete: "off",
-                        startAdornment: (<InputAdornment position="start">
-                            <RoomIcon/>
-                        </InputAdornment>),
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    className='delete-stage-button'
-                                    aria-label="delete"
-                                    size="large"
-                                    onClick={props.handleDeleteStage}
-                                    style={{visibility: 'hidden'}}
-                                >
-                                    <ClearIcon/>
-                                </IconButton>
-                            </InputAdornment>
-                        )
-                    }}
-                />
-            </StandaloneSearchBox>
+                        onMouseOver={(e) => {
+                            e.currentTarget.querySelector('.end-adornments').style.visibility = 'visible';
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.querySelector('.end-adornments').style.visibility = 'hidden';
+                        }}
+                        InputProps={{
+                            autoComplete: "off",
+                            startAdornment: (<InputAdornment position="start">
+                                <RoomIcon/>
+                            </InputAdornment>),
+                            endAdornment: (
+                                <div className='end-adornments' style={{visibility: 'hidden'}}>
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            className='delete-stage-button'
+                                            aria-label="delete"
+                                            size="large"
+                                            onClick={props.handleDeleteStage}
+                                        >
+                                            <ClearIcon/>
+                                        </IconButton>
+                                        {/*<IconButton*/}
+                                        {/*    size="large"*/}
+                                        {/*    onClick={() => {*/}
+                                        {/*        const TimeContainer = document.getElementById('time-picker-container-' + stage.id)*/}
+                                        {/*        TimeContainer.style.display = 'block';*/}
+                                        {/*    }}*/}
+                                        {/*>*/}
+                                        {/*    <MoreTimeIcon/>*/}
+                                        {/*</IconButton>*/}
 
+                                    </InputAdornment>
+                                </div>
+                            )
+                        }}
+                    />
+                </StandaloneSearchBox>
+            </Box>
+            {/*<Box*/}
+            {/*    sx={{*/}
+            {/*        width: '20%',*/}
+            {/*        display: stage.time ? 'block' : 'none'*/}
+            {/*    }}*/}
+            {/*    id={'time-picker-container-' + stage.id}*/}
+            {/*    className='time-picker-container'*/}
+            {/*    onClick={() => {*/}
+            {/*        console.log(convertDateIfNeeded(stage.time))*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    <MobileTimePicker*/}
+            {/*        ampm={false}*/}
+            {/*        openTo="hours"*/}
+            {/*        sx={{*/}
+            {/*            align: 'center'*/}
+            {/*        }}*/}
+            {/*        value={() => {*/}
+            {/*            console.log(stage.time)*/}
+            {/*            return stage.time ? convertDateIfNeeded(stage.time) : new Date()*/}
+            {/*        }}*/}
+            {/*        onChange={handleTimeChange}*/}
+            {/*    />*/}
+            {/*</Box>*/}
         </Box>);
 }

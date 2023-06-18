@@ -111,7 +111,7 @@ export const Tripmates = (props) => {
                             variant='outlined'
                             size='small'
                             sx={{
-                                width: '50%',
+                                width: '70%',
                                 marginTop: 2,
                                 visibility: tripmates.length > 0 ? 'hidden' : 'visible'
                             }}

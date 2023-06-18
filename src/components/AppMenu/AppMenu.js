@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography"
 import InputBase from "@mui/material/InputBase"
 import MenuItem from "@mui/material/MenuItem"
 import Menu from "@mui/material/Menu"
-import MenuIcon from "@mui/icons-material/Menu"
 import SearchIcon from "@mui/icons-material/Search"
 import AccountCircle from "@mui/icons-material/AccountCircle"
 import MoreIcon from "@mui/icons-material/MoreVert"
@@ -19,6 +18,7 @@ import {auth, AuthContext} from "../../auth/firebaseAuth";
 import {Avatar} from "@mui/material";
 import {StandaloneSearchBox} from "@react-google-maps/api";
 import {MapContext} from "../Map/Map";
+import ExploreIcon from '@mui/icons-material/Explore';
 
 const Search = styled("div")(({theme}) => ({
     position: "relative",
@@ -185,8 +185,13 @@ export function AppMenu() {
                         color="inherit"
                         aria-label="open drawer"
                         sx={{mr: 2}}
+                        onClick={() => {
+                            document.getElementById('left-main-content')
+                                .scrollTo({top: 0, left: 0, behavior: "smooth"})
+                        }}
                     >
-                        <MenuIcon sx={{fill: 'white'}}/>
+                        <ExploreIcon fontSize='large' sx={{fill: 'white'}}
+                        />
                     </IconButton>
                     <Typography
                         variant="h5"

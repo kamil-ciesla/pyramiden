@@ -1,5 +1,4 @@
-import {DesktopDatePicker, LocalizationProvider} from "@mui/x-date-pickers"
-import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs"
+import {DesktopDatePicker} from "@mui/x-date-pickers"
 import {Button, Grid, TextField, Typography} from "@mui/material"
 import dayjs from "dayjs"
 import React, {useState} from "react";
@@ -46,43 +45,41 @@ export function Timeframe(props) {
     return (
         <>
             {isEditable ? (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <Grid container spacing={4}>
-                            <Grid item sm={6}>
-                                <DesktopDatePicker
-                                    name='startDate'
-                                    label="Start Date"
-                                    format="DD-MM-YYYY"
-                                    value={dayjs(timeframe.startDate)}
-                                    onChange={(newStartDate) => {
-                                        setTimeframe({...timeframe, startDate: newStartDate.toDate()})
-                                    }}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </Grid>
-                            <Grid item sm={6}>
-                                <DesktopDatePicker
-                                    name='endDate'
-                                    label="End Date"
-                                    format="DD-MM-YYYY"
-                                    value={dayjs(timeframe.endDate)}
-                                    onChange={(newEndDate) => {
-                                        setTimeframe({...timeframe, endDate: newEndDate.toDate()})
-                                    }}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </Grid>
-                            <Grid item sm={12}>
-                                <Button variant="contained"
-                                        onClick={() => {
-                                            updateTimeframe()
-                                        }}
-                                >
-                                    Set dates
-                                </Button>
-                            </Grid>
+                    <Grid container spacing={4}>
+                        <Grid item sm={6}>
+                            <DesktopDatePicker
+                                name='startDate'
+                                label="Start Date"
+                                format="DD-MM-YYYY"
+                                value={dayjs(timeframe.startDate)}
+                                onChange={(newStartDate) => {
+                                    setTimeframe({...timeframe, startDate: newStartDate.toDate()})
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
                         </Grid>
-                    </LocalizationProvider>
+                        <Grid item sm={6}>
+                            <DesktopDatePicker
+                                name='endDate'
+                                label="End Date"
+                                format="DD-MM-YYYY"
+                                value={dayjs(timeframe.endDate)}
+                                onChange={(newEndDate) => {
+                                    setTimeframe({...timeframe, endDate: newEndDate.toDate()})
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Grid>
+                        <Grid item sm={12}>
+                            <Button variant="contained"
+                                    onClick={() => {
+                                        updateTimeframe()
+                                    }}
+                            >
+                                Set dates
+                            </Button>
+                        </Grid>
+                    </Grid>
 
                 )
                 :

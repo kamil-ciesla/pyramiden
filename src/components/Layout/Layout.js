@@ -26,7 +26,7 @@ export const Layout = () => {
                     }}>
                         <AppMenu/>
                     </Box>
-                    <Box className="left-main-content"
+                    <Box id="left-main-content" className="left-main-content"
                          sx={{
                              scrollbarGutter: 'stable',
                              overflow: 'auto',

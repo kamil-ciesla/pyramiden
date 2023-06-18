@@ -3,8 +3,8 @@ import React, {createContext, useContext, useState} from "react";
 import "./Map.css"
 import LeaderLine from 'react-leader-line'
 import {useInterval} from "../../useInterval";
-import {createRandomId} from "../../idGenerator";
 import {Box} from "@mui/material";
+import {createMarker} from "./marker";
 
 export const MapContext = createContext();
 
@@ -45,12 +45,12 @@ export const Map = (props) => {
 
     const handleMapClick = (event) => {
         const {latLng} = event;
-        const newMarker = {
-            id: createRandomId(),
+        const location = {
             lat: latLng.lat(),
-            lng: latLng.lng(),
-            isNew: true
+            lng: latLng.lng()
         }
+        const newMarker = createMarker(location)
+
         setCurrentMarker(newMarker)
     };
 
@@ -70,7 +70,6 @@ export const Map = (props) => {
         )
 
         if (options.isNew) newLine.show(['draw'])
-        // newLine.path ='magnet'
         lines.push(newLine)
         return newLine
     }
@@ -152,6 +151,7 @@ export const Map = (props) => {
 
     useInterval(refreshLines, 1)
     useInterval(createLines, 1)
+
 
     return (
         <Box
